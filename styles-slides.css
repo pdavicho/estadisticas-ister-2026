@@ -1,107 +1,149 @@
 /*-- scss:rules --*/
-/* Estilos para presentaciones Reveal.js — ISTER 2026 */
+/* ============================================================
+   Slides ISTER 2026 — Tamaño óptimo para uso embebido
+   Lógica: diapositivas virtuales 1280×720, escaladas ~0.80-0.86x
+   → fuente virtual × escala = tamaño real en pantalla
+   ============================================================ */
 
-/* Fuente base reducida para que los slides se vean bien embebidos */
+/* Base 30px (original Reveal.js: 42px → demasiado grande)
+   30px × 0.83 scale ≈ 25px en pantalla — cómodo para leer */
 .reveal {
   font-family: 'Segoe UI', system-ui, sans-serif;
-  font-size: 26px !important;  /* Reveal.js default: 42px — demasiado grande al embebir */
+  font-size: 30px !important;
 }
 
-/* Títulos proporcionalmente ajustados */
+/* --- Títulos --- */
 .reveal h1 {
   color: #003366;
   font-weight: 700;
-  font-size: 1.7em !important;
+  font-size: 1.55em !important;   /* 46px virtual → ~38px real */
   line-height: 1.2;
+  margin-bottom: 0.3em;
 }
 
 .reveal h2 {
   color: #003366;
   font-weight: 700;
-  font-size: 1.3em !important;
-  line-height: 1.3;
+  font-size: 1.2em !important;    /* 36px virtual → ~30px real */
+  line-height: 1.25;
+  margin-bottom: 0.4em;
 }
 
 .reveal h3 {
-  color: #003366;
+  color: #0055a5;
   font-weight: 600;
-  font-size: 1.05em !important;
+  font-size: 1.0em !important;    /* 30px virtual → ~25px real */
 }
 
-/* Texto y listas más compactos */
+/* --- Texto y listas --- */
 .reveal p {
+  font-size: 0.92em;              /* 27.6px virtual → ~23px real */
   line-height: 1.5;
-  margin: 0.4em 0;
+  margin: 0.3em 0;
 }
 
 .reveal ul, .reveal ol {
-  font-size: 0.95em;
-  line-height: 1.6;
+  font-size: 0.90em;              /* 27px virtual → ~22px real */
+  line-height: 1.55;
 }
 
 .reveal li {
-  margin-bottom: 0.2em;
+  margin-bottom: 0.15em;
 }
 
-/* Código más compacto */
+/* --- CÓDIGO: prioridad máxima de legibilidad ---
+   0.80em × 30px = 24px virtual → ×0.83 = ~20px real
+   El mínimo legible en pantalla es ~16px → estamos bien */
+.reveal pre {
+  font-size: 0.80em !important;
+  margin: 0.4em 0;
+  border-radius: 6px;
+}
+
 .reveal pre code {
-  font-size: 0.62em !important;
+  font-size: 1em !important;      /* hereda el 0.80em del pre */
+  line-height: 1.45;
   max-height: 420px;
-  line-height: 1.4;
+  overflow-y: auto;
+  padding: 0.6em 0.8em !important;
 }
 
-.reveal code {
-  font-size: 0.8em;
+/* Código inline en texto */
+.reveal code:not(pre code) {
+  font-size: 0.85em;
+  background: #f0f4f8;
+  padding: 0.05em 0.3em;
+  border-radius: 3px;
 }
 
-/* Tablas compactas */
+/* --- Tablas ---
+   0.80em × 30px = 24px virtual → ~20px real — legible */
 .reveal table {
-  font-size: 0.72em !important;
+  font-size: 0.80em !important;
   border-collapse: collapse;
-  margin: 0 auto;
+  margin: 0.3em auto;
+  width: auto;
+  max-width: 100%;
 }
 
 .reveal table th {
   background-color: #003366;
   color: white;
-  padding: 0.4rem 0.7rem;
+  padding: 0.35rem 0.65rem;
   font-size: 0.95em;
+  white-space: nowrap;
 }
 
 .reveal table td {
-  padding: 0.3rem 0.7rem;
-  border-bottom: 1px solid #eee;
+  padding: 0.28rem 0.65rem;
+  border-bottom: 1px solid #dee2e6;
 }
 
-/* Número de diapositiva y footer pequeños */
+.reveal table tr:nth-child(even) td {
+  background: #f8f9fa;
+}
+
+/* --- Footer y número de slide --- */
 .reveal .slide-number {
-  font-size: 12px;
+  font-size: 13px;
   color: #666;
 }
 
 .reveal .footer {
-  font-size: 11px;
+  font-size: 12px;
   color: #888;
 }
 
-/* Callouts y cajas */
+/* --- Callouts y cajas --- */
 .reveal .callout {
   border-radius: 6px;
-  padding: 0.6rem 0.9rem;
+  padding: 0.5rem 0.8rem;
   margin: 0.4rem 0;
+  font-size: 0.85em;
+}
+
+/* --- Cita / blockquote --- */
+.reveal blockquote {
+  border-left: 4px solid #f0a500;
+  padding-left: 0.8rem;
+  margin: 0.5em 0;
+  font-style: italic;
+  color: #555;
   font-size: 0.88em;
 }
 
-/* Cita */
-.reveal blockquote {
-  border-left: 4px solid #f0a500;
-  padding-left: 0.9rem;
-  font-style: italic;
-  color: #555;
-  font-size: 0.9em;
+/* --- Columnas: menos gap para aprovechar espacio --- */
+.reveal .columns {
+  gap: 1.2rem;
 }
 
-/* Columnas con menos margen */
-.reveal .columns {
-  gap: 1rem;
+/* --- Cajas personalizadas de los slides --- */
+.reveal .formula-slide {
+  font-size: 0.92em;
+  padding: 0.6rem 1rem;
+}
+
+.reveal .highlight-box {
+  font-size: 0.88em;
+  padding: 0.6rem 0.9rem;
 }
