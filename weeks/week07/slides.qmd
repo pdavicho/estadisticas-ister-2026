@@ -1,18 +1,23 @@
-﻿---
-title: "Semana 7: GestiÃ³n de Datos en R"
+---
+title: "Semana 7: Gestión de Datos en R"
 subtitle: "Importar, Limpiar y Transformar Datos con dplyr"
 author: "Ing. David Minango PhD"
-institute: "ISTER â€” Sistemas y GestiÃ³n de Data"
+institute: "ISTER — Sistemas y Gestión de Data"
 date: "2026"
 format:
   revealjs:
     theme: [default, ../../styles-slides.css]
     slide-number: true
     logo: ../../figures/logos/ister_logo.png
-    footer: "Herramientas EstadÃ­sticas 2026 | Ing. David Minango PhD"
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
     transition: slide
     highlight-style: github
     chalkboard: true
+    width: 1280
+    height: 720
+    margin: 0.04
+    min-scale: 0.1
+    max-scale: 2.0
 include-in-header:
   text: |
     <style>
@@ -25,19 +30,19 @@ include-in-header:
 ## El Flujo de Trabajo en Ciencia de Datos {background-color="#003366" color="white"}
 
 ```
-ðŸ“‚ Datos Crudos
-      â†“
+📂 Datos Crudos
+      ↓
    Importar (read.csv, read_excel)
-      â†“
+      ↓
    Explorar (head, str, summary)
-      â†“
+      ↓
    Limpiar (na.omit, mutate, filter)
-      â†“
+      ↓
    Transformar (group_by, summarise, arrange)
-      â†“
-ðŸ“Š AnÃ¡lisis y VisualizaciÃ³n
-      â†“
-ðŸ“ Informe / DecisiÃ³n
+      ↓
+📊 Análisis y Visualización
+      ↓
+📝 Informe / Decisión
 ```
 
 Esta semana cubrimos **todos** estos pasos con datos reales.
@@ -47,7 +52,7 @@ Esta semana cubrimos **todos** estos pasos con datos reales.
 ## Importar Datos
 
 ```r
-# â”€â”€ CSV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── CSV ──────────────────────────────────────────────
 datos <- read.csv("archivo.csv")
 datos <- read.csv("archivo.csv",
                   sep=";",            # separador punto y coma
@@ -55,33 +60,33 @@ datos <- read.csv("archivo.csv",
                   encoding="UTF-8",   # caracteres especiales
                   header=TRUE)        # primera fila = nombres
 
-# â”€â”€ Excel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Excel ─────────────────────────────────────────────
 library(readxl)
 datos <- read_excel("archivo.xlsx")
 datos <- read_excel("archivo.xlsx",
-                    sheet = "Hoja2",   # hoja especÃ­fica
+                    sheet = "Hoja2",   # hoja específica
                     skip = 2,          # saltar primeras 2 filas
-                    range = "A1:E100") # rango especÃ­fico
+                    range = "A1:E100") # rango específico
 
-# â”€â”€ Exportar resultados â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Exportar resultados ───────────────────────────────
 write.csv(datos, "resultados.csv", row.names=FALSE)
 ```
 
 ::: {.callout-tip}
-## Tip prÃ¡ctico
-En RStudio: **File â†’ Import Dataset â†’ From CSV/Excel** abre un asistente visual para importar sin escribir cÃ³digo.
+## Tip práctico
+En RStudio: **File → Import Dataset → From CSV/Excel** abre un asistente visual para importar sin escribir código.
 :::
 
 ---
 
-## ExploraciÃ³n Inicial del Dataset
+## Exploración Inicial del Dataset
 
 ```r
 # Siempre comience con estas funciones:
 head(datos, 10)        # primeras 10 filas
-tail(datos, 5)         # Ãºltimas 5 filas
+tail(datos, 5)         # últimas 5 filas
 str(datos)             # estructura y tipos
-summary(datos)         # estadÃ­sticas rÃ¡pidas
+summary(datos)         # estadísticas rápidas
 dim(datos)             # filas x columnas
 names(datos)           # nombres de columnas
 nrow(datos); ncol(datos)
@@ -97,23 +102,23 @@ mean(is.na(datos$columna))     # % NAs en una columna
 ## Limpieza de Datos
 
 ```r
-# â”€â”€ Valores faltantes (NA) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Valores faltantes (NA) ────────────────────────────
 is.na(datos$columna)           # vector de TRUE/FALSE
 datos_limpios <- na.omit(datos) # eliminar filas con NA
 
 # Reemplazar NA por la media
 datos$salario[is.na(datos$salario)] <- mean(datos$salario, na.rm=TRUE)
 
-# â”€â”€ Duplicados â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Duplicados ────────────────────────────────────────
 sum(duplicated(datos))           # contar duplicados
 datos <- datos[!duplicated(datos), ]  # eliminar duplicados
 
-# â”€â”€ Convertir tipos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Convertir tipos ───────────────────────────────────
 datos$fecha  <- as.Date(datos$fecha, format="%Y-%m-%d")
 datos$salario <- as.numeric(datos$salario)
 datos$ciudad  <- as.factor(datos$ciudad)
 
-# â”€â”€ Filtrar outliers extremos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Filtrar outliers extremos ─────────────────────────
 Q1 <- quantile(datos$salario, 0.25)
 Q3 <- quantile(datos$salario, 0.75)
 IQR <- Q3 - Q1
@@ -123,32 +128,32 @@ datos_sin_outliers <- datos[datos$salario >= Q1 - 1.5*IQR &
 
 ---
 
-## El Paquete dplyr â€” Las 5 Funciones Clave
+## El Paquete dplyr — Las 5 Funciones Clave
 
 ```r
 library(dplyr)
 
-# â”€â”€ filter(): filtrar filas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── filter(): filtrar filas ───────────────────────────
 datos %>% filter(salario > 1000)
 datos %>% filter(ciudad == "Quito" & genero == "F")
 
-# â”€â”€ select(): seleccionar columnas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── select(): seleccionar columnas ───────────────────
 datos %>% select(nombre, salario, ciudad)
 datos %>% select(-id)           # todas menos id
 datos %>% select(starts_with("nota"))  # columnas que empiezan con "nota"
 
-# â”€â”€ mutate(): crear/modificar columnas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── mutate(): crear/modificar columnas ───────────────
 datos %>% mutate(
   salario_anual = salario * 12,
   categoria = ifelse(salario >= 1500, "Alto", "Bajo")
 )
 
-# â”€â”€ group_by + summarise(): resumen por grupos â”€â”€â”€â”€â”€â”€â”€â”€
+# ── group_by + summarise(): resumen por grupos ────────
 datos %>%
   group_by(ciudad) %>%
   summarise(media = mean(salario), n = n())
 
-# â”€â”€ arrange(): ordenar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── arrange(): ordenar ───────────────────────────────
 datos %>% arrange(desc(salario))   # mayor a menor
 datos %>% arrange(ciudad, salario) # por ciudad, luego salario
 ```
@@ -160,11 +165,11 @@ datos %>% arrange(ciudad, salario) # por ciudad, luego salario
 El operador `%>%` (pipe) permite **encadenar operaciones**:
 
 ```r
-# Sin pipe (difÃ­cil de leer):
+# Sin pipe (difícil de leer):
 arrange(summarise(group_by(filter(datos, salario>800), ciudad),
         media=mean(salario)), desc(media))
 
-# Con pipe (fÃ¡cil de leer):
+# Con pipe (fácil de leer):
 datos %>%
   filter(salario > 800) %>%
   group_by(ciudad) %>%
@@ -174,15 +179,15 @@ datos %>%
 
 ::: {.highlight-box}
 Lea el pipe `%>%` como "**y luego**":
-- Tome `datos` â†’ **y luego** filtre â†’ **y luego** agrupe â†’ **y luego** resuma
+- Tome `datos` → **y luego** filtre → **y luego** agrupe → **y luego** resuma
 :::
 
 ---
 
-## AnÃ¡lisis Descriptivo Completo
+## Análisis Descriptivo Completo
 
 ```r
-# Pipeline completo de anÃ¡lisis
+# Pipeline completo de análisis
 resumen_completo <- datos %>%
   filter(!is.na(salario)) %>%
   group_by(departamento) %>%
@@ -204,20 +209,19 @@ print(resumen_completo)
 
 ---
 
-## APP 2 â€” Esta Semana {background-color="#003366" color="white"}
+## APP 2 — Esta Semana {background-color="#003366" color="white"}
 
-Esta semana tiene la **PrÃ¡ctica Experimental APP 2** (8 horas):
+Esta semana tiene la **Práctica Experimental APP 2** (8 horas):
 
 ::: {.highlight-box}
 **Dataset real:** Datos de desigualdad salarial en Ecuador 2023
 
 1. Importar datos desde CSV
 2. Limpiar y verificar calidad del dataset
-3. Calcular estadÃ­sticas descriptivas completas
-4. AnÃ¡lisis por regiÃ³n, gÃ©nero y sector
+3. Calcular estadísticas descriptivas completas
+4. Análisis por región, género y sector
 5. Visualizaciones interpretativas
-6. Conclusiones sobre la problemÃ¡tica social
+6. Conclusiones sobre la problemática social
 :::
 
-**Â¡El anÃ¡lisis de datos tiene impacto real en la sociedad!** ðŸŒ
-
+**¡El análisis de datos tiene impacto real en la sociedad!** 🌍

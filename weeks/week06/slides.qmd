@@ -1,18 +1,23 @@
-﻿---
+---
 title: "Semana 6: Primeros Pasos en R"
 subtitle: "Vectores, Matrices, Data Frames y Funciones Esenciales"
 author: "Ing. David Minango PhD"
-institute: "ISTER â€” Sistemas y GestiÃ³n de Data"
+institute: "ISTER — Sistemas y Gestión de Data"
 date: "2026"
 format:
   revealjs:
     theme: [default, ../../styles-slides.css]
     slide-number: true
     logo: ../../figures/logos/ister_logo.png
-    footer: "Herramientas EstadÃ­sticas 2026 | Ing. David Minango PhD"
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
     transition: slide
     highlight-style: github
     chalkboard: true
+    width: 1280
+    height: 720
+    margin: 0.04
+    min-scale: 0.1
+    max-scale: 2.0
 include-in-header:
   text: |
     <style>
@@ -30,14 +35,14 @@ R tiene 4 estructuras principales:
 |---|:---:|---|---|
 | **Vector** | 1D | Un solo tipo | `c(1, 2, 3)` |
 | **Matriz** | 2D | Un solo tipo | `matrix(1:9, 3, 3)` |
-| **Data Frame** | 2D | MÃºltiples tipos | tabla de datos |
+| **Data Frame** | 2D | Múltiples tipos | tabla de datos |
 | **Lista** | nD | Cualquier tipo | `list(1, "a", TRUE)` |
 
 ---
 
 ## Vectores
 
-La estructura mÃ¡s fundamental de R:
+La estructura más fundamental de R:
 
 ```r
 # Crear vectores
@@ -71,33 +76,33 @@ x * y   # 10 40 90 160 250
 x / y   # 10 10 10 10 10
 x^2     # 100 400 900 1600 2500
 
-# Funciones estadÃ­sticas sobre vectores
+# Funciones estadísticas sobre vectores
 sum(x)      # 150
 mean(x)     # 30
 median(x)   # 30
 sd(x)       # 15.81 (muestral)
 var(x)      # 250 (muestral)
 range(x)    # 10 50
-diff(range(x)) # 40 (rango estadÃ­stico)
+diff(range(x)) # 40 (rango estadístico)
 cumsum(x)   # 10 30 60 100 150
 ```
 
 ---
 
-## Filtros LÃ³gicos (Subsetting)
+## Filtros Lógicos (Subsetting)
 
 ```r
 notas <- c(85, 45, 92, 67, 78, 55, 91, 88)
 
-# Filtros con operadores lÃ³gicos
+# Filtros con operadores lógicos
 notas[notas >= 70]            # Solo aprobados
 notas[notas < 70]             # Solo reprobados
 notas[notas > 60 & notas < 90] # Entre 60 y 90
 
-# which() devuelve Ã­ndices que cumplen condiciÃ³n
+# which() devuelve índices que cumplen condición
 which(notas >= 70)            # posiciones de aprobados
-which.max(notas)              # posiciÃ³n del mÃ¡ximo
-which.min(notas)              # posiciÃ³n del mÃ­nimo
+which.max(notas)              # posición del máximo
+which.min(notas)              # posición del mínimo
 
 # Tabla de frecuencias
 table(notas >= 70)
@@ -118,13 +123,13 @@ M <- matrix(1:9, nrow=3, ncol=3, byrow=TRUE)
 # [3,]    7    8    9
 
 # Acceder a elementos
-M[1, 2]    # fila 1, columna 2 â†’ 2
+M[1, 2]    # fila 1, columna 2 → 2
 M[2, ]     # toda la fila 2
 M[, 3]     # toda la columna 3
 
 # Operaciones
 t(M)         # transpuesta
-M %*% M      # multiplicaciÃ³n matricial
+M %*% M      # multiplicación matricial
 apply(M, 1, sum) # suma por filas
 apply(M, 2, mean) # media por columnas
 ```
@@ -138,7 +143,7 @@ El equivalente de una **tabla de datos** (como una hoja de Excel):
 ```r
 # Crear un data frame
 estudiantes <- data.frame(
-  nombre = c("Ana", "Carlos", "MarÃ­a", "Juan", "SofÃ­a"),
+  nombre = c("Ana", "Carlos", "María", "Juan", "Sofía"),
   nota   = c(92, 78, 85, 67, 91),
   ciudad = c("Quito", "Guayaquil", "Quito", "Cuenca", "Guayaquil"),
   aprobado = c(TRUE, TRUE, TRUE, FALSE, TRUE)
@@ -147,9 +152,9 @@ estudiantes <- data.frame(
 # Explorar el data frame
 head(estudiantes)        # primeras 6 filas
 str(estudiantes)         # estructura
-summary(estudiantes)     # resumen estadÃ­stico
-nrow(estudiantes)        # nÃºmero de filas
-ncol(estudiantes)        # nÃºmero de columnas
+summary(estudiantes)     # resumen estadístico
+nrow(estudiantes)        # número de filas
+ncol(estudiantes)        # número de columnas
 names(estudiantes)       # nombres de columnas
 ```
 
@@ -161,7 +166,7 @@ names(estudiantes)       # nombres de columnas
 # Tres formas de acceder a una columna
 estudiantes$nota          # con $
 estudiantes[, "nota"]     # con nombre entre comillas
-estudiantes[, 2]          # con nÃºmero de columna
+estudiantes[, 2]          # con número de columna
 
 # Filtrar filas
 estudiantes[estudiantes$nota >= 80, ]     # aprobados con nota >= 80
@@ -178,20 +183,20 @@ print(estudiantes)
 
 ---
 
-## Funciones EstadÃ­sticas Clave
+## Funciones Estadísticas Clave
 
 ```r
 x <- c(85, 45, 92, 67, 78, 55, 91, 88, 72, 80)
 
-# EstadÃ­sticas bÃ¡sicas
+# Estadísticas básicas
 mean(x)          # media
 median(x)        # mediana
-sd(x)            # desv. estÃ¡ndar muestral
+sd(x)            # desv. estándar muestral
 var(x)           # varianza muestral
 range(x)         # min y max
 quantile(x)      # cuartiles
 quantile(x, 0.9) # percentil 90
-cor(x, y)        # correlaciÃ³n entre dos vectores
+cor(x, y)        # correlación entre dos vectores
 summary(x)       # todo en uno
 
 # Tabla de frecuencias
@@ -210,7 +215,7 @@ materias <- list(
   BD     = c(78, 85, 70, 88, 82)
 )
 
-# sapply aplica una funciÃ³n a cada elemento de la lista
+# sapply aplica una función a cada elemento de la lista
 # y devuelve un vector o matriz
 sapply(materias, mean)   # media de cada materia
 sapply(materias, sd)     # desv. std de cada materia
@@ -226,15 +231,14 @@ sd   9.23...  7.40... 7.09...
 
 ---
 
-## PrÃ³xima Semana {background-color="#003366" color="white"}
+## Próxima Semana {background-color="#003366" color="white"}
 
 ::: {.highlight-box}
-### Semana 7 â€” GestiÃ³n de Datos en R (APP 2)
+### Semana 7 — Gestión de Datos en R (APP 2)
 - Importar datos desde CSV y Excel
-- Limpieza y transformaciÃ³n con **dplyr**
+- Limpieza y transformación con **dplyr**
 - `filter()`, `select()`, `mutate()`, `group_by()`, `summarise()`
-- AnÃ¡lisis estadÃ­stico descriptivo completo de un **dataset real**
+- Análisis estadístico descriptivo completo de un **dataset real**
 :::
 
-Esta es la semana de la **prÃ¡ctica experimental APP 2** (8 horas). PrepÃ¡rese para un anÃ¡lisis intensivo con datos reales de problemas sociales.
-
+Esta es la semana de la **práctica experimental APP 2** (8 horas). Prepárese para un análisis intensivo con datos reales de problemas sociales.

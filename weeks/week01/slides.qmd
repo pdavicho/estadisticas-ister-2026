@@ -1,15 +1,15 @@
-﻿---
-title: "Semana 1: EstadÃ­stica Descriptiva"
-subtitle: "Datos No Agrupados â€” Medidas de Tendencia Central y DispersiÃ³n"
+---
+title: "Semana 1: Estadística Descriptiva"
+subtitle: "Datos No Agrupados — Medidas de Tendencia Central y Dispersión"
 author: "Ing. David Minango PhD"
-institute: "ISTER â€” Sistemas y GestiÃ³n de Data"
+institute: "ISTER — Sistemas y Gestión de Data"
 date: "2026"
 format:
   revealjs:
     theme: [default, ../../styles-slides.css]
     slide-number: true
     logo: ../../figures/logos/ister_logo.png
-    footer: "Herramientas EstadÃ­sticas 2026 | Ing. David Minango PhD"
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
     transition: slide
     background-transition: fade
     highlight-style: github
@@ -19,9 +19,6 @@ format:
     margin: 0.04
     min-scale: 0.1
     max-scale: 2.0
-    center: true
-    controls: true
-    progress: true
 include-in-header:
   text: |
     <style>
@@ -32,27 +29,27 @@ include-in-header:
     </style>
 ---
 
-## Â¿QuÃ© es la EstadÃ­stica? {background-color="#003366" color="white"}
+## ¿Qué es la Estadística? {background-color="#003366" color="white"}
 
-> La **estadÃ­stica** es la rama de las matemÃ¡ticas encargada de **recolectar, analizar, interpretar y presentar datos**.
+> La **estadística** es la rama de las matemáticas encargada de **recolectar, analizar, interpretar y presentar datos**.
 
 <br>
 
 :::: {.columns}
 ::: {.column width="50%"}
-### Â¿Para quÃ© sirve?
-- Resumir grandes volÃºmenes de datos
+### ¿Para qué sirve?
+- Resumir grandes volúmenes de datos
 - Identificar patrones y tendencias
 - Evaluar incertidumbre y variabilidad
 - Tomar decisiones basadas en evidencia
 :::
 
 ::: {.column width="50%"}
-### Campos de aplicaciÃ³n
-- ðŸ’Š Medicina y salud
-- ðŸ“ˆ EconomÃ­a y finanzas
-- ðŸŒ¿ BiologÃ­a y ciencias naturales
-- ðŸ’» TecnologÃ­a y datos
+### Campos de aplicación
+- 💊 Medicina y salud
+- 📈 Economía y finanzas
+- 🌿 Biología y ciencias naturales
+- 💻 Tecnología y datos
 :::
 ::::
 
@@ -63,24 +60,24 @@ include-in-header:
 :::: {.columns}
 ::: {.column width="50%"}
 ### Datos Cuantitativos
-Valores numÃ©ricos medibles
+Valores numéricos medibles
 
 - **Discretos**: conteos (1, 2, 3...)
-  - NÃºmero de estudiantes
-  - NÃºmero de errores
+  - Número de estudiantes
+  - Número de errores
 
 - **Continuos**: medidas en escala continua
-  - Temperatura: 23.4Â°C
+  - Temperatura: 23.4°C
   - Peso: 65.8 kg
 :::
 
 ::: {.column width="50%"}
 ### Datos Cualitativos
-CategorÃ­as o atributos
+Categorías o atributos
 
 - Colores
-- GÃ©nero
-- Nivel de satisfacciÃ³n
+- Género
+- Nivel de satisfacción
 - Ciudad de origen
 :::
 ::::
@@ -91,9 +88,9 @@ En este curso trabajamos principalmente con **datos cuantitativos**.
 
 ---
 
-## DistribuciÃ³n de Frecuencias {background-color="#f8f9fa"}
+## Distribución de Frecuencias {background-color="#f8f9fa"}
 
-Una **distribuciÃ³n de frecuencias** muestra cuÃ¡ntas veces aparece cada valor en un dataset.
+Una **distribución de frecuencias** muestra cuántas veces aparece cada valor en un dataset.
 
 **Ejemplo:** Calificaciones: `7, 8, 8, 9, 7, 10, 8, 9, 7, 8`
 
@@ -113,21 +110,21 @@ Una **distribuciÃ³n de frecuencias** muestra cuÃ¡ntas veces aparece cada val
 
 ## Medidas de Tendencia Central
 
-Â¿CuÃ¡l es el **valor tÃ­pico** o **central** de un conjunto de datos?
+¿Cuál es el **valor típico** o **central** de un conjunto de datos?
 
 <br>
 
 ::: {.r-fit-text}
-| Medida | Â¿QuÃ© mide? | SÃ­mbolo |
+| Medida | ¿Qué mide? | Símbolo |
 |---|---|:---:|
-| **Media** | Promedio aritmÃ©tico | Î¼ o xÌ„ |
+| **Media** | Promedio aritmético | μ o x̄ |
 | **Mediana** | Valor central cuando se ordenan los datos | Me |
-| **Moda** | Valor que mÃ¡s se repite | Mo |
+| **Moda** | Valor que más se repite | Mo |
 :::
 
 ---
 
-## La Media AritmÃ©tica
+## La Media Aritmética
 
 ::: {.formula-slide}
 $$\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n} = \frac{x_1 + x_2 + \cdots + x_n}{n}$$
@@ -138,24 +135,24 @@ $$\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n} = \frac{x_1 + x_2 + \cdots + x_n}{n}$$
 $$\bar{x} = \frac{20 + 22 + 19 + 24 + 20}{5} = \frac{105}{5} = \mathbf{21}$$
 
 ::: {.callout-tip}
-## InterpretaciÃ³n
-El promedio de edad es **21 aÃ±os**. La mitad de los estudiantes tienen menos de 21 y la otra mitad mÃ¡s de 21 (aproximadamente).
+## Interpretación
+El promedio de edad es **21 años**. La mitad de los estudiantes tienen menos de 21 y la otra mitad más de 21 (aproximadamente).
 :::
 
 ---
 
 ## La Mediana
 
-Es el **valor central** cuando los datos estÃ¡n ordenados de menor a mayor.
+Es el **valor central** cuando los datos están ordenados de menor a mayor.
 
 ::: {.formula-slide}
-- Si **n es impar**: Me = valor en posiciÃ³n $\frac{n+1}{2}$
+- Si **n es impar**: Me = valor en posición $\frac{n+1}{2}$
 - Si **n es par**: Me = promedio de los valores en posiciones $\frac{n}{2}$ y $\frac{n}{2}+1$
 :::
 
-**Ejemplo 1 (n=7, impar):** `3, 5, 7, **8**, 12, 13, 15` â†’ Me = **8**
+**Ejemplo 1 (n=7, impar):** `3, 5, 7, **8**, 12, 13, 15` → Me = **8**
 
-**Ejemplo 2 (n=6, par):** `2, 4, **6**, **9**, 11, 14` â†’ Me = $\frac{6+9}{2}$ = **7.5**
+**Ejemplo 2 (n=6, par):** `2, 4, **6**, **9**, 11, 14` → Me = $\frac{6+9}{2}$ = **7.5**
 
 ::: {.callout-tip}
 ## Ventaja de la mediana
@@ -166,16 +163,16 @@ No se ve afectada por valores extremos (outliers), a diferencia de la media.
 
 ## La Moda
 
-Es el **valor que mÃ¡s se repite** en el conjunto de datos.
+Es el **valor que más se repite** en el conjunto de datos.
 
-**Ejemplo 1 â€” Unimodal:**
-Dataset: `4, 5, **5**, 6, 7, 8, **8**, **8**, 9` â†’ Mo = **8**
+**Ejemplo 1 — Unimodal:**
+Dataset: `4, 5, **5**, 6, 7, 8, **8**, **8**, 9` → Mo = **8**
 
-**Ejemplo 2 â€” Bimodal:**
-Dataset: `3, **4**, **4**, 5, 6, **7**, **7**, 8` â†’ Mo = **4 y 7**
+**Ejemplo 2 — Bimodal:**
+Dataset: `3, **4**, **4**, 5, 6, **7**, **7**, 8` → Mo = **4 y 7**
 
-**Ejemplo 3 â€” Sin moda:**
-Dataset: `1, 2, 3, 4, 5` â†’ No tiene moda (todos valores Ãºnicos)
+**Ejemplo 3 — Sin moda:**
+Dataset: `1, 2, 3, 4, 5` → No tiene moda (todos valores únicos)
 
 ::: {.callout-note}
 Un dataset puede ser **unimodal**, **bimodal** o **multimodal**.
@@ -183,21 +180,21 @@ Un dataset puede ser **unimodal**, **bimodal** o **multimodal**.
 
 ---
 
-## Medidas de DispersiÃ³n
+## Medidas de Dispersión
 
-Miden la **variabilidad** o **dispersiÃ³n** de los datos alrededor de la media.
+Miden la **variabilidad** o **dispersión** de los datos alrededor de la media.
 
-| Medida | Â¿QuÃ© mide? |
+| Medida | ¿Qué mide? |
 |---|---|
 | **Rango** | Amplitud total (max - min) |
-| **Varianza** | DispersiÃ³n cuadrÃ¡tica promedio |
-| **DesviaciÃ³n EstÃ¡ndar** | DispersiÃ³n promedio (mismas unidades) |
-| **Coef. de VariaciÃ³n** | DispersiÃ³n relativa (%) |
+| **Varianza** | Dispersión cuadrática promedio |
+| **Desviación Estándar** | Dispersión promedio (mismas unidades) |
+| **Coef. de Variación** | Dispersión relativa (%) |
 
 ::: {.highlight-box}
-**Â¿Por quÃ© importa la dispersiÃ³n?**
+**¿Por qué importa la dispersión?**
 Dos grupos pueden tener la misma media pero comportamientos muy distintos.
-Grupo A: `50, 50, 50` | Grupo B: `20, 50, 80` â†’ Ambos con media = 50
+Grupo A: `50, 50, 50` | Grupo B: `20, 50, 80` → Ambos con media = 50
 :::
 
 ---
@@ -210,7 +207,7 @@ $$R = x_{max} - x_{min}$$
 $$s^2 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})^2}{n}$$
 :::
 
-**Ejemplo:** Dataset: `2, 4, 4, 4, 5, 5, 7, 9` â†’ $\bar{x} = 5$
+**Ejemplo:** Dataset: `2, 4, 4, 4, 5, 5, 7, 9` → $\bar{x} = 5$
 
 | $x_i$ | $x_i - \bar{x}$ | $(x_i - \bar{x})^2$ |
 |:---:|:---:|:---:|
@@ -223,7 +220,7 @@ $$s^2 = \frac{9+1+1+1+0+0+4+16}{8} = \frac{32}{8} = 4$$
 
 ---
 
-## DesviaciÃ³n EstÃ¡ndar y Coeficiente de VariaciÃ³n
+## Desviación Estándar y Coeficiente de Variación
 
 ::: {.formula-slide}
 $$s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^{n}(x_i - \bar{x})^2}{n}}$$
@@ -231,48 +228,47 @@ $$s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^{n}(x_i - \bar{x})^2}{n}}$$
 $$CV = \frac{s}{\bar{x}} \times 100\%$$
 :::
 
-Continuando el ejemplo anterior: $s^2 = 4$ â†’ $s = \sqrt{4} = 2$
+Continuando el ejemplo anterior: $s^2 = 4$ → $s = \sqrt{4} = 2$
 
 $$CV = \frac{2}{5} \times 100\% = 40\%$$
 
 ::: {.callout-tip}
-## InterpretaciÃ³n del CV
-- **CV < 15%**: Datos homogÃ©neos (poca dispersiÃ³n)
-- **CV 15-30%**: DispersiÃ³n moderada
-- **CV > 30%**: Datos heterogÃ©neos (alta dispersiÃ³n)
+## Interpretación del CV
+- **CV < 15%**: Datos homogéneos (poca dispersión)
+- **CV 15-30%**: Dispersión moderada
+- **CV > 30%**: Datos heterogéneos (alta dispersión)
 :::
 
 ---
 
-## Resumen de FÃ³rmulas {background-color="#003366" color="white"}
+## Resumen de Fórmulas {background-color="#003366" color="white"}
 
 <br>
 
-| Medida | FÃ³rmula |
+| Medida | Fórmula |
 |---|---|
 | Media | $\bar{x} = \frac{\sum x_i}{n}$ |
 | Varianza | $s^2 = \frac{\sum(x_i - \bar{x})^2}{n}$ |
-| Desv. EstÃ¡ndar | $s = \sqrt{s^2}$ |
-| Coef. VariaciÃ³n | $CV = \frac{s}{\bar{x}} \times 100\%$ |
+| Desv. Estándar | $s = \sqrt{s^2}$ |
+| Coef. Variación | $CV = \frac{s}{\bar{x}} \times 100\%$ |
 | Rango | $R = x_{max} - x_{min}$ |
 
 ---
 
-## PrÃ³xima Semana
+## Próxima Semana
 
 ::: {.highlight-box}
-### Semana 2 â€” Datos Agrupados
-- Â¿CuÃ¡ndo y por quÃ© agrupar datos?
-- Regla de Sturges para determinar el nÃºmero de clases
-- ConstrucciÃ³n de tablas de frecuencias para datos agrupados
+### Semana 2 — Datos Agrupados
+- ¿Cuándo y por qué agrupar datos?
+- Regla de Sturges para determinar el número de clases
+- Construcción de tablas de frecuencias para datos agrupados
 - Media, mediana y moda para datos agrupados
 :::
 
-**PrepÃ¡rese para:** Ejercicios con datasets de 30-50 observaciones usando Python y R.
+**Prepárese para:** Ejercicios con datasets de 30-50 observaciones usando Python y R.
 
 <br>
 
 ::: {.r-fit-text}
-Â¡Hasta la prÃ³xima clase! ðŸ‘‹
+¡Hasta la próxima clase! 👋
 :::
-

@@ -1,18 +1,23 @@
-﻿---
-title: "Semana 5: IntroducciÃ³n a RStudio"
-subtitle: "Entorno, InstalaciÃ³n y Primeros Comandos en R"
+---
+title: "Semana 5: Introducción a RStudio"
+subtitle: "Entorno, Instalación y Primeros Comandos en R"
 author: "Ing. David Minango PhD"
-institute: "ISTER â€” Sistemas y GestiÃ³n de Data"
+institute: "ISTER — Sistemas y Gestión de Data"
 date: "2026"
 format:
   revealjs:
     theme: [default, ../../styles-slides.css]
     slide-number: true
     logo: ../../figures/logos/ister_logo.png
-    footer: "Herramientas EstadÃ­sticas 2026 | Ing. David Minango PhD"
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
     transition: slide
     highlight-style: github
     chalkboard: true
+    width: 1280
+    height: 720
+    margin: 0.04
+    min-scale: 0.1
+    max-scale: 2.0
 include-in-header:
   text: |
     <style>
@@ -23,27 +28,27 @@ include-in-header:
     </style>
 ---
 
-## Â¿Por quÃ© aprender R? {background-color="#003366" color="white"}
+## ¿Por qué aprender R? {background-color="#003366" color="white"}
 
 :::: {.columns}
 ::: {.column width="60%"}
 - **Gratuito y open source**
-- DiseÃ±ado especÃ­ficamente para **estadÃ­stica y anÃ¡lisis de datos**
+- Diseñado específicamente para **estadística y análisis de datos**
 - Enorme comunidad y repositorio de paquetes (**CRAN**: 20,000+ paquetes)
-- EstÃ¡ndar en academia, investigaciÃ³n y ciencia de datos
+- Estándar en academia, investigación y ciencia de datos
 - Excelente para visualizaciones (ggplot2)
-- IntegraciÃ³n con Python, SQL, y mÃ¡s
+- Integración con Python, SQL, y más
 :::
 
 ::: {.column width="40%"}
 ```
 R es el lenguaje de los
-estadÃ­sticos. Si quieres
+estadísticos. Si quieres
 hablar el idioma de los
 datos, necesitas R.
 ```
 
-ðŸ† Empresas que usan R:
+🏆 Empresas que usan R:
 - Google
 - Facebook/Meta
 - Airbnb
@@ -53,24 +58,24 @@ datos, necesitas R.
 
 ---
 
-## R vs Python para EstadÃ­stica
+## R vs Python para Estadística
 
-| CaracterÃ­stica | R | Python |
+| Característica | R | Python |
 |---|:---:|:---:|
-| EstadÃ­stica nativa | â­â­â­ | â­â­ |
-| VisualizaciÃ³n | â­â­â­ | â­â­â­ |
-| Machine Learning | â­â­ | â­â­â­ |
+| Estadística nativa | ⭐⭐⭐ | ⭐⭐ |
+| Visualización | ⭐⭐⭐ | ⭐⭐⭐ |
+| Machine Learning | ⭐⭐ | ⭐⭐⭐ |
 | Curva de aprendizaje | Media | Media |
-| Comunidad estadÃ­stica | â­â­â­ | â­â­ |
-| Datos tabulares | â­â­â­ | â­â­â­ |
+| Comunidad estadística | ⭐⭐⭐ | ⭐⭐ |
+| Datos tabulares | ⭐⭐⭐ | ⭐⭐⭐ |
 
 ::: {.highlight-box}
-**En este curso:** Usamos **ambos**. R para anÃ¡lisis estadÃ­stico formal, Python para automatizaciÃ³n y machine learning. Â¡Son complementarios!
+**En este curso:** Usamos **ambos**. R para análisis estadístico formal, Python para automatización y machine learning. ¡Son complementarios!
 :::
 
 ---
 
-## InstalaciÃ³n
+## Instalación
 
 **Paso 1:** Instalar R base
 - Descargar de: **cran.r-project.org**
@@ -79,10 +84,10 @@ datos, necesitas R.
 
 **Paso 2:** Instalar RStudio
 - Descargar de: **posit.co/download/rstudio-desktop/**
-- Instalar la versiÃ³n Desktop gratuita
+- Instalar la versión Desktop gratuita
 
 ::: {.callout-note}
-RStudio es un **IDE** (entorno de desarrollo integrado) que hace que trabajar con R sea mucho mÃ¡s cÃ³modo. No es R en sÃ­, sino la interfaz para usarlo.
+RStudio es un **IDE** (entorno de desarrollo integrado) que hace que trabajar con R sea mucho más cómodo. No es R en sí, sino la interfaz para usarlo.
 :::
 
 ---
@@ -92,19 +97,19 @@ RStudio es un **IDE** (entorno de desarrollo integrado) que hace que trabajar co
 La pantalla de RStudio tiene **4 paneles**:
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                     â”‚                     â”‚
-â”‚    Editor de        â”‚   Environment /     â”‚
-â”‚    Scripts          â”‚   History           â”‚
-â”‚    (arriba izq.)    â”‚   (arriba der.)     â”‚
-â”‚                     â”‚                     â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                     â”‚                     â”‚
-â”‚    Consola          â”‚   Files / Plots /   â”‚
-â”‚    (abajo izq.)     â”‚   Packages / Help   â”‚
-â”‚                     â”‚   (abajo der.)      â”‚
-â”‚                     â”‚                     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────┬─────────────────────┐
+│                     │                     │
+│    Editor de        │   Environment /     │
+│    Scripts          │   History           │
+│    (arriba izq.)    │   (arriba der.)     │
+│                     │                     │
+├─────────────────────┼─────────────────────┤
+│                     │                     │
+│    Consola          │   Files / Plots /   │
+│    (abajo izq.)     │   Packages / Help   │
+│                     │   (abajo der.)      │
+│                     │                     │
+└─────────────────────┴─────────────────────┘
 ```
 
 ---
@@ -114,9 +119,9 @@ La pantalla de RStudio tiene **4 paneles**:
 :::: {.columns}
 ::: {.column width="50%"}
 ### Panel 1: Editor (Scripts)
-- AquÃ­ escribe su cÃ³digo
+- Aquí escribe su código
 - Se guarda como archivo `.R`
-- **Ctrl+Enter** para ejecutar lÃ­nea
+- **Ctrl+Enter** para ejecutar línea
 - **Ctrl+Shift+Enter** para ejecutar todo
 :::
 
@@ -132,16 +137,16 @@ La pantalla de RStudio tiene **4 paneles**:
 ::: {.column width="50%"}
 ### Panel 3: Consola
 - Ejecuta R en tiempo real
-- Resultados aparecen aquÃ­
-- TambiÃ©n puede escribir directamente
+- Resultados aparecen aquí
+- También puede escribir directamente
 :::
 
 ::: {.column width="50%"}
 ### Panel 4: Files/Plots/Help
 - **Files**: navegador de archivos
-- **Plots**: grÃ¡ficos generados
+- **Plots**: gráficos generados
 - **Packages**: paquetes instalados
-- **Help**: documentaciÃ³n
+- **Help**: documentación
 :::
 ::::
 
@@ -150,9 +155,9 @@ La pantalla de RStudio tiene **4 paneles**:
 ## Primeros Comandos en R
 
 ```r
-# Esto es un comentario (R ignora las lÃ­neas que empiezan con #)
+# Esto es un comentario (R ignora las líneas que empiezan con #)
 
-# Operaciones bÃ¡sicas
+# Operaciones básicas
 2 + 3        # 5
 10 - 4       # 6
 3 * 7        # 21
@@ -165,7 +170,7 @@ log10(100)   # 2 (logaritmo base 10)
 ```
 
 ::: {.highlight-box}
-En R, el operador de asignaciÃ³n es `<-` (aunque `=` tambiÃ©n funciona):
+En R, el operador de asignación es `<-` (aunque `=` también funciona):
 ```r
 x <- 10
 y <- 5
@@ -178,7 +183,7 @@ x + y  # 15
 ## Tipos de Datos en R
 
 ```r
-# Numeric (numÃ©rico)
+# Numeric (numérico)
 edad    <- 25L         # entero (integer)
 salario <- 1500.50     # decimal (double)
 
@@ -186,7 +191,7 @@ salario <- 1500.50     # decimal (double)
 nombre  <- "David"
 ciudad  <- 'Quito'
 
-# Logical (lÃ³gico)
+# Logical (lógico)
 activo  <- TRUE
 inactivo <- FALSE
 
@@ -221,31 +226,31 @@ library(ggplot2)
 # Ver todos los paquetes instalados
 installed.packages()[, "Package"]
 
-# Obtener ayuda sobre un paquete o funciÃ³n
+# Obtener ayuda sobre un paquete o función
 ?dplyr
 help("mean")
 ?ggplot2
 ```
 
 ::: {.callout-tip}
-Los paquetes mÃ¡s importantes para este curso:
-- **`dplyr`** â€” manipulaciÃ³n de datos
-- **`ggplot2`** â€” visualizaciÃ³n
-- **`readxl`** â€” importar Excel
-- **`tidyr`** â€” limpieza de datos
+Los paquetes más importantes para este curso:
+- **`dplyr`** — manipulación de datos
+- **`ggplot2`** — visualización
+- **`readxl`** — importar Excel
+- **`tidyr`** — limpieza de datos
 :::
 
 ---
 
 ## R Comparado con lo que ya conoce
 
-Si ya sabe Python, R le resultarÃ¡ familiar:
+Si ya sabe Python, R le resultará familiar:
 
 | Concepto | Python | R |
 |---|---|---|
 | Lista/Vector | `[1, 2, 3]` | `c(1, 2, 3)` |
 | Comentario | `# texto` | `# texto` |
-| AsignaciÃ³n | `x = 5` | `x <- 5` |
+| Asignación | `x = 5` | `x <- 5` |
 | Imprimir | `print(x)` | `print(x)` o `cat(x)` |
 | Longitud | `len(x)` | `length(x)` |
 | Suma | `sum(x)` | `sum(x)` |
@@ -254,14 +259,14 @@ Si ya sabe Python, R le resultarÃ¡ familiar:
 
 ---
 
-## PrÃ³xima Clase {background-color="#003366" color="white"}
+## Próxima Clase {background-color="#003366" color="white"}
 
 ::: {.highlight-box}
-### Semana 6 â€” Primeros Pasos en R
+### Semana 6 — Primeros Pasos en R
 - **Vectores**: la estructura de datos fundamental en R
 - **Matrices** y operaciones matriciales
 - **Data Frames**: el equivalente de una tabla en R
-- **Funciones de estadÃ­stica descriptiva** con R
+- **Funciones de estadística descriptiva** con R
 :::
 
 **Prepare su computadora:**
@@ -269,5 +274,4 @@ Si ya sabe Python, R le resultarÃ¡ familiar:
 2. Instale RStudio desde posit.co
 3. Abra RStudio y ejecute: `print("Hola R!")`
 
-Â¡En la prÃ³xima clase empezamos a programar! ðŸ’»
-
+¡En la próxima clase empezamos a programar! 💻
