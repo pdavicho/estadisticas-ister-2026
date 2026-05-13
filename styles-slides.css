@@ -1,55 +1,107 @@
 /*-- scss:rules --*/
 /* Estilos para presentaciones Reveal.js — ISTER 2026 */
 
+/* Fuente base reducida para que los slides se vean bien embebidos */
 .reveal {
   font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 26px !important;  /* Reveal.js default: 42px — demasiado grande al embebir */
 }
 
-.reveal h1, .reveal h2, .reveal h3 {
+/* Títulos proporcionalmente ajustados */
+.reveal h1 {
   color: #003366;
   font-weight: 700;
+  font-size: 1.7em !important;
+  line-height: 1.2;
 }
 
-.reveal .slide-number {
-  font-size: 14px;
-  color: #666;
+.reveal h2 {
+  color: #003366;
+  font-weight: 700;
+  font-size: 1.3em !important;
+  line-height: 1.3;
 }
 
-.reveal .footer {
-  font-size: 13px;
-  color: #888;
+.reveal h3 {
+  color: #003366;
+  font-weight: 600;
+  font-size: 1.05em !important;
 }
 
+/* Texto y listas más compactos */
+.reveal p {
+  line-height: 1.5;
+  margin: 0.4em 0;
+}
+
+.reveal ul, .reveal ol {
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+.reveal li {
+  margin-bottom: 0.2em;
+}
+
+/* Código más compacto */
 .reveal pre code {
-  font-size: 0.75em;
-  max-height: 500px;
+  font-size: 0.62em !important;
+  max-height: 420px;
+  line-height: 1.4;
 }
 
+.reveal code {
+  font-size: 0.8em;
+}
+
+/* Tablas compactas */
 .reveal table {
-  font-size: 0.82em;
+  font-size: 0.72em !important;
   border-collapse: collapse;
+  margin: 0 auto;
 }
 
 .reveal table th {
   background-color: #003366;
   color: white;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.95em;
 }
 
 .reveal table td {
-  padding: 0.4rem 0.8rem;
+  padding: 0.3rem 0.7rem;
   border-bottom: 1px solid #eee;
 }
 
-.reveal .callout {
-  border-radius: 6px;
-  padding: 0.8rem 1rem;
-  margin: 0.5rem 0;
+/* Número de diapositiva y footer pequeños */
+.reveal .slide-number {
+  font-size: 12px;
+  color: #666;
 }
 
+.reveal .footer {
+  font-size: 11px;
+  color: #888;
+}
+
+/* Callouts y cajas */
+.reveal .callout {
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  margin: 0.4rem 0;
+  font-size: 0.88em;
+}
+
+/* Cita */
 .reveal blockquote {
   border-left: 4px solid #f0a500;
-  padding-left: 1rem;
+  padding-left: 0.9rem;
   font-style: italic;
   color: #555;
+  font-size: 0.9em;
+}
+
+/* Columnas con menos margen */
+.reveal .columns {
+  gap: 1rem;
 }
