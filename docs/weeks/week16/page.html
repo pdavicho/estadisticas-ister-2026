@@ -109,23 +109,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 <script>
 (function() {
-  var currentPage = window.location.pathname;
-  // No proteger la página de login ni recursos estáticos
-  if (currentPage.endsWith('login.html') ||
-      currentPage.endsWith('.css') ||
-      currentPage.endsWith('.js') ||
-      currentPage.endsWith('.png') ||
-      currentPage.endsWith('.jpg')) {
+  var path = window.location.pathname;
+
+  // No proteger login ni recursos estáticos
+  if (path.indexOf('login.html') !== -1 ||
+      /\.(css|js|png|jpg|woff2?|ttf|eot|ico|svg|json|map)$/i.test(path)) {
     return;
   }
+
   var token = sessionStorage.getItem('HE_auth_token');
-  if (!token || token !== 'HEstadisticas_Ister_2026') {
-    // Calcular la ruta relativa a login.html
-    var depth = (currentPage.match(/\//g) || []).length;
-    var prefix = '';
-    for (var i = 0; i < depth - 1; i++) { prefix += '../'; }
-    window.location.replace(prefix + 'login.html');
-  }
+  if (token === 'HEstadisticas_Ister_2026') return;
+
+  // Calcular ruta absoluta a login.html
+  // GitHub Pages proyecto: /repo-name/path/to/page.html  → root en /repo-name/
+  // Local / raíz:          /path/to/page.html            → root en /
+  var segments = path.split('/');
+  // segments[0] siempre '' (antes del primer /)
+  // segments[1] = repo name en GitHub Pages proyecto, o primer directorio
+  // segments[N] = filename
+
+  var isGitHubPages = window.location.hostname.endsWith('.github.io');
+  // En project pages el repo ocupa segments[1], así que el sitio empieza en segments[2]
+  var siteDepth = isGitHubPages ? 2 : 1;
+
+  // Nivel del archivo dentro del sitio (cuántos directorios hay que subir)
+  var fileDepth = segments.length - 1 - siteDepth; // descontamos '' + repo + filename
+  if (fileDepth < 0) fileDepth = 0;
+
+  var goUp = '';
+  for (var i = 0; i < fileDepth; i++) { goUp += '../'; }
+
+  window.location.replace(goUp + 'login.html');
 })();
 </script>
 
