@@ -1,5 +1,4 @@
-# Quarto build output — se genera con quarto render
-_site/
+# Quarto temp files (el output va en docs/)
 .quarto/
 
 # Archivos temporales
@@ -14,3 +13,6 @@ Thumbs.db
 
 # Claude Code settings locales
 .claude/
+
+/.quarto/
+**/*.quarto_ipynb
