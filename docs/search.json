@@ -192,74 +192,81 @@
     ]
   },
   {
+    "objectID": "weeks/week06/slides.html",
+    "href": "weeks/week06/slides.html",
+    "title": "Semana 6: Primeros Pasos en R",
+    "section": "",
+    "text": "R tiene 4 estructuras principales:\n\n\n\nEstructura\nDimensiones\nTipos\nEjemplo\n\n\n\n\nVector\n1D\nUn solo tipo\nc(1, 2, 3)\n\n\nMatriz\n2D\nUn solo tipo\nmatrix(1:9, 3, 3)\n\n\nData Frame\n2D\nMÃºltiples tipos\ntabla de datos\n\n\nLista\nnD\nCualquier tipo\nlist(1, \"a\", TRUE)"
+  },
+  {
     "objectID": "weeks/week06/slides.html#estructuras-de-datos-en-r",
     "href": "weeks/week06/slides.html#estructuras-de-datos-en-r",
     "title": "Semana 6: Primeros Pasos en R",
-    "section": "Estructuras de Datos en R",
-    "text": "Estructuras de Datos en R\nR tiene 4 estructuras principales:\n\n\n\nEstructura\nDimensiones\nTipos\nEjemplo\n\n\n\n\nVector\n1D\nUn solo tipo\nc(1, 2, 3)\n\n\nMatriz\n2D\nUn solo tipo\nmatrix(1:9, 3, 3)\n\n\nData Frame\n2D\nMúltiples tipos\ntabla de datos\n\n\nLista\nnD\nCualquier tipo\nlist(1, \"a\", TRUE)"
+    "section": "",
+    "text": "R tiene 4 estructuras principales:\n\n\n\nEstructura\nDimensiones\nTipos\nEjemplo\n\n\n\n\nVector\n1D\nUn solo tipo\nc(1, 2, 3)\n\n\nMatriz\n2D\nUn solo tipo\nmatrix(1:9, 3, 3)\n\n\nData Frame\n2D\nMÃºltiples tipos\ntabla de datos\n\n\nLista\nnD\nCualquier tipo\nlist(1, \"a\", TRUE)"
   },
   {
     "objectID": "weeks/week06/slides.html#vectores",
     "href": "weeks/week06/slides.html#vectores",
     "title": "Semana 6: Primeros Pasos en R",
     "section": "Vectores",
-    "text": "Vectores\nLa estructura más fundamental de R:\n# Crear vectores\nnumeros  &lt;- c(1, 2, 3, 4, 5)\nletras   &lt;- c(\"a\", \"b\", \"c\")\nlogicos  &lt;- c(TRUE, FALSE, TRUE)\n\n# Secuencias\nsecuencia1 &lt;- 1:10           # 1 2 3 4 5 6 7 8 9 10\nsecuencia2 &lt;- seq(0, 1, 0.2) # 0.0 0.2 0.4 0.6 0.8 1.0\nrepeticion &lt;- rep(5, times=3) # 5 5 5\n\n# Acceder a elementos (R empieza en 1!)\nnumeros[1]       # 1 (primer elemento)\nnumeros[3:5]     # 3 4 5\nnumeros[c(1,3)]  # 1 3 (elementos 1 y 3)\nnumeros[-2]      # 1 3 4 5 (todo excepto el 2do)"
+    "text": "Vectores\nLa estructura mÃ¡s fundamental de R:\n# Crear vectores\nnumeros  &lt;- c(1, 2, 3, 4, 5)\nletras   &lt;- c(\"a\", \"b\", \"c\")\nlogicos  &lt;- c(TRUE, FALSE, TRUE)\n\n# Secuencias\nsecuencia1 &lt;- 1:10           # 1 2 3 4 5 6 7 8 9 10\nsecuencia2 &lt;- seq(0, 1, 0.2) # 0.0 0.2 0.4 0.6 0.8 1.0\nrepeticion &lt;- rep(5, times=3) # 5 5 5\n\n# Acceder a elementos (R empieza en 1!)\nnumeros[1]       # 1 (primer elemento)\nnumeros[3:5]     # 3 4 5\nnumeros[c(1,3)]  # 1 3 (elementos 1 y 3)\nnumeros[-2]      # 1 3 4 5 (todo excepto el 2do)"
   },
   {
     "objectID": "weeks/week06/slides.html#operaciones-con-vectores",
     "href": "weeks/week06/slides.html#operaciones-con-vectores",
     "title": "Semana 6: Primeros Pasos en R",
     "section": "Operaciones con Vectores",
-    "text": "Operaciones con Vectores\nx &lt;- c(10, 20, 30, 40, 50)\ny &lt;- c(1, 2, 3, 4, 5)\n\n# Operaciones elemento a elemento\nx + y   # 11 22 33 44 55\nx * y   # 10 40 90 160 250\nx / y   # 10 10 10 10 10\nx^2     # 100 400 900 1600 2500\n\n# Funciones estadísticas sobre vectores\nsum(x)      # 150\nmean(x)     # 30\nmedian(x)   # 30\nsd(x)       # 15.81 (muestral)\nvar(x)      # 250 (muestral)\nrange(x)    # 10 50\ndiff(range(x)) # 40 (rango estadístico)\ncumsum(x)   # 10 30 60 100 150"
+    "text": "Operaciones con Vectores\nx &lt;- c(10, 20, 30, 40, 50)\ny &lt;- c(1, 2, 3, 4, 5)\n\n# Operaciones elemento a elemento\nx + y   # 11 22 33 44 55\nx * y   # 10 40 90 160 250\nx / y   # 10 10 10 10 10\nx^2     # 100 400 900 1600 2500\n\n# Funciones estadÃ­sticas sobre vectores\nsum(x)      # 150\nmean(x)     # 30\nmedian(x)   # 30\nsd(x)       # 15.81 (muestral)\nvar(x)      # 250 (muestral)\nrange(x)    # 10 50\ndiff(range(x)) # 40 (rango estadÃ­stico)\ncumsum(x)   # 10 30 60 100 150"
   },
   {
-    "objectID": "weeks/week06/slides.html#filtros-lógicos-subsetting",
-    "href": "weeks/week06/slides.html#filtros-lógicos-subsetting",
+    "objectID": "weeks/week06/slides.html#filtros-lã³gicos-subsetting",
+    "href": "weeks/week06/slides.html#filtros-lã³gicos-subsetting",
     "title": "Semana 6: Primeros Pasos en R",
-    "section": "Filtros Lógicos (Subsetting)",
-    "text": "Filtros Lógicos (Subsetting)\nnotas &lt;- c(85, 45, 92, 67, 78, 55, 91, 88)\n\n# Filtros con operadores lógicos\nnotas[notas &gt;= 70]            # Solo aprobados\nnotas[notas &lt; 70]             # Solo reprobados\nnotas[notas &gt; 60 & notas &lt; 90] # Entre 60 y 90\n\n# which() devuelve índices que cumplen condición\nwhich(notas &gt;= 70)            # posiciones de aprobados\nwhich.max(notas)              # posición del máximo\nwhich.min(notas)              # posición del mínimo\n\n# Tabla de frecuencias\ntable(notas &gt;= 70)\n# FALSE  TRUE\n#     2     6"
+    "section": "Filtros LÃ³gicos (Subsetting)",
+    "text": "Filtros LÃ³gicos (Subsetting)\nnotas &lt;- c(85, 45, 92, 67, 78, 55, 91, 88)\n\n# Filtros con operadores lÃ³gicos\nnotas[notas &gt;= 70]            # Solo aprobados\nnotas[notas &lt; 70]             # Solo reprobados\nnotas[notas &gt; 60 & notas &lt; 90] # Entre 60 y 90\n\n# which() devuelve Ã­ndices que cumplen condiciÃ³n\nwhich(notas &gt;= 70)            # posiciones de aprobados\nwhich.max(notas)              # posiciÃ³n del mÃ¡ximo\nwhich.min(notas)              # posiciÃ³n del mÃ­nimo\n\n# Tabla de frecuencias\ntable(notas &gt;= 70)\n# FALSE  TRUE\n#     2     6"
   },
   {
     "objectID": "weeks/week06/slides.html#matrices",
     "href": "weeks/week06/slides.html#matrices",
     "title": "Semana 6: Primeros Pasos en R",
     "section": "Matrices",
-    "text": "Matrices\n# Crear una matriz 3x3\nM &lt;- matrix(1:9, nrow=3, ncol=3, byrow=TRUE)\n#      [,1] [,2] [,3]\n# [1,]    1    2    3\n# [2,]    4    5    6\n# [3,]    7    8    9\n\n# Acceder a elementos\nM[1, 2]    # fila 1, columna 2 → 2\nM[2, ]     # toda la fila 2\nM[, 3]     # toda la columna 3\n\n# Operaciones\nt(M)         # transpuesta\nM %*% M      # multiplicación matricial\napply(M, 1, sum) # suma por filas\napply(M, 2, mean) # media por columnas"
+    "text": "Matrices\n# Crear una matriz 3x3\nM &lt;- matrix(1:9, nrow=3, ncol=3, byrow=TRUE)\n#      [,1] [,2] [,3]\n# [1,]    1    2    3\n# [2,]    4    5    6\n# [3,]    7    8    9\n\n# Acceder a elementos\nM[1, 2]    # fila 1, columna 2 â†’ 2\nM[2, ]     # toda la fila 2\nM[, 3]     # toda la columna 3\n\n# Operaciones\nt(M)         # transpuesta\nM %*% M      # multiplicaciÃ³n matricial\napply(M, 1, sum) # suma por filas\napply(M, 2, mean) # media por columnas"
   },
   {
     "objectID": "weeks/week06/slides.html#data-frames",
     "href": "weeks/week06/slides.html#data-frames",
     "title": "Semana 6: Primeros Pasos en R",
     "section": "Data Frames",
-    "text": "Data Frames\nEl equivalente de una tabla de datos (como una hoja de Excel):\n# Crear un data frame\nestudiantes &lt;- data.frame(\n  nombre = c(\"Ana\", \"Carlos\", \"María\", \"Juan\", \"Sofía\"),\n  nota   = c(92, 78, 85, 67, 91),\n  ciudad = c(\"Quito\", \"Guayaquil\", \"Quito\", \"Cuenca\", \"Guayaquil\"),\n  aprobado = c(TRUE, TRUE, TRUE, FALSE, TRUE)\n)\n\n# Explorar el data frame\nhead(estudiantes)        # primeras 6 filas\nstr(estudiantes)         # estructura\nsummary(estudiantes)     # resumen estadístico\nnrow(estudiantes)        # número de filas\nncol(estudiantes)        # número de columnas\nnames(estudiantes)       # nombres de columnas"
+    "text": "Data Frames\nEl equivalente de una tabla de datos (como una hoja de Excel):\n# Crear un data frame\nestudiantes &lt;- data.frame(\n  nombre = c(\"Ana\", \"Carlos\", \"MarÃ­a\", \"Juan\", \"SofÃ­a\"),\n  nota   = c(92, 78, 85, 67, 91),\n  ciudad = c(\"Quito\", \"Guayaquil\", \"Quito\", \"Cuenca\", \"Guayaquil\"),\n  aprobado = c(TRUE, TRUE, TRUE, FALSE, TRUE)\n)\n\n# Explorar el data frame\nhead(estudiantes)        # primeras 6 filas\nstr(estudiantes)         # estructura\nsummary(estudiantes)     # resumen estadÃ­stico\nnrow(estudiantes)        # nÃºmero de filas\nncol(estudiantes)        # nÃºmero de columnas\nnames(estudiantes)       # nombres de columnas"
   },
   {
     "objectID": "weeks/week06/slides.html#acceder-a-columnas-de-data-frames",
     "href": "weeks/week06/slides.html#acceder-a-columnas-de-data-frames",
     "title": "Semana 6: Primeros Pasos en R",
     "section": "Acceder a Columnas de Data Frames",
-    "text": "Acceder a Columnas de Data Frames\n# Tres formas de acceder a una columna\nestudiantes$nota          # con $\nestudiantes[, \"nota\"]     # con nombre entre comillas\nestudiantes[, 2]          # con número de columna\n\n# Filtrar filas\nestudiantes[estudiantes$nota &gt;= 80, ]     # aprobados con nota &gt;= 80\nestudiantes[estudiantes$ciudad == \"Quito\", ]  # solo de Quito\n\n# Agregar nuevas columnas\nestudiantes$nota_letra &lt;- ifelse(estudiantes$nota &gt;= 90, \"A\",\n                          ifelse(estudiantes$nota &gt;= 80, \"B\",\n                          ifelse(estudiantes$nota &gt;= 70, \"C\", \"F\")))\n\n# Ver resultado\nprint(estudiantes)"
+    "text": "Acceder a Columnas de Data Frames\n# Tres formas de acceder a una columna\nestudiantes$nota          # con $\nestudiantes[, \"nota\"]     # con nombre entre comillas\nestudiantes[, 2]          # con nÃºmero de columna\n\n# Filtrar filas\nestudiantes[estudiantes$nota &gt;= 80, ]     # aprobados con nota &gt;= 80\nestudiantes[estudiantes$ciudad == \"Quito\", ]  # solo de Quito\n\n# Agregar nuevas columnas\nestudiantes$nota_letra &lt;- ifelse(estudiantes$nota &gt;= 90, \"A\",\n                          ifelse(estudiantes$nota &gt;= 80, \"B\",\n                          ifelse(estudiantes$nota &gt;= 70, \"C\", \"F\")))\n\n# Ver resultado\nprint(estudiantes)"
   },
   {
-    "objectID": "weeks/week06/slides.html#funciones-estadísticas-clave",
-    "href": "weeks/week06/slides.html#funciones-estadísticas-clave",
+    "objectID": "weeks/week06/slides.html#funciones-estadãsticas-clave",
+    "href": "weeks/week06/slides.html#funciones-estadãsticas-clave",
     "title": "Semana 6: Primeros Pasos en R",
-    "section": "Funciones Estadísticas Clave",
-    "text": "Funciones Estadísticas Clave\nx &lt;- c(85, 45, 92, 67, 78, 55, 91, 88, 72, 80)\n\n# Estadísticas básicas\nmean(x)          # media\nmedian(x)        # mediana\nsd(x)            # desv. estándar muestral\nvar(x)           # varianza muestral\nrange(x)         # min y max\nquantile(x)      # cuartiles\nquantile(x, 0.9) # percentil 90\ncor(x, y)        # correlación entre dos vectores\nsummary(x)       # todo en uno\n\n# Tabla de frecuencias\ntable(cut(x, breaks=5))  # frecuencias en 5 clases"
+    "section": "Funciones EstadÃ­sticas Clave",
+    "text": "Funciones EstadÃ­sticas Clave\nx &lt;- c(85, 45, 92, 67, 78, 55, 91, 88, 72, 80)\n\n# EstadÃ­sticas bÃ¡sicas\nmean(x)          # media\nmedian(x)        # mediana\nsd(x)            # desv. estÃ¡ndar muestral\nvar(x)           # varianza muestral\nrange(x)         # min y max\nquantile(x)      # cuartiles\nquantile(x, 0.9) # percentil 90\ncor(x, y)        # correlaciÃ³n entre dos vectores\nsummary(x)       # todo en uno\n\n# Tabla de frecuencias\ntable(cut(x, breaks=5))  # frecuencias en 5 clases"
   },
   {
     "objectID": "weeks/week06/slides.html#apply-sapply-lapply",
     "href": "weeks/week06/slides.html#apply-sapply-lapply",
     "title": "Semana 6: Primeros Pasos en R",
     "section": "apply, sapply, lapply",
-    "text": "apply, sapply, lapply\n# Datos de notas por materia\nmaterias &lt;- list(\n  Python = c(88, 75, 92, 68, 85),\n  R      = c(90, 82, 88, 75, 93),\n  BD     = c(78, 85, 70, 88, 82)\n)\n\n# sapply aplica una función a cada elemento de la lista\n# y devuelve un vector o matriz\nsapply(materias, mean)   # media de cada materia\nsapply(materias, sd)     # desv. std de cada materia\nsapply(materias, function(x) max(x) - min(x))  # rango\nOutput:\n     Python    R       BD\nmean 81.6     85.6    80.6\nsd   9.23...  7.40... 7.09..."
+    "text": "apply, sapply, lapply\n# Datos de notas por materia\nmaterias &lt;- list(\n  Python = c(88, 75, 92, 68, 85),\n  R      = c(90, 82, 88, 75, 93),\n  BD     = c(78, 85, 70, 88, 82)\n)\n\n# sapply aplica una funciÃ³n a cada elemento de la lista\n# y devuelve un vector o matriz\nsapply(materias, mean)   # media de cada materia\nsapply(materias, sd)     # desv. std de cada materia\nsapply(materias, function(x) max(x) - min(x))  # rango\nOutput:\n     Python    R       BD\nmean 81.6     85.6    80.6\nsd   9.23...  7.40... 7.09..."
   },
   {
-    "objectID": "weeks/week06/slides.html#próxima-semana",
-    "href": "weeks/week06/slides.html#próxima-semana",
+    "objectID": "weeks/week06/slides.html#prã³xima-semana",
+    "href": "weeks/week06/slides.html#prã³xima-semana",
     "title": "Semana 6: Primeros Pasos en R",
-    "section": "Próxima Semana",
-    "text": "Próxima Semana\n\nSemana 7 — Gestión de Datos en R (APP 2)\n\nImportar datos desde CSV y Excel\nLimpieza y transformación con dplyr\nfilter(), select(), mutate(), group_by(), summarise()\nAnálisis estadístico descriptivo completo de un dataset real\n\n\nEsta es la semana de la práctica experimental APP 2 (8 horas). Prepárese para un análisis intensivo con datos reales de problemas sociales."
+    "section": "PrÃ³xima Semana",
+    "text": "PrÃ³xima Semana\n\nSemana 7 â€” GestiÃ³n de Datos en R (APP 2)\n\nImportar datos desde CSV y Excel\nLimpieza y transformaciÃ³n con dplyr\nfilter(), select(), mutate(), group_by(), summarise()\nAnÃ¡lisis estadÃ­stico descriptivo completo de un dataset real\n\n\nEsta es la semana de la prÃ¡ctica experimental APP 2 (8 horas). PrepÃ¡rese para un anÃ¡lisis intensivo con datos reales de problemas sociales."
   },
   {
     "objectID": "weeks/week06/lab.html",
@@ -418,67 +425,74 @@
     ]
   },
   {
-    "objectID": "weeks/week04/slides.html#de-la-estadística-descriptiva-a-la-probabilidad",
-    "href": "weeks/week04/slides.html#de-la-estadística-descriptiva-a-la-probabilidad",
+    "objectID": "weeks/week04/slides.html",
+    "href": "weeks/week04/slides.html",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
-    "section": "De la Estadística Descriptiva a la Probabilidad",
-    "text": "De la Estadística Descriptiva a la Probabilidad\nHasta ahora: Describimos datos que ya tenemos (pasado) - Media, mediana, moda, varianza, desviación estándar\nAhora: Modelamos lo que puede ocurrir (futuro) - ¿Cuál es la probabilidad de que un servidor falle mañana? - ¿Qué tan probable es que un estudiante apruebe?\n\nLa probabilidad es el lenguaje matemático de la incertidumbre."
+    "section": "",
+    "text": "Hasta ahora: Describimos datos que ya tenemos (pasado) - Media, mediana, moda, varianza, desviaciÃ³n estÃ¡ndar\nAhora: Modelamos lo que puede ocurrir (futuro) - Â¿CuÃ¡l es la probabilidad de que un servidor falle maÃ±ana? - Â¿QuÃ© tan probable es que un estudiante apruebe?\n\nLa probabilidad es el lenguaje matemÃ¡tico de la incertidumbre."
+  },
+  {
+    "objectID": "weeks/week04/slides.html#de-la-estadãstica-descriptiva-a-la-probabilidad",
+    "href": "weeks/week04/slides.html#de-la-estadãstica-descriptiva-a-la-probabilidad",
+    "title": "Semana 4: Variables Aleatorias y Probabilidad",
+    "section": "",
+    "text": "Hasta ahora: Describimos datos que ya tenemos (pasado) - Media, mediana, moda, varianza, desviaciÃ³n estÃ¡ndar\nAhora: Modelamos lo que puede ocurrir (futuro) - Â¿CuÃ¡l es la probabilidad de que un servidor falle maÃ±ana? - Â¿QuÃ© tan probable es que un estudiante apruebe?\n\nLa probabilidad es el lenguaje matemÃ¡tico de la incertidumbre."
   },
   {
     "objectID": "weeks/week04/slides.html#variable-aleatoria",
     "href": "weeks/week04/slides.html#variable-aleatoria",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
     "section": "Variable Aleatoria",
-    "text": "Variable Aleatoria\nUna variable aleatoria (V.A.) es una función que asigna un valor numérico a cada resultado posible de un experimento aleatorio.\n\n\nDiscreta\nToma valores contables (enteros)\nEjemplos: - X = número de bugs en un código - X = número de llamadas por hora - X = resultado al lanzar un dado\nValores posibles: {0, 1, 2, 3, …}\n\nContinua\nToma cualquier valor en un intervalo\nEjemplos: - X = tiempo de respuesta de un servidor - X = temperatura del CPU - X = peso de un archivo (MB)\nValores posibles: [0, ∞)"
+    "text": "Variable Aleatoria\nUna variable aleatoria (V.A.) es una funciÃ³n que asigna un valor numÃ©rico a cada resultado posible de un experimento aleatorio.\n\n\n\nDiscreta\nToma valores contables (enteros)\nEjemplos: - X = nÃºmero de bugs en un cÃ³digo - X = nÃºmero de llamadas por hora - X = resultado al lanzar un dado\nValores posibles: {0, 1, 2, 3, …}\n\n\n\nContinua\nToma cualquier valor en un intervalo\nEjemplos: - X = tiempo de respuesta de un servidor - X = temperatura del CPU - X = peso de un archivo (MB)\nValores posibles: [0, âˆž)"
   },
   {
-    "objectID": "weeks/week04/slides.html#función-de-probabilidad-variable-discreta",
-    "href": "weeks/week04/slides.html#función-de-probabilidad-variable-discreta",
+    "objectID": "weeks/week04/slides.html#funciã³n-de-probabilidad-variable-discreta",
+    "href": "weeks/week04/slides.html#funciã³n-de-probabilidad-variable-discreta",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
-    "section": "Función de Probabilidad (Variable Discreta)",
-    "text": "Función de Probabilidad (Variable Discreta)\nPara una variable discreta X, la función \\(P(X = x)\\) debe cumplir:\n\n\\[\\sum_{x} P(X = x) = 1 \\quad \\text{y} \\quad P(X = x) \\geq 0 \\text{ para todo } x\\]\n\nEjemplo: X = número de errores en una línea de código\n\n\n\nX\n0\n1\n2\n3\n4\n\n\n\n\nP(X=x)\n0.40\n0.30\n0.20\n0.07\n0.03\n\n\n\nVerificación: \\(0.40 + 0.30 + 0.20 + 0.07 + 0.03 = 1.00\\) ✅"
+    "section": "FunciÃ³n de Probabilidad (Variable Discreta)",
+    "text": "FunciÃ³n de Probabilidad (Variable Discreta)\nPara una variable discreta X, la funciÃ³n \\(P(X = x)\\) debe cumplir:\n\n\\[\\sum_{x} P(X = x) = 1 \\quad \\text{y} \\quad P(X = x) \\geq 0 \\text{ para todo } x\\]\n\nEjemplo: X = nÃºmero de errores en una lÃ­nea de cÃ³digo\n\n\n\nX\n0\n1\n2\n3\n4\n\n\n\n\nP(X=x)\n0.40\n0.30\n0.20\n0.07\n0.03\n\n\n\nVerificaciÃ³n: \\(0.40 + 0.30 + 0.20 + 0.07 + 0.03 = 1.00\\) âœ…"
   },
   {
     "objectID": "weeks/week04/slides.html#valor-esperado-y-varianza-discreta",
     "href": "weeks/week04/slides.html#valor-esperado-y-varianza-discreta",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
     "section": "Valor Esperado y Varianza (Discreta)",
-    "text": "Valor Esperado y Varianza (Discreta)\n\n\\[E(X) = \\mu = \\sum_{x} x \\cdot P(X = x)\\]\n\\[Var(X) = \\sigma^2 = \\sum_{x} (x - \\mu)^2 \\cdot P(X = x)\\]\n\nEjemplo: Con la tabla anterior (errores por línea)\n\\[E(X) = 0(0.40) + 1(0.30) + 2(0.20) + 3(0.07) + 4(0.03) = 1.03 \\text{ errores}\\]\n\nEl valor esperado es el promedio a largo plazo si repitiéramos el experimento muchas veces. En este caso, esperamos ~1 error por línea de código."
+    "text": "Valor Esperado y Varianza (Discreta)\n\n\\[E(X) = \\mu = \\sum_{x} x \\cdot P(X = x)\\]\n\\[Var(X) = \\sigma^2 = \\sum_{x} (x - \\mu)^2 \\cdot P(X = x)\\]\n\nEjemplo: Con la tabla anterior (errores por lÃ­nea)\n\\[E(X) = 0(0.40) + 1(0.30) + 2(0.20) + 3(0.07) + 4(0.03) = 1.03 \\text{ errores}\\]\n\nEl valor esperado es el promedio a largo plazo si repitiÃ©ramos el experimento muchas veces. En este caso, esperamos ~1 error por lÃ­nea de cÃ³digo."
   },
   {
-    "objectID": "weeks/week04/slides.html#función-de-densidad-variable-continua",
-    "href": "weeks/week04/slides.html#función-de-densidad-variable-continua",
+    "objectID": "weeks/week04/slides.html#funciã³n-de-densidad-variable-continua",
+    "href": "weeks/week04/slides.html#funciã³n-de-densidad-variable-continua",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
-    "section": "Función de Densidad (Variable Continua)",
-    "text": "Función de Densidad (Variable Continua)\nPara una variable continua, \\(P(X = x) = 0\\) para cualquier valor exacto. En cambio usamos la función de densidad \\(f(x)\\):\n\n\\[P(a \\leq X \\leq b) = \\int_a^b f(x) dx \\quad \\text{y} \\quad \\int_{-\\infty}^{\\infty} f(x) dx = 1\\]\n\nLa probabilidad es el área bajo la curva en un intervalo."
+    "section": "FunciÃ³n de Densidad (Variable Continua)",
+    "text": "FunciÃ³n de Densidad (Variable Continua)\nPara una variable continua, \\(P(X = x) = 0\\) para cualquier valor exacto. En cambio usamos la funciÃ³n de densidad \\(f(x)\\):\n\n\\[P(a \\leq X \\leq b) = \\int_a^b f(x) dx \\quad \\text{y} \\quad \\int_{-\\infty}^{\\infty} f(x) dx = 1\\]\n\nLa probabilidad es el Ã¡rea bajo la curva en un intervalo."
   },
   {
-    "objectID": "weeks/week04/slides.html#la-distribución-normal",
-    "href": "weeks/week04/slides.html#la-distribución-normal",
+    "objectID": "weeks/week04/slides.html#la-distribuciã³n-normal",
+    "href": "weeks/week04/slides.html#la-distribuciã³n-normal",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
-    "section": "La Distribución Normal",
-    "text": "La Distribución Normal\nLa distribución más importante en estadística:\n\n\\[f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}\\]\n\nPropiedades: - Simétrica alrededor de \\(\\mu\\) (media = mediana = moda) - Forma de campana - Completamente definida por \\(\\mu\\) y \\(\\sigma\\)\nRegla empírica: - \\(P(\\mu - \\sigma \\leq X \\leq \\mu + \\sigma) \\approx 68\\%\\) - \\(P(\\mu - 2\\sigma \\leq X \\leq \\mu + 2\\sigma) \\approx 95\\%\\) - \\(P(\\mu - 3\\sigma \\leq X \\leq \\mu + 3\\sigma) \\approx 99.7\\%\\)"
+    "section": "La DistribuciÃ³n Normal",
+    "text": "La DistribuciÃ³n Normal\nLa distribuciÃ³n mÃ¡s importante en estadÃ­stica:\n\n\\[f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}\\]\n\nPropiedades: - SimÃ©trica alrededor de \\(\\mu\\) (media = mediana = moda) - Forma de campana - Completamente definida por \\(\\mu\\) y \\(\\sigma\\)\nRegla empÃ­rica: - \\(P(\\mu - \\sigma \\leq X \\leq \\mu + \\sigma) \\approx 68\\%\\) - \\(P(\\mu - 2\\sigma \\leq X \\leq \\mu + 2\\sigma) \\approx 95\\%\\) - \\(P(\\mu - 3\\sigma \\leq X \\leq \\mu + 3\\sigma) \\approx 99.7\\%\\)"
   },
   {
-    "objectID": "weeks/week04/slides.html#distribución-normal-estándar-z",
-    "href": "weeks/week04/slides.html#distribución-normal-estándar-z",
+    "objectID": "weeks/week04/slides.html#distribuciã³n-normal-estãndar-z",
+    "href": "weeks/week04/slides.html#distribuciã³n-normal-estãndar-z",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
-    "section": "Distribución Normal Estándar (Z)",
-    "text": "Distribución Normal Estándar (Z)\nEstandarización: convierte cualquier normal en la normal estándar \\(N(0,1)\\):\n\n\\[Z = \\frac{X - \\mu}{\\sigma}\\]\n\nEjemplo: Los tiempos de carga de un servidor siguen \\(N(\\mu=3, \\sigma=0.5)\\) seg\n¿Cuál es la probabilidad de que el tiempo sea menor a 3.5 segundos?\n\\[Z = \\frac{3.5 - 3}{0.5} = 1.0 \\quad \\Rightarrow \\quad P(X &lt; 3.5) = P(Z &lt; 1) \\approx 84.13\\%\\]"
+    "section": "DistribuciÃ³n Normal EstÃ¡ndar (Z)",
+    "text": "DistribuciÃ³n Normal EstÃ¡ndar (Z)\nEstandarizaciÃ³n: convierte cualquier normal en la normal estÃ¡ndar \\(N(0,1)\\):\n\n\\[Z = \\frac{X - \\mu}{\\sigma}\\]\n\nEjemplo: Los tiempos de carga de un servidor siguen \\(N(\\mu=3, \\sigma=0.5)\\) seg\nÂ¿CuÃ¡l es la probabilidad de que el tiempo sea menor a 3.5 segundos?\n\\[Z = \\frac{3.5 - 3}{0.5} = 1.0 \\quad \\Rightarrow \\quad P(X &lt; 3.5) = P(Z &lt; 1) \\approx 84.13\\%\\]"
   },
   {
     "objectID": "weeks/week04/slides.html#distribuciones-discretas-importantes",
     "href": "weeks/week04/slides.html#distribuciones-discretas-importantes",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
     "section": "Distribuciones Discretas Importantes",
-    "text": "Distribuciones Discretas Importantes\n\n\nBernoulli\nUn experimento con dos resultados (éxito/fracaso): \\[P(X=1) = p \\quad P(X=0) = 1-p\\] \\(E(X) = p \\quad Var(X) = p(1-p)\\)\n\nBinomial\nn repeticiones Bernoulli independientes: \\[P(X=k) = \\binom{n}{k} p^k (1-p)^{n-k}\\] \\(E(X) = np \\quad Var(X) = np(1-p)\\)\n\nEjemplo Binomial: Si el 30% de los sistemas tienen un bug, en una muestra de 10 sistemas, ¿cuántos esperamos con bugs? \\[E(X) = 10 \\times 0.30 = 3 \\text{ sistemas}\\]"
+    "text": "Distribuciones Discretas Importantes\n\n\n\nBernoulli\nUn experimento con dos resultados (Ã©xito/fracaso): \\[P(X=1) = p \\quad P(X=0) = 1-p\\] \\(E(X) = p \\quad Var(X) = p(1-p)\\)\n\n\n\nBinomial\nn repeticiones Bernoulli independientes: \\[P(X=k) = \\binom{n}{k} p^k (1-p)^{n-k}\\] \\(E(X) = np \\quad Var(X) = np(1-p)\\)\n\n\n\nEjemplo Binomial: Si el 30% de los sistemas tienen un bug, en una muestra de 10 sistemas, Â¿cuÃ¡ntos esperamos con bugs? \\[E(X) = 10 \\times 0.30 = 3 \\text{ sistemas}\\]"
   },
   {
     "objectID": "weeks/week04/slides.html#resumen",
     "href": "weeks/week04/slides.html#resumen",
     "title": "Semana 4: Variables Aleatorias y Probabilidad",
     "section": "Resumen",
-    "text": "Resumen\n\n\n\nConcepto\nDescripción\n\n\n\n\nVariable aleatoria\nAsigna números a resultados aleatorios\n\n\nDiscreta\nValores contables (enteros)\n\n\nContinua\nCualquier valor en un intervalo\n\n\nE(X)\nValor esperado (promedio teórico)\n\n\nDistribución Normal\nLa más usada en estadística\n\n\nEstandarización Z\nPermite usar tablas/funciones estándar\n\n\n\nPróximo tema:\nSemana 5 — Introducción a RStudio: el entorno que usaremos para todos los análisis estadísticos computacionales."
+    "text": "Resumen\n\n\n\nConcepto\nDescripciÃ³n\n\n\n\n\nVariable aleatoria\nAsigna nÃºmeros a resultados aleatorios\n\n\nDiscreta\nValores contables (enteros)\n\n\nContinua\nCualquier valor en un intervalo\n\n\nE(X)\nValor esperado (promedio teÃ³rico)\n\n\nDistribuciÃ³n Normal\nLa mÃ¡s usada en estadÃ­stica\n\n\nEstandarizaciÃ³n Z\nPermite usar tablas/funciones estÃ¡ndar\n\n\n\n\nPrÃ³ximo tema:\nSemana 5 â€” IntroducciÃ³n a RStudio: el entorno que usaremos para todos los anÃ¡lisis estadÃ­sticos computacionales."
   },
   {
     "objectID": "weeks/week04/lab.html",
@@ -613,39 +627,46 @@
     ]
   },
   {
-    "objectID": "weeks/week02/slides.html#repaso-qué-vimos-la-semana-pasada",
-    "href": "weeks/week02/slides.html#repaso-qué-vimos-la-semana-pasada",
+    "objectID": "weeks/week02/slides.html",
+    "href": "weeks/week02/slides.html",
     "title": "Semana 2: Datos Agrupados",
-    "section": "Repaso: ¿Qué vimos la semana pasada?",
-    "text": "Repaso: ¿Qué vimos la semana pasada?\nSemana 1 — Datos No Agrupados:\n\nMedia: \\(\\bar{x} = \\frac{\\sum x_i}{n}\\)\nMediana: valor central en datos ordenados\nModa: valor que más se repite\nRango, varianza, desviación estándar, CV\n\n\nEsta semana: ¿Cuándo y por qué agrupar los datos?"
+    "section": "",
+    "text": "Semana 1 â€” Datos No Agrupados:\n\nMedia: \\(\\bar{x} = \\frac{\\sum x_i}{n}\\)\nMediana: valor central en datos ordenados\nModa: valor que mÃ¡s se repite\nRango, varianza, desviaciÃ³n estÃ¡ndar, CV"
   },
   {
-    "objectID": "weeks/week02/slides.html#datos-agrupados-vs-no-agrupados",
-    "href": "weeks/week02/slides.html#datos-agrupados-vs-no-agrupados",
+    "objectID": "weeks/week02/slides.html#repaso-âquã-vimos-la-semana-pasada",
+    "href": "weeks/week02/slides.html#repaso-âquã-vimos-la-semana-pasada",
     "title": "Semana 2: Datos Agrupados",
-    "section": "¿Datos Agrupados vs No Agrupados?",
-    "text": "¿Datos Agrupados vs No Agrupados?\n\n\n📋 No Agrupados\nCada valor individual se analiza por separado.\nApropiado cuando: - Pocos datos (n &lt; 30) - Pocos valores distintos - Se necesita precisión exacta\nEjemplo: 5, 7, 8, 9, 10, 7, 8\n\n📊 Agrupados\nLos datos se organizan en intervalos o clases.\nApropiado cuando: - Muchos datos (n ≥ 30) - Muchos valores distintos (datos continuos) - Se busca identificar patrones generales\nEjemplo: Salarios de 150 empleados\n\n\n\n\n\n\n\nRegla práctica\n\n\nSi n &gt; 30 o el rango de valores es muy amplio, agrupe los datos."
+    "section": "",
+    "text": "Semana 1 â€” Datos No Agrupados:\n\nMedia: \\(\\bar{x} = \\frac{\\sum x_i}{n}\\)\nMediana: valor central en datos ordenados\nModa: valor que mÃ¡s se repite\nRango, varianza, desviaciÃ³n estÃ¡ndar, CV"
+  },
+  {
+    "objectID": "weeks/week02/slides.html#âdatos-agrupados-vs-no-agrupados",
+    "href": "weeks/week02/slides.html#âdatos-agrupados-vs-no-agrupados",
+    "title": "Semana 2: Datos Agrupados",
+    "section": "Â¿Datos Agrupados vs No Agrupados?",
+    "text": "Â¿Datos Agrupados vs No Agrupados?\n\n\n\nðŸ“‹ No Agrupados\nCada valor individual se analiza por separado.\nApropiado cuando: - Pocos datos (n &lt; 30) - Pocos valores distintos - Se necesita precisiÃ³n exacta\nEjemplo: 5, 7, 8, 9, 10, 7, 8\n\n\n\nðŸ“Š Agrupados\nLos datos se organizan en intervalos o clases.\nApropiado cuando: - Muchos datos (n â‰¥ 30) - Muchos valores distintos (datos continuos) - Se busca identificar patrones generales\nEjemplo: Salarios de 150 empleados\n\n\n\n\n\n\n\n\n\nTipRegla prÃ¡ctica\n\n\n\nSi n &gt; 30 o el rango de valores es muy amplio, agrupe los datos."
   },
   {
     "objectID": "weeks/week02/slides.html#paso-1-regla-de-sturges",
     "href": "weeks/week02/slides.html#paso-1-regla-de-sturges",
     "title": "Semana 2: Datos Agrupados",
     "section": "Paso 1: Regla de Sturges",
-    "text": "Paso 1: Regla de Sturges\nPara determinar el número óptimo de clases o intervalos:\n\n\\[k = 1 + 3.322 \\times \\log_{10}(n)\\]\n\ndonde k = número de clases y n = total de observaciones.\nEjemplo: n = 40 datos\n\\[k = 1 + 3.322 \\times \\log_{10}(40) = 1 + 3.322 \\times 1.602 = 6.32 \\approx \\mathbf{7 \\text{ clases}}\\]\n\nRegla general: Redondear k hacia arriba (usar techo). El número de clases suele estar entre 5 y 20."
+    "text": "Paso 1: Regla de Sturges\nPara determinar el nÃºmero Ã³ptimo de clases o intervalos:\n\n\\[k = 1 + 3.322 \\times \\log_{10}(n)\\]\n\ndonde k = nÃºmero de clases y n = total de observaciones.\nEjemplo: n = 40 datos\n\\[k = 1 + 3.322 \\times \\log_{10}(40) = 1 + 3.322 \\times 1.602 = 6.32 \\approx \\mathbf{7 \\text{ clases}}\\]\n\nRegla general: Redondear k hacia arriba (usar techo). El nÃºmero de clases suele estar entre 5 y 20."
   },
   {
     "objectID": "weeks/week02/slides.html#paso-2-amplitud-de-clase",
     "href": "weeks/week02/slides.html#paso-2-amplitud-de-clase",
     "title": "Semana 2: Datos Agrupados",
     "section": "Paso 2: Amplitud de Clase",
-    "text": "Paso 2: Amplitud de Clase\nUna vez determinado k, calculamos el ancho de cada intervalo:\n\n\\[c = \\frac{x_{max} - x_{min}}{k} = \\frac{\\text{Rango}}{k}\\]\n\nContinuando el ejemplo: - Salarios entre $400 y $1,200 (n=40) - k = 7 clases - c = (1200 - 400) / 7 = 800 / 7 ≈ 114.3 → redondeamos a 120\n\n\n\n\n\n\nNote\n\n\nSe acostumbra redondear c a un número conveniente (múltiplo de 10, 5, etc.) para que los límites sean más legibles."
+    "text": "Paso 2: Amplitud de Clase\nUna vez determinado k, calculamos el ancho de cada intervalo:\n\n\\[c = \\frac{x_{max} - x_{min}}{k} = \\frac{\\text{Rango}}{k}\\]\n\nContinuando el ejemplo: - Salarios entre $400 y $1,200 (n=40) - k = 7 clases - c = (1200 - 400) / 7 = 800 / 7 â‰ˆ 114.3 â†’ redondeamos a 120\n\n\n\n\n\n\nNota\n\n\n\nSe acostumbra redondear c a un nÃºmero conveniente (mÃºltiplo de 10, 5, etc.) para que los lÃ­mites sean mÃ¡s legibles."
   },
   {
-    "objectID": "weeks/week02/slides.html#paso-3-construcción-de-la-tabla-de-frecuencias",
-    "href": "weeks/week02/slides.html#paso-3-construcción-de-la-tabla-de-frecuencias",
+    "objectID": "weeks/week02/slides.html#paso-3-construcciã³n-de-la-tabla-de-frecuencias",
+    "href": "weeks/week02/slides.html#paso-3-construcciã³n-de-la-tabla-de-frecuencias",
     "title": "Semana 2: Datos Agrupados",
-    "section": "Paso 3: Construcción de la Tabla de Frecuencias",
-    "text": "Paso 3: Construcción de la Tabla de Frecuencias\nLa tabla de frecuencias para datos agrupados tiene las siguientes columnas:\n\n\n\nColumna\nSímbolo\nDescripción\n\n\n\n\nClase (intervalo)\n\\([L_i, L_s)\\)\nLímite inferior y superior\n\n\nMarca de clase\n\\(m_i\\)\nPunto medio del intervalo\n\n\nFrecuencia absoluta\n\\(f_i\\)\nConteo de datos en la clase\n\n\nFrecuencia relativa\n\\(h_i = f_i/n\\)\nProporción de datos\n\n\nFrecuencia acumulada\n\\(F_i\\)\nSuma acumulada de \\(f_i\\)\n\n\nFrec. rel. acumulada\n\\(H_i\\)\nSuma acumulada de \\(h_i\\)\n\n\n\n\\[m_i = \\frac{L_i + L_s}{2}\\]"
+    "section": "Paso 3: ConstrucciÃ³n de la Tabla de Frecuencias",
+    "text": "Paso 3: ConstrucciÃ³n de la Tabla de Frecuencias\nLa tabla de frecuencias para datos agrupados tiene las siguientes columnas:\n\n\n\nColumna\nSÃ­mbolo\nDescripciÃ³n\n\n\n\n\nClase (intervalo)\n\\([L_i, L_s)\\)\nLÃ­mite inferior y superior\n\n\nMarca de clase\n\\(m_i\\)\nPunto medio del intervalo\n\n\nFrecuencia absoluta\n\\(f_i\\)\nConteo de datos en la clase\n\n\nFrecuencia relativa\n\\(h_i = f_i/n\\)\nProporciÃ³n de datos\n\n\nFrecuencia acumulada\n\\(F_i\\)\nSuma acumulada de \\(f_i\\)\n\n\nFrec. rel. acumulada\n\\(H_i\\)\nSuma acumulada de \\(h_i\\)\n\n\n\n\\[m_i = \\frac{L_i + L_s}{2}\\]"
   },
   {
     "objectID": "weeks/week02/slides.html#ejemplo-tabla-de-frecuencias-completa",
@@ -666,35 +687,35 @@
     "href": "weeks/week02/slides.html#mediana-para-datos-agrupados",
     "title": "Semana 2: Datos Agrupados",
     "section": "Mediana para Datos Agrupados",
-    "text": "Mediana para Datos Agrupados\nLa mediana se encuentra en la clase que contiene el valor \\(n/2\\).\n\n\\[Me = L_i + \\frac{\\frac{n}{2} - F_{i-1}}{f_i} \\times c\\]\n\nDonde: - \\(L_i\\) = límite inferior de la clase mediana - \\(F_{i-1}\\) = frecuencia acumulada antes de la clase mediana - \\(f_i\\) = frecuencia de la clase mediana - \\(c\\) = amplitud de clase\nEjemplo: n/2 = 20. La clase mediana es [640-760) porque \\(F_3 = 25 \\geq 20\\)\n\\[Me = 640 + \\frac{20 - 14}{11} \\times 120 = 640 + \\frac{6}{11} \\times 120 = 640 + 65.45 = \\mathbf{\\$705.45}\\]"
+    "text": "Mediana para Datos Agrupados\nLa mediana se encuentra en la clase que contiene el valor \\(n/2\\).\n\n\\[Me = L_i + \\frac{\\frac{n}{2} - F_{i-1}}{f_i} \\times c\\]\n\nDonde: - \\(L_i\\) = lÃ­mite inferior de la clase mediana - \\(F_{i-1}\\) = frecuencia acumulada antes de la clase mediana - \\(f_i\\) = frecuencia de la clase mediana - \\(c\\) = amplitud de clase\nEjemplo: n/2 = 20. La clase mediana es [640-760) porque \\(F_3 = 25 \\geq 20\\)\n\\[Me = 640 + \\frac{20 - 14}{11} \\times 120 = 640 + \\frac{6}{11} \\times 120 = 640 + 65.45 = \\mathbf{\\$705.45}\\]"
   },
   {
     "objectID": "weeks/week02/slides.html#moda-para-datos-agrupados",
     "href": "weeks/week02/slides.html#moda-para-datos-agrupados",
     "title": "Semana 2: Datos Agrupados",
     "section": "Moda para Datos Agrupados",
-    "text": "Moda para Datos Agrupados\nLa moda se ubica en la clase con mayor frecuencia (clase modal).\n\n\\[Mo = L_i + \\frac{d_1}{d_1 + d_2} \\times c\\]\n\nDonde: - \\(L_i\\) = límite inferior de la clase modal - \\(d_1 = f_{modal} - f_{anterior}\\) - \\(d_2 = f_{modal} - f_{siguiente}\\) - \\(c\\) = amplitud de clase\nEjemplo: Clase modal = [640-760) con f=11\n\n\\(d_1 = 11 - 9 = 2\\)\n\\(d_2 = 11 - 8 = 3\\)\n\\(Mo = 640 + \\frac{2}{2+3} \\times 120 = 640 + 48 = \\mathbf{\\$688}\\)"
+    "text": "Moda para Datos Agrupados\nLa moda se ubica en la clase con mayor frecuencia (clase modal).\n\n\\[Mo = L_i + \\frac{d_1}{d_1 + d_2} \\times c\\]\n\nDonde: - \\(L_i\\) = lÃ­mite inferior de la clase modal - \\(d_1 = f_{modal} - f_{anterior}\\) - \\(d_2 = f_{modal} - f_{siguiente}\\) - \\(c\\) = amplitud de clase\nEjemplo: Clase modal = [640-760) con f=11\n\n\\(d_1 = 11 - 9 = 2\\)\n\\(d_2 = 11 - 8 = 3\\)\n\\(Mo = 640 + \\frac{2}{2+3} \\times 120 = 640 + 48 = \\mathbf{\\$688}\\)"
   },
   {
-    "objectID": "weeks/week02/slides.html#comparación-agrupados-vs-no-agrupados",
-    "href": "weeks/week02/slides.html#comparación-agrupados-vs-no-agrupados",
+    "objectID": "weeks/week02/slides.html#comparaciã³n-agrupados-vs-no-agrupados",
+    "href": "weeks/week02/slides.html#comparaciã³n-agrupados-vs-no-agrupados",
     "title": "Semana 2: Datos Agrupados",
-    "section": "Comparación: Agrupados vs No Agrupados",
-    "text": "Comparación: Agrupados vs No Agrupados\n\n\n\n\nNo Agrupados\nAgrupados\n\n\n\n\nMedia\n\\(\\frac{\\sum x_i}{n}\\)\n\\(\\frac{\\sum f_i \\cdot m_i}{n}\\)\n\n\nMediana\nValor en posición central\nFórmula de interpolación\n\n\nModa\nValor más frecuente\nFórmula con \\(d_1\\) y \\(d_2\\)\n\n\nPrecisión\nExacta\nAproximada\n\n\nUso\nn pequeño\nn grande\n\n\n\n\n\n\n\n\n\nNote\n\n\nLos resultados para datos agrupados son aproximaciones porque usamos la marca de clase (punto medio) como representante de todos los valores del intervalo."
+    "section": "ComparaciÃ³n: Agrupados vs No Agrupados",
+    "text": "ComparaciÃ³n: Agrupados vs No Agrupados\n\n\n\n\n\n\n\n\n\nNo Agrupados\nAgrupados\n\n\n\n\nMedia\n\\(\\frac{\\sum x_i}{n}\\)\n\\(\\frac{\\sum f_i \\cdot m_i}{n}\\)\n\n\nMediana\nValor en posiciÃ³n central\nFÃ³rmula de interpolaciÃ³n\n\n\nModa\nValor mÃ¡s frecuente\nFÃ³rmula con \\(d_1\\) y \\(d_2\\)\n\n\nPrecisiÃ³n\nExacta\nAproximada\n\n\nUso\nn pequeÃ±o\nn grande\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nLos resultados para datos agrupados son aproximaciones porque usamos la marca de clase (punto medio) como representante de todos los valores del intervalo."
   },
   {
     "objectID": "weeks/week02/slides.html#resumen-del-proceso",
     "href": "weeks/week02/slides.html#resumen-del-proceso",
     "title": "Semana 2: Datos Agrupados",
     "section": "Resumen del Proceso",
-    "text": "Resumen del Proceso\nDatos → ¿n ≥ 30? → SÍ: Agrupar\n                 ↓\n     1. k = 1 + 3.322 × log₁₀(n)\n     2. c = Rango / k\n     3. Construir tabla de frecuencias\n     4. Calcular mi = (Li + Ls) / 2\n     5. Media = Σ(fi × mi) / n\n     6. Mediana: encontrar clase, interpolar\n     7. Moda: clase modal, aplicar fórmula"
+    "text": "Resumen del Proceso\nDatos â†’ Â¿n â‰¥ 30? â†’ SÃ: Agrupar\n                 â†“\n     1. k = 1 + 3.322 Ã— logâ‚â‚€(n)\n     2. c = Rango / k\n     3. Construir tabla de frecuencias\n     4. Calcular mi = (Li + Ls) / 2\n     5. Media = Î£(fi Ã— mi) / n\n     6. Mediana: encontrar clase, interpolar\n     7. Moda: clase modal, aplicar fÃ³rmula"
   },
   {
-    "objectID": "weeks/week02/slides.html#próxima-clase-viernes",
-    "href": "weeks/week02/slides.html#próxima-clase-viernes",
+    "objectID": "weeks/week02/slides.html#prã³xima-clase-viernes",
+    "href": "weeks/week02/slides.html#prã³xima-clase-viernes",
     "title": "Semana 2: Datos Agrupados",
-    "section": "Próxima Clase (Viernes)",
-    "text": "Próxima Clase (Viernes)\n\nContinuación Semana 2\n\nPráctica completa con Python y R\nConstrucción automática de tablas de frecuencias\nCálculo de las tres medidas para un dataset real\n\n\nTaller: Dataset de salarios reales de empleados ecuatorianos. Construya la tabla de frecuencias y calcule media, mediana y moda.\n\n¡Practique con el taller disponible en el sitio! 💻"
+    "section": "PrÃ³xima Clase (Viernes)",
+    "text": "PrÃ³xima Clase (Viernes)\n\nContinuaciÃ³n Semana 2\n\nPrÃ¡ctica completa con Python y R\nConstrucciÃ³n automÃ¡tica de tablas de frecuencias\nCÃ¡lculo de las tres medidas para un dataset real\n\n\nTaller: Dataset de salarios reales de empleados ecuatorianos. Construya la tabla de frecuencias y calcule media, mediana y moda.\n\nÂ¡Practique con el taller disponible en el sitio! ðŸ’»"
   },
   {
     "objectID": "weeks/week02/lab.html",
@@ -1095,88 +1116,95 @@
     ]
   },
   {
-    "objectID": "weeks/week01/slides.html#qué-es-la-estadística",
-    "href": "weeks/week01/slides.html#qué-es-la-estadística",
-    "title": "Semana 1: Estadística Descriptiva",
-    "section": "¿Qué es la Estadística?",
-    "text": "¿Qué es la Estadística?\n\nLa estadística es la rama de las matemáticas encargada de recolectar, analizar, interpretar y presentar datos.\n\n\n\n\n¿Para qué sirve?\n\nResumir grandes volúmenes de datos\nIdentificar patrones y tendencias\nEvaluar incertidumbre y variabilidad\nTomar decisiones basadas en evidencia\n\n\nCampos de aplicación\n\n💊 Medicina y salud\n📈 Economía y finanzas\n🌿 Biología y ciencias naturales\n💻 Tecnología y datos"
+    "objectID": "weeks/week01/slides.html",
+    "href": "weeks/week01/slides.html",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
+    "section": "",
+    "text": "La estadÃ­stica es la rama de las matemÃ¡ticas encargada de recolectar, analizar, interpretar y presentar datos.\n\n\n\n\n\n\n\nResumir grandes volÃºmenes de datos\nIdentificar patrones y tendencias\nEvaluar incertidumbre y variabilidad\nTomar decisiones basadas en evidencia\n\n\n\n\n\n\nðŸ’Š Medicina y salud\nðŸ“ˆ EconomÃ­a y finanzas\nðŸŒ¿ BiologÃ­a y ciencias naturales\nðŸ’» TecnologÃ­a y datos"
+  },
+  {
+    "objectID": "weeks/week01/slides.html#âquã-es-la-estadãstica",
+    "href": "weeks/week01/slides.html#âquã-es-la-estadãstica",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
+    "section": "",
+    "text": "La estadÃ­stica es la rama de las matemÃ¡ticas encargada de recolectar, analizar, interpretar y presentar datos.\n\n\n\n\n\n\n\nResumir grandes volÃºmenes de datos\nIdentificar patrones y tendencias\nEvaluar incertidumbre y variabilidad\nTomar decisiones basadas en evidencia\n\n\n\n\n\n\nðŸ’Š Medicina y salud\nðŸ“ˆ EconomÃ­a y finanzas\nðŸŒ¿ BiologÃ­a y ciencias naturales\nðŸ’» TecnologÃ­a y datos"
   },
   {
     "objectID": "weeks/week01/slides.html#tipos-de-datos",
     "href": "weeks/week01/slides.html#tipos-de-datos",
-    "title": "Semana 1: Estadística Descriptiva",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
     "section": "Tipos de Datos",
-    "text": "Tipos de Datos\n\n\nDatos Cuantitativos\nValores numéricos medibles\n\nDiscretos: conteos (1, 2, 3…)\n\nNúmero de estudiantes\nNúmero de errores\n\nContinuos: medidas en escala continua\n\nTemperatura: 23.4°C\nPeso: 65.8 kg\n\n\n\nDatos Cualitativos\nCategorías o atributos\n\nColores\nGénero\nNivel de satisfacción\nCiudad de origen\n\n\n\n\n\n\n\n\nNote\n\n\nEn este curso trabajamos principalmente con datos cuantitativos."
+    "text": "Tipos de Datos\n\n\n\nDatos Cuantitativos\nValores numÃ©ricos medibles\n\nDiscretos: conteos (1, 2, 3…)\n\nNÃºmero de estudiantes\nNÃºmero de errores\n\nContinuos: medidas en escala continua\n\nTemperatura: 23.4Â°C\nPeso: 65.8 kg\n\n\n\n\n\nDatos Cualitativos\nCategorÃ­as o atributos\n\nColores\nGÃ©nero\nNivel de satisfacciÃ³n\nCiudad de origen\n\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nEn este curso trabajamos principalmente con datos cuantitativos."
   },
   {
-    "objectID": "weeks/week01/slides.html#distribución-de-frecuencias",
-    "href": "weeks/week01/slides.html#distribución-de-frecuencias",
-    "title": "Semana 1: Estadística Descriptiva",
-    "section": "Distribución de Frecuencias",
-    "text": "Distribución de Frecuencias\nUna distribución de frecuencias muestra cuántas veces aparece cada valor en un dataset.\nEjemplo: Calificaciones: 7, 8, 8, 9, 7, 10, 8, 9, 7, 8\n\n\n\nValor\nFrecuencia (fi)\nFrecuencia Relativa (hi)\n\n\n\n\n7\n3\n0.30\n\n\n8\n4\n0.40\n\n\n9\n2\n0.20\n\n\n10\n1\n0.10\n\n\nTotal\n10\n1.00\n\n\n\n\nhi = fi / n donde n = total de datos"
+    "objectID": "weeks/week01/slides.html#distribuciã³n-de-frecuencias",
+    "href": "weeks/week01/slides.html#distribuciã³n-de-frecuencias",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
+    "section": "DistribuciÃ³n de Frecuencias",
+    "text": "DistribuciÃ³n de Frecuencias\nUna distribuciÃ³n de frecuencias muestra cuÃ¡ntas veces aparece cada valor en un dataset.\nEjemplo: Calificaciones: 7, 8, 8, 9, 7, 10, 8, 9, 7, 8\n\n\n\nValor\nFrecuencia (fi)\nFrecuencia Relativa (hi)\n\n\n\n\n7\n3\n0.30\n\n\n8\n4\n0.40\n\n\n9\n2\n0.20\n\n\n10\n1\n0.10\n\n\nTotal\n10\n1.00\n\n\n\n\nhi = fi / n donde n = total de datos"
   },
   {
     "objectID": "weeks/week01/slides.html#medidas-de-tendencia-central",
     "href": "weeks/week01/slides.html#medidas-de-tendencia-central",
-    "title": "Semana 1: Estadística Descriptiva",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
     "section": "Medidas de Tendencia Central",
-    "text": "Medidas de Tendencia Central\n¿Cuál es el valor típico o central de un conjunto de datos?\n\n\n\n\n\nMedida\n¿Qué mide?\nSímbolo\n\n\n\n\nMedia\nPromedio aritmético\nμ o x̄\n\n\nMediana\nValor central cuando se ordenan los datos\nMe\n\n\nModa\nValor que más se repite\nMo"
+    "text": "Medidas de Tendencia Central\nÂ¿CuÃ¡l es el valor tÃ­pico o central de un conjunto de datos?\n\n\n\n\n\nMedida\nÂ¿QuÃ© mide?\nSÃ­mbolo\n\n\n\n\nMedia\nPromedio aritmÃ©tico\nÎ¼ o xÌ„\n\n\nMediana\nValor central cuando se ordenan los datos\nMe\n\n\nModa\nValor que mÃ¡s se repite\nMo"
   },
   {
-    "objectID": "weeks/week01/slides.html#la-media-aritmética",
-    "href": "weeks/week01/slides.html#la-media-aritmética",
-    "title": "Semana 1: Estadística Descriptiva",
-    "section": "La Media Aritmética",
-    "text": "La Media Aritmética\n\n\\[\\bar{x} = \\frac{\\sum_{i=1}^{n} x_i}{n} = \\frac{x_1 + x_2 + \\cdots + x_n}{n}\\]\n\nEjemplo: Edades de 5 estudiantes: 20, 22, 19, 24, 20\n\\[\\bar{x} = \\frac{20 + 22 + 19 + 24 + 20}{5} = \\frac{105}{5} = \\mathbf{21}\\]\n\n\n\n\n\n\nInterpretación\n\n\nEl promedio de edad es 21 años. La mitad de los estudiantes tienen menos de 21 y la otra mitad más de 21 (aproximadamente)."
+    "objectID": "weeks/week01/slides.html#la-media-aritmãtica",
+    "href": "weeks/week01/slides.html#la-media-aritmãtica",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
+    "section": "La Media AritmÃ©tica",
+    "text": "La Media AritmÃ©tica\n\n\\[\\bar{x} = \\frac{\\sum_{i=1}^{n} x_i}{n} = \\frac{x_1 + x_2 + \\cdots + x_n}{n}\\]\n\nEjemplo: Edades de 5 estudiantes: 20, 22, 19, 24, 20\n\\[\\bar{x} = \\frac{20 + 22 + 19 + 24 + 20}{5} = \\frac{105}{5} = \\mathbf{21}\\]\n\n\n\n\n\n\nTipInterpretaciÃ³n\n\n\n\nEl promedio de edad es 21 aÃ±os. La mitad de los estudiantes tienen menos de 21 y la otra mitad mÃ¡s de 21 (aproximadamente)."
   },
   {
     "objectID": "weeks/week01/slides.html#la-mediana",
     "href": "weeks/week01/slides.html#la-mediana",
-    "title": "Semana 1: Estadística Descriptiva",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
     "section": "La Mediana",
-    "text": "La Mediana\nEs el valor central cuando los datos están ordenados de menor a mayor.\n\n\nSi n es impar: Me = valor en posición \\(\\frac{n+1}{2}\\)\nSi n es par: Me = promedio de los valores en posiciones \\(\\frac{n}{2}\\) y \\(\\frac{n}{2}+1\\)\n\n\nEjemplo 1 (n=7, impar): 3, 5, 7, **8**, 12, 13, 15 → Me = 8\nEjemplo 2 (n=6, par): 2, 4, **6**, **9**, 11, 14 → Me = \\(\\frac{6+9}{2}\\) = 7.5\n\n\n\n\n\n\nVentaja de la mediana\n\n\nNo se ve afectada por valores extremos (outliers), a diferencia de la media."
+    "text": "La Mediana\nEs el valor central cuando los datos estÃ¡n ordenados de menor a mayor.\n\n\nSi n es impar: Me = valor en posiciÃ³n \\(\\frac{n+1}{2}\\)\nSi n es par: Me = promedio de los valores en posiciones \\(\\frac{n}{2}\\) y \\(\\frac{n}{2}+1\\)\n\n\nEjemplo 1 (n=7, impar): 3, 5, 7, **8**, 12, 13, 15 â†’ Me = 8\nEjemplo 2 (n=6, par): 2, 4, **6**, **9**, 11, 14 â†’ Me = \\(\\frac{6+9}{2}\\) = 7.5\n\n\n\n\n\n\nTipVentaja de la mediana\n\n\n\nNo se ve afectada por valores extremos (outliers), a diferencia de la media."
   },
   {
     "objectID": "weeks/week01/slides.html#la-moda",
     "href": "weeks/week01/slides.html#la-moda",
-    "title": "Semana 1: Estadística Descriptiva",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
     "section": "La Moda",
-    "text": "La Moda\nEs el valor que más se repite en el conjunto de datos.\nEjemplo 1 — Unimodal: Dataset: 4, 5, **5**, 6, 7, 8, **8**, **8**, 9 → Mo = 8\nEjemplo 2 — Bimodal: Dataset: 3, **4**, **4**, 5, 6, **7**, **7**, 8 → Mo = 4 y 7\nEjemplo 3 — Sin moda: Dataset: 1, 2, 3, 4, 5 → No tiene moda (todos valores únicos)\n\n\n\n\n\n\nNote\n\n\nUn dataset puede ser unimodal, bimodal o multimodal."
+    "text": "La Moda\nEs el valor que mÃ¡s se repite en el conjunto de datos.\nEjemplo 1 â€” Unimodal: Dataset: 4, 5, **5**, 6, 7, 8, **8**, **8**, 9 â†’ Mo = 8\nEjemplo 2 â€” Bimodal: Dataset: 3, **4**, **4**, 5, 6, **7**, **7**, 8 â†’ Mo = 4 y 7\nEjemplo 3 â€” Sin moda: Dataset: 1, 2, 3, 4, 5 â†’ No tiene moda (todos valores Ãºnicos)\n\n\n\n\n\n\nNota\n\n\n\nUn dataset puede ser unimodal, bimodal o multimodal."
   },
   {
-    "objectID": "weeks/week01/slides.html#medidas-de-dispersión",
-    "href": "weeks/week01/slides.html#medidas-de-dispersión",
-    "title": "Semana 1: Estadística Descriptiva",
-    "section": "Medidas de Dispersión",
-    "text": "Medidas de Dispersión\nMiden la variabilidad o dispersión de los datos alrededor de la media.\n\n\n\nMedida\n¿Qué mide?\n\n\n\n\nRango\nAmplitud total (max - min)\n\n\nVarianza\nDispersión cuadrática promedio\n\n\nDesviación Estándar\nDispersión promedio (mismas unidades)\n\n\nCoef. de Variación\nDispersión relativa (%)\n\n\n\n\n¿Por qué importa la dispersión? Dos grupos pueden tener la misma media pero comportamientos muy distintos. Grupo A: 50, 50, 50 | Grupo B: 20, 50, 80 → Ambos con media = 50"
+    "objectID": "weeks/week01/slides.html#medidas-de-dispersiã³n",
+    "href": "weeks/week01/slides.html#medidas-de-dispersiã³n",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
+    "section": "Medidas de DispersiÃ³n",
+    "text": "Medidas de DispersiÃ³n\nMiden la variabilidad o dispersiÃ³n de los datos alrededor de la media.\n\n\n\nMedida\nÂ¿QuÃ© mide?\n\n\n\n\nRango\nAmplitud total (max - min)\n\n\nVarianza\nDispersiÃ³n cuadrÃ¡tica promedio\n\n\nDesviaciÃ³n EstÃ¡ndar\nDispersiÃ³n promedio (mismas unidades)\n\n\nCoef. de VariaciÃ³n\nDispersiÃ³n relativa (%)\n\n\n\n\nÂ¿Por quÃ© importa la dispersiÃ³n? Dos grupos pueden tener la misma media pero comportamientos muy distintos. Grupo A: 50, 50, 50 | Grupo B: 20, 50, 80 â†’ Ambos con media = 50"
   },
   {
     "objectID": "weeks/week01/slides.html#rango-y-varianza",
     "href": "weeks/week01/slides.html#rango-y-varianza",
-    "title": "Semana 1: Estadística Descriptiva",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
     "section": "Rango y Varianza",
-    "text": "Rango y Varianza\n\n\\[R = x_{max} - x_{min}\\]\n\\[s^2 = \\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})^2}{n}\\]\n\nEjemplo: Dataset: 2, 4, 4, 4, 5, 5, 7, 9 → \\(\\bar{x} = 5\\)\n\n\n\n\\(x_i\\)\n\\(x_i - \\bar{x}\\)\n\\((x_i - \\bar{x})^2\\)\n\n\n\n\n2\n-3\n9\n\n\n4\n-1\n1\n\n\n4\n-1\n1\n\n\n…\n…\n…\n\n\n\n\\[s^2 = \\frac{9+1+1+1+0+0+4+16}{8} = \\frac{32}{8} = 4\\]"
+    "text": "Rango y Varianza\n\n\\[R = x_{max} - x_{min}\\]\n\\[s^2 = \\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})^2}{n}\\]\n\nEjemplo: Dataset: 2, 4, 4, 4, 5, 5, 7, 9 â†’ \\(\\bar{x} = 5\\)\n\n\n\n\\(x_i\\)\n\\(x_i - \\bar{x}\\)\n\\((x_i - \\bar{x})^2\\)\n\n\n\n\n2\n-3\n9\n\n\n4\n-1\n1\n\n\n4\n-1\n1\n\n\n…\n…\n…\n\n\n\n\\[s^2 = \\frac{9+1+1+1+0+0+4+16}{8} = \\frac{32}{8} = 4\\]"
   },
   {
-    "objectID": "weeks/week01/slides.html#desviación-estándar-y-coeficiente-de-variación",
-    "href": "weeks/week01/slides.html#desviación-estándar-y-coeficiente-de-variación",
-    "title": "Semana 1: Estadística Descriptiva",
-    "section": "Desviación Estándar y Coeficiente de Variación",
-    "text": "Desviación Estándar y Coeficiente de Variación\n\n\\[s = \\sqrt{s^2} = \\sqrt{\\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})^2}{n}}\\]\n\\[CV = \\frac{s}{\\bar{x}} \\times 100\\%\\]\n\nContinuando el ejemplo anterior: \\(s^2 = 4\\) → \\(s = \\sqrt{4} = 2\\)\n\\[CV = \\frac{2}{5} \\times 100\\% = 40\\%\\]\n\n\n\n\n\n\nInterpretación del CV\n\n\n\nCV &lt; 15%: Datos homogéneos (poca dispersión)\nCV 15-30%: Dispersión moderada\nCV &gt; 30%: Datos heterogéneos (alta dispersión)"
+    "objectID": "weeks/week01/slides.html#desviaciã³n-estãndar-y-coeficiente-de-variaciã³n",
+    "href": "weeks/week01/slides.html#desviaciã³n-estãndar-y-coeficiente-de-variaciã³n",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
+    "section": "DesviaciÃ³n EstÃ¡ndar y Coeficiente de VariaciÃ³n",
+    "text": "DesviaciÃ³n EstÃ¡ndar y Coeficiente de VariaciÃ³n\n\n\\[s = \\sqrt{s^2} = \\sqrt{\\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})^2}{n}}\\]\n\\[CV = \\frac{s}{\\bar{x}} \\times 100\\%\\]\n\nContinuando el ejemplo anterior: \\(s^2 = 4\\) â†’ \\(s = \\sqrt{4} = 2\\)\n\\[CV = \\frac{2}{5} \\times 100\\% = 40\\%\\]\n\n\n\n\n\n\nTipInterpretaciÃ³n del CV\n\n\n\n\nCV &lt; 15%: Datos homogÃ©neos (poca dispersiÃ³n)\nCV 15-30%: DispersiÃ³n moderada\nCV &gt; 30%: Datos heterogÃ©neos (alta dispersiÃ³n)"
   },
   {
-    "objectID": "weeks/week01/slides.html#resumen-de-fórmulas",
-    "href": "weeks/week01/slides.html#resumen-de-fórmulas",
-    "title": "Semana 1: Estadística Descriptiva",
-    "section": "Resumen de Fórmulas",
-    "text": "Resumen de Fórmulas\n\n\n\n\nMedida\nFórmula\n\n\n\n\nMedia\n\\(\\bar{x} = \\frac{\\sum x_i}{n}\\)\n\n\nVarianza\n\\(s^2 = \\frac{\\sum(x_i - \\bar{x})^2}{n}\\)\n\n\nDesv. Estándar\n\\(s = \\sqrt{s^2}\\)\n\n\nCoef. Variación\n\\(CV = \\frac{s}{\\bar{x}} \\times 100\\%\\)\n\n\nRango\n\\(R = x_{max} - x_{min}\\)"
+    "objectID": "weeks/week01/slides.html#resumen-de-fã³rmulas",
+    "href": "weeks/week01/slides.html#resumen-de-fã³rmulas",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
+    "section": "Resumen de FÃ³rmulas",
+    "text": "Resumen de FÃ³rmulas\n\n\n\n\nMedida\nFÃ³rmula\n\n\n\n\nMedia\n\\(\\bar{x} = \\frac{\\sum x_i}{n}\\)\n\n\nVarianza\n\\(s^2 = \\frac{\\sum(x_i - \\bar{x})^2}{n}\\)\n\n\nDesv. EstÃ¡ndar\n\\(s = \\sqrt{s^2}\\)\n\n\nCoef. VariaciÃ³n\n\\(CV = \\frac{s}{\\bar{x}} \\times 100\\%\\)\n\n\nRango\n\\(R = x_{max} - x_{min}\\)"
   },
   {
-    "objectID": "weeks/week01/slides.html#próxima-semana",
-    "href": "weeks/week01/slides.html#próxima-semana",
-    "title": "Semana 1: Estadística Descriptiva",
-    "section": "Próxima Semana",
-    "text": "Próxima Semana\n\nSemana 2 — Datos Agrupados\n\n¿Cuándo y por qué agrupar datos?\nRegla de Sturges para determinar el número de clases\nConstrucción de tablas de frecuencias para datos agrupados\nMedia, mediana y moda para datos agrupados\n\n\nPrepárese para: Ejercicios con datasets de 30-50 observaciones usando Python y R.\n\n\n¡Hasta la próxima clase! 👋"
+    "objectID": "weeks/week01/slides.html#prã³xima-semana",
+    "href": "weeks/week01/slides.html#prã³xima-semana",
+    "title": "Semana 1: EstadÃ­stica Descriptiva",
+    "section": "PrÃ³xima Semana",
+    "text": "PrÃ³xima Semana\n\nSemana 2 â€” Datos Agrupados\n\nÂ¿CuÃ¡ndo y por quÃ© agrupar datos?\nRegla de Sturges para determinar el nÃºmero de clases\nConstrucciÃ³n de tablas de frecuencias para datos agrupados\nMedia, mediana y moda para datos agrupados\n\n\nPrepÃ¡rese para: Ejercicios con datasets de 30-50 observaciones usando Python y R.\n\n\nÂ¡Hasta la prÃ³xima clase! ðŸ‘‹"
   },
   {
     "objectID": "weeks/week02/page.html",
@@ -1299,60 +1327,67 @@
     ]
   },
   {
-    "objectID": "weeks/week03/slides.html#repaso-de-la-semana-anterior",
-    "href": "weeks/week03/slides.html#repaso-de-la-semana-anterior",
-    "title": "Semana 3: Medidas de Dispersión para Datos Agrupados",
-    "section": "Repaso de la Semana Anterior",
-    "text": "Repaso de la Semana Anterior\nSemana 2: Datos Agrupados — Tendencia Central\n\\[k = 1 + 3.322 \\log_{10}(n) \\quad c = \\frac{Rango}{k}\\]\n\\[\\bar{x} = \\frac{\\sum f_i m_i}{n} \\quad Me = L_i + \\frac{n/2 - F_{i-1}}{f_i} \\times c \\quad Mo = L_i + \\frac{d_1}{d_1+d_2} \\times c\\]\nEsta semana: ¿Qué tan dispersos están los datos alrededor de la media?"
+    "objectID": "weeks/week03/slides.html",
+    "href": "weeks/week03/slides.html",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
+    "section": "",
+    "text": "Semana 2: Datos Agrupados â€” Tendencia Central\n\\[k = 1 + 3.322 \\log_{10}(n) \\quad c = \\frac{Rango}{k}\\]\n\\[\\bar{x} = \\frac{\\sum f_i m_i}{n} \\quad Me = L_i + \\frac{n/2 - F_{i-1}}{f_i} \\times c \\quad Mo = L_i + \\frac{d_1}{d_1+d_2} \\times c\\]\nEsta semana: Â¿QuÃ© tan dispersos estÃ¡n los datos alrededor de la media?"
   },
   {
-    "objectID": "weeks/week03/slides.html#por-qué-necesitamos-medir-la-dispersión",
-    "href": "weeks/week03/slides.html#por-qué-necesitamos-medir-la-dispersión",
-    "title": "Semana 3: Medidas de Dispersión para Datos Agrupados",
-    "section": "¿Por qué necesitamos medir la dispersión?",
-    "text": "¿Por qué necesitamos medir la dispersión?\n\n\nGrupo A — Notas:\n70, 71, 70, 72, 70, 71\nMedia = 70.7\nNotas muy consistentes ✅\n\nGrupo B — Notas:\n40, 55, 85, 95, 60, 80\nMedia = 69.2\nNotas muy variables ⚠️\n\n\n\nDos grupos con media similar pueden tener comportamientos completamente distintos. La dispersión nos dice cuánto se alejan los datos de la media."
+    "objectID": "weeks/week03/slides.html#repaso-de-la-semana-anterior",
+    "href": "weeks/week03/slides.html#repaso-de-la-semana-anterior",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
+    "section": "",
+    "text": "Semana 2: Datos Agrupados â€” Tendencia Central\n\\[k = 1 + 3.322 \\log_{10}(n) \\quad c = \\frac{Rango}{k}\\]\n\\[\\bar{x} = \\frac{\\sum f_i m_i}{n} \\quad Me = L_i + \\frac{n/2 - F_{i-1}}{f_i} \\times c \\quad Mo = L_i + \\frac{d_1}{d_1+d_2} \\times c\\]\nEsta semana: Â¿QuÃ© tan dispersos estÃ¡n los datos alrededor de la media?"
+  },
+  {
+    "objectID": "weeks/week03/slides.html#âpor-quã-necesitamos-medir-la-dispersiã³n",
+    "href": "weeks/week03/slides.html#âpor-quã-necesitamos-medir-la-dispersiã³n",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
+    "section": "Â¿Por quÃ© necesitamos medir la dispersiÃ³n?",
+    "text": "Â¿Por quÃ© necesitamos medir la dispersiÃ³n?\n\n\n\nGrupo A â€” Notas:\n70, 71, 70, 72, 70, 71\nMedia = 70.7\nNotas muy consistentes âœ…\n\n\n\nGrupo B â€” Notas:\n40, 55, 85, 95, 60, 80\nMedia = 69.2\nNotas muy variables âš ï¸\n\n\n\n\n\nDos grupos con media similar pueden tener comportamientos completamente distintos. La dispersiÃ³n nos dice cuÃ¡nto se alejan los datos de la media."
   },
   {
     "objectID": "weeks/week03/slides.html#varianza-para-datos-agrupados",
     "href": "weeks/week03/slides.html#varianza-para-datos-agrupados",
-    "title": "Semana 3: Medidas de Dispersión para Datos Agrupados",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
     "section": "Varianza para Datos Agrupados",
     "text": "Varianza para Datos Agrupados\n\n\\[s^2 = \\frac{\\sum_{i=1}^{k} f_i \\cdot (m_i - \\bar{x})^2}{n}\\]\n\nUsando las marcas de clase \\(m_i\\) como representantes de cada intervalo.\n\n\n\n\n\n\n\n\n\n\n\n\\(i\\)\n\\(m_i\\)\n\\(f_i\\)\n\\(m_i - \\bar{x}\\)\n\\((m_i - \\bar{x})^2\\)\n\\(f_i(m_i-\\bar{x})^2\\)\n\n\n\n\n1\n460\n5\n460-721=-261\n68121\n340605\n\n\n2\n580\n9\n-141\n19881\n178929\n\n\n3\n700\n11\n-21\n441\n4851\n\n\n4\n820\n8\n99\n9801\n78408\n\n\n…\n…\n…\n…\n…\n…\n\n\n\n\\[s^2 = \\frac{340605 + 178929 + 4851 + 78408 + \\cdots}{40}\\]"
   },
   {
-    "objectID": "weeks/week03/slides.html#desviación-estándar-agrupada",
-    "href": "weeks/week03/slides.html#desviación-estándar-agrupada",
-    "title": "Semana 3: Medidas de Dispersión para Datos Agrupados",
-    "section": "Desviación Estándar Agrupada",
-    "text": "Desviación Estándar Agrupada\n\n\\[s = \\sqrt{s^2} = \\sqrt{\\frac{\\sum f_i (m_i - \\bar{x})^2}{n}}\\]\n\nLa desviación estándar está en las mismas unidades que los datos originales.\nInterpretación:\n\nSi \\(\\bar{x} = \\$721\\) y \\(s = \\$180\\), significa que los salarios típicamente se alejan $180 de la media\nLa mayoría de datos cae en el intervalo \\([\\bar{x} - s,\\ \\bar{x} + s] = [\\$541, \\$901]\\)\n\n\n\n\n\n\n\nRegla empírica (distribución aproximadamente normal)\n\n\n\n68% de los datos cae en \\(\\bar{x} \\pm s\\)\n95% de los datos cae en \\(\\bar{x} \\pm 2s\\)\n99.7% de los datos cae en \\(\\bar{x} \\pm 3s\\)"
+    "objectID": "weeks/week03/slides.html#desviaciã³n-estãndar-agrupada",
+    "href": "weeks/week03/slides.html#desviaciã³n-estãndar-agrupada",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
+    "section": "DesviaciÃ³n EstÃ¡ndar Agrupada",
+    "text": "DesviaciÃ³n EstÃ¡ndar Agrupada\n\n\\[s = \\sqrt{s^2} = \\sqrt{\\frac{\\sum f_i (m_i - \\bar{x})^2}{n}}\\]\n\nLa desviaciÃ³n estÃ¡ndar estÃ¡ en las mismas unidades que los datos originales.\n\nInterpretaciÃ³n:\n\nSi \\(\\bar{x} = \\$721\\) y \\(s = \\$180\\), significa que los salarios tÃ­picamente se alejan $180 de la media\nLa mayorÃ­a de datos cae en el intervalo \\([\\bar{x} - s,\\ \\bar{x} + s] = [\\$541, \\$901]\\)\n\n\n\n\n\n\n\nTipRegla empÃ­rica (distribuciÃ³n aproximadamente normal)\n\n\n\n\n68% de los datos cae en \\(\\bar{x} \\pm s\\)\n95% de los datos cae en \\(\\bar{x} \\pm 2s\\)\n99.7% de los datos cae en \\(\\bar{x} \\pm 3s\\)"
   },
   {
-    "objectID": "weeks/week03/slides.html#coeficiente-de-variación-cv",
-    "href": "weeks/week03/slides.html#coeficiente-de-variación-cv",
-    "title": "Semana 3: Medidas de Dispersión para Datos Agrupados",
-    "section": "Coeficiente de Variación (CV)",
-    "text": "Coeficiente de Variación (CV)\n\n\\[CV = \\frac{s}{\\bar{x}} \\times 100\\%\\]\n\nEl CV es adimensional → permite comparar la variabilidad entre grupos con distintas unidades o escalas.\n\n\n\nCV\nInterpretación\n\n\n\n\n&lt; 15%\nDatos homogéneos (poca dispersión)\n\n\n15% - 30%\nDispersión moderada\n\n\n&gt; 30%\nDatos heterogéneos (alta dispersión)\n\n\n\nEjemplo: \\(CV = \\frac{180}{721} \\times 100 = 24.97\\%\\) → Dispersión moderada"
+    "objectID": "weeks/week03/slides.html#coeficiente-de-variaciã³n-cv",
+    "href": "weeks/week03/slides.html#coeficiente-de-variaciã³n-cv",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
+    "section": "Coeficiente de VariaciÃ³n (CV)",
+    "text": "Coeficiente de VariaciÃ³n (CV)\n\n\\[CV = \\frac{s}{\\bar{x}} \\times 100\\%\\]\n\nEl CV es adimensional â†’ permite comparar la variabilidad entre grupos con distintas unidades o escalas.\n\n\n\nCV\nInterpretaciÃ³n\n\n\n\n\n&lt; 15%\nDatos homogÃ©neos (poca dispersiÃ³n)\n\n\n15% - 30%\nDispersiÃ³n moderada\n\n\n&gt; 30%\nDatos heterogÃ©neos (alta dispersiÃ³n)\n\n\n\nEjemplo: \\(CV = \\frac{180}{721} \\times 100 = 24.97\\%\\) â†’ DispersiÃ³n moderada"
   },
   {
-    "objectID": "weeks/week03/slides.html#comparación-datos-agrupados-vs-no-agrupados",
-    "href": "weeks/week03/slides.html#comparación-datos-agrupados-vs-no-agrupados",
-    "title": "Semana 3: Medidas de Dispersión para Datos Agrupados",
-    "section": "Comparación: Datos Agrupados vs No Agrupados",
-    "text": "Comparación: Datos Agrupados vs No Agrupados\n\n\n\n\n\n\n\n\nMedida\nNo Agrupados\nAgrupados\n\n\n\n\nVarianza\n\\(s^2 = \\frac{\\sum(x_i - \\bar{x})^2}{n}\\)\n\\(s^2 = \\frac{\\sum f_i(m_i - \\bar{x})^2}{n}\\)\n\n\nDesv. Estándar\n\\(s = \\sqrt{s^2}\\)\n\\(s = \\sqrt{s^2}\\)\n\n\nCV\n\\(\\frac{s}{\\bar{x}} \\times 100\\%\\)\n\\(\\frac{s}{\\bar{x}} \\times 100\\%\\)\n\n\n\n\n\n\n\n\n\nNote\n\n\nLa fórmula es la misma conceptualmente. La diferencia es que para agrupados usamos \\(f_i \\cdot (m_i - \\bar{x})^2\\) en lugar de \\((x_i - \\bar{x})^2\\) para cada dato individual."
+    "objectID": "weeks/week03/slides.html#comparaciã³n-datos-agrupados-vs-no-agrupados",
+    "href": "weeks/week03/slides.html#comparaciã³n-datos-agrupados-vs-no-agrupados",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
+    "section": "ComparaciÃ³n: Datos Agrupados vs No Agrupados",
+    "text": "ComparaciÃ³n: Datos Agrupados vs No Agrupados\n\n\n\n\n\n\n\n\nMedida\nNo Agrupados\nAgrupados\n\n\n\n\nVarianza\n\\(s^2 = \\frac{\\sum(x_i - \\bar{x})^2}{n}\\)\n\\(s^2 = \\frac{\\sum f_i(m_i - \\bar{x})^2}{n}\\)\n\n\nDesv. EstÃ¡ndar\n\\(s = \\sqrt{s^2}\\)\n\\(s = \\sqrt{s^2}\\)\n\n\nCV\n\\(\\frac{s}{\\bar{x}} \\times 100\\%\\)\n\\(\\frac{s}{\\bar{x}} \\times 100\\%\\)\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nLa fÃ³rmula es la misma conceptualmente. La diferencia es que para agrupados usamos \\(f_i \\cdot (m_i - \\bar{x})^2\\) en lugar de \\((x_i - \\bar{x})^2\\) para cada dato individual."
   },
   {
-    "objectID": "weeks/week03/slides.html#caso-práctico-comparar-dos-grupos",
-    "href": "weeks/week03/slides.html#caso-práctico-comparar-dos-grupos",
-    "title": "Semana 3: Medidas de Dispersión para Datos Agrupados",
-    "section": "Caso Práctico: Comparar dos grupos",
-    "text": "Caso Práctico: Comparar dos grupos\n¿Qué empresa tiene salarios más consistentes?\n\n\n\n\nEmpresa A\nEmpresa B\n\n\n\n\nMedia (x̄)\n$1,200\n$800\n\n\nDesv. Estándar (s)\n$360\n$200\n\n\nCV\n30%\n25%\n\n\n\n\nConclusión: Aunque la empresa A paga más en promedio, la empresa B tiene salarios más consistentes (menor CV). Si fuera candidato, ¿cuál elegiría?"
+    "objectID": "weeks/week03/slides.html#caso-prãctico-comparar-dos-grupos",
+    "href": "weeks/week03/slides.html#caso-prãctico-comparar-dos-grupos",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
+    "section": "Caso PrÃ¡ctico: Comparar dos grupos",
+    "text": "Caso PrÃ¡ctico: Comparar dos grupos\nÂ¿QuÃ© empresa tiene salarios mÃ¡s consistentes?\n\n\n\n\nEmpresa A\nEmpresa B\n\n\n\n\nMedia (xÌ„)\n$1,200\n$800\n\n\nDesv. EstÃ¡ndar (s)\n$360\n$200\n\n\nCV\n30%\n25%\n\n\n\n\nConclusiÃ³n: Aunque la empresa A paga mÃ¡s en promedio, la empresa B tiene salarios mÃ¡s consistentes (menor CV). Si fuera candidato, Â¿cuÃ¡l elegirÃ­a?"
   },
   {
-    "objectID": "weeks/week03/slides.html#resumen-de-fórmulas-completo",
-    "href": "weeks/week03/slides.html#resumen-de-fórmulas-completo",
-    "title": "Semana 3: Medidas de Dispersión para Datos Agrupados",
-    "section": "Resumen de Fórmulas Completo",
-    "text": "Resumen de Fórmulas Completo\nMedidas de Tendencia Central (agrupadas): \\[\\bar{x} = \\frac{\\sum f_i m_i}{n} \\quad Me = L + \\frac{n/2-F}{f}c \\quad Mo = L + \\frac{d_1}{d_1+d_2}c\\]\nMedidas de Dispersión (agrupadas): \\[s^2 = \\frac{\\sum f_i(m_i-\\bar{x})^2}{n} \\quad s = \\sqrt{s^2} \\quad CV = \\frac{s}{\\bar{x}} \\times 100\\%\\]\n\nLa semana que viene…\nTema 2: Variables aleatorias y funciones de probabilidad — la base del pensamiento estadístico inferencial."
+    "objectID": "weeks/week03/slides.html#resumen-de-fã³rmulas-completo",
+    "href": "weeks/week03/slides.html#resumen-de-fã³rmulas-completo",
+    "title": "Semana 3: Medidas de DispersiÃ³n para Datos Agrupados",
+    "section": "Resumen de FÃ³rmulas Completo",
+    "text": "Resumen de FÃ³rmulas Completo\nMedidas de Tendencia Central (agrupadas): \\[\\bar{x} = \\frac{\\sum f_i m_i}{n} \\quad Me = L + \\frac{n/2-F}{f}c \\quad Mo = L + \\frac{d_1}{d_1+d_2}c\\]\nMedidas de DispersiÃ³n (agrupadas): \\[s^2 = \\frac{\\sum f_i(m_i-\\bar{x})^2}{n} \\quad s = \\sqrt{s^2} \\quad CV = \\frac{s}{\\bar{x}} \\times 100\\%\\]\n\n\nLa semana que viene…\nTema 2: Variables aleatorias y funciones de probabilidad â€” la base del pensamiento estadÃ­stico inferencial."
   },
   {
     "objectID": "weeks/week04/page.html",
@@ -1487,74 +1522,81 @@
     ]
   },
   {
-    "objectID": "weeks/week05/slides.html#por-qué-aprender-r",
-    "href": "weeks/week05/slides.html#por-qué-aprender-r",
-    "title": "Semana 5: Introducción a RStudio",
-    "section": "¿Por qué aprender R?",
-    "text": "¿Por qué aprender R?\n\n\n\nGratuito y open source\nDiseñado específicamente para estadística y análisis de datos\nEnorme comunidad y repositorio de paquetes (CRAN: 20,000+ paquetes)\nEstándar en academia, investigación y ciencia de datos\nExcelente para visualizaciones (ggplot2)\nIntegración con Python, SQL, y más\n\n\nR es el lenguaje de los\nestadísticos. Si quieres\nhablar el idioma de los\ndatos, necesitas R.\n🏆 Empresas que usan R: - Google - Facebook/Meta - Airbnb - New York Times"
+    "objectID": "weeks/week05/slides.html",
+    "href": "weeks/week05/slides.html",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
+    "section": "",
+    "text": "Gratuito y open source\nDiseÃ±ado especÃ­ficamente para estadÃ­stica y anÃ¡lisis de datos\nEnorme comunidad y repositorio de paquetes (CRAN: 20,000+ paquetes)\nEstÃ¡ndar en academia, investigaciÃ³n y ciencia de datos\nExcelente para visualizaciones (ggplot2)\nIntegraciÃ³n con Python, SQL, y mÃ¡s\n\n\nR es el lenguaje de los\nestadÃ­sticos. Si quieres\nhablar el idioma de los\ndatos, necesitas R.\nðŸ† Empresas que usan R: - Google - Facebook/Meta - Airbnb - New York Times"
   },
   {
-    "objectID": "weeks/week05/slides.html#r-vs-python-para-estadística",
-    "href": "weeks/week05/slides.html#r-vs-python-para-estadística",
-    "title": "Semana 5: Introducción a RStudio",
-    "section": "R vs Python para Estadística",
-    "text": "R vs Python para Estadística\n\n\n\nCaracterística\nR\nPython\n\n\n\n\nEstadística nativa\n⭐⭐⭐\n⭐⭐\n\n\nVisualización\n⭐⭐⭐\n⭐⭐⭐\n\n\nMachine Learning\n⭐⭐\n⭐⭐⭐\n\n\nCurva de aprendizaje\nMedia\nMedia\n\n\nComunidad estadística\n⭐⭐⭐\n⭐⭐\n\n\nDatos tabulares\n⭐⭐⭐\n⭐⭐⭐\n\n\n\n\nEn este curso: Usamos ambos. R para análisis estadístico formal, Python para automatización y machine learning. ¡Son complementarios!"
+    "objectID": "weeks/week05/slides.html#âpor-quã-aprender-r",
+    "href": "weeks/week05/slides.html#âpor-quã-aprender-r",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
+    "section": "",
+    "text": "Gratuito y open source\nDiseÃ±ado especÃ­ficamente para estadÃ­stica y anÃ¡lisis de datos\nEnorme comunidad y repositorio de paquetes (CRAN: 20,000+ paquetes)\nEstÃ¡ndar en academia, investigaciÃ³n y ciencia de datos\nExcelente para visualizaciones (ggplot2)\nIntegraciÃ³n con Python, SQL, y mÃ¡s\n\n\nR es el lenguaje de los\nestadÃ­sticos. Si quieres\nhablar el idioma de los\ndatos, necesitas R.\nðŸ† Empresas que usan R: - Google - Facebook/Meta - Airbnb - New York Times"
   },
   {
-    "objectID": "weeks/week05/slides.html#instalación",
-    "href": "weeks/week05/slides.html#instalación",
-    "title": "Semana 5: Introducción a RStudio",
-    "section": "Instalación",
-    "text": "Instalación\nPaso 1: Instalar R base - Descargar de: cran.r-project.org - Seleccionar: Windows / macOS / Linux - Instalar con opciones por defecto\nPaso 2: Instalar RStudio - Descargar de: posit.co/download/rstudio-desktop/ - Instalar la versión Desktop gratuita\n\n\n\n\n\n\nNote\n\n\nRStudio es un IDE (entorno de desarrollo integrado) que hace que trabajar con R sea mucho más cómodo. No es R en sí, sino la interfaz para usarlo."
+    "objectID": "weeks/week05/slides.html#r-vs-python-para-estadãstica",
+    "href": "weeks/week05/slides.html#r-vs-python-para-estadãstica",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
+    "section": "R vs Python para EstadÃ­stica",
+    "text": "R vs Python para EstadÃ­stica\n\n\n\nCaracterÃ­stica\nR\nPython\n\n\n\n\nEstadÃ­stica nativa\nâ­â­â­\nâ­â­\n\n\nVisualizaciÃ³n\nâ­â­â­\nâ­â­â­\n\n\nMachine Learning\nâ­â­\nâ­â­â­\n\n\nCurva de aprendizaje\nMedia\nMedia\n\n\nComunidad estadÃ­stica\nâ­â­â­\nâ­â­\n\n\nDatos tabulares\nâ­â­â­\nâ­â­â­\n\n\n\n\nEn este curso: Usamos ambos. R para anÃ¡lisis estadÃ­stico formal, Python para automatizaciÃ³n y machine learning. Â¡Son complementarios!"
+  },
+  {
+    "objectID": "weeks/week05/slides.html#instalaciã³n",
+    "href": "weeks/week05/slides.html#instalaciã³n",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
+    "section": "InstalaciÃ³n",
+    "text": "InstalaciÃ³n\nPaso 1: Instalar R base - Descargar de: cran.r-project.org - Seleccionar: Windows / macOS / Linux - Instalar con opciones por defecto\nPaso 2: Instalar RStudio - Descargar de: posit.co/download/rstudio-desktop/ - Instalar la versiÃ³n Desktop gratuita\n\n\n\n\n\n\nNota\n\n\n\nRStudio es un IDE (entorno de desarrollo integrado) que hace que trabajar con R sea mucho mÃ¡s cÃ³modo. No es R en sÃ­, sino la interfaz para usarlo."
   },
   {
     "objectID": "weeks/week05/slides.html#la-interfaz-de-rstudio",
     "href": "weeks/week05/slides.html#la-interfaz-de-rstudio",
-    "title": "Semana 5: Introducción a RStudio",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
     "section": "La Interfaz de RStudio",
-    "text": "La Interfaz de RStudio\nLa pantalla de RStudio tiene 4 paneles:\n┌─────────────────────┬─────────────────────┐\n│                     │                     │\n│    Editor de        │   Environment /     │\n│    Scripts          │   History           │\n│    (arriba izq.)    │   (arriba der.)     │\n│                     │                     │\n├─────────────────────┼─────────────────────┤\n│                     │                     │\n│    Consola          │   Files / Plots /   │\n│    (abajo izq.)     │   Packages / Help   │\n│                     │   (abajo der.)      │\n│                     │                     │\n└─────────────────────┴─────────────────────┘"
+    "text": "La Interfaz de RStudio\nLa pantalla de RStudio tiene 4 paneles:\nâ”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”\nâ”‚                     â”‚                     â”‚\nâ”‚    Editor de        â”‚   Environment /     â”‚\nâ”‚    Scripts          â”‚   History           â”‚\nâ”‚    (arriba izq.)    â”‚   (arriba der.)     â”‚\nâ”‚                     â”‚                     â”‚\nâ”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤\nâ”‚                     â”‚                     â”‚\nâ”‚    Consola          â”‚   Files / Plots /   â”‚\nâ”‚    (abajo izq.)     â”‚   Packages / Help   â”‚\nâ”‚                     â”‚   (abajo der.)      â”‚\nâ”‚                     â”‚                     â”‚\nâ””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜"
   },
   {
     "objectID": "weeks/week05/slides.html#los-4-paneles-de-rstudio",
     "href": "weeks/week05/slides.html#los-4-paneles-de-rstudio",
-    "title": "Semana 5: Introducción a RStudio",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
     "section": "Los 4 Paneles de RStudio",
-    "text": "Los 4 Paneles de RStudio\n\n\nPanel 1: Editor (Scripts)\n\nAquí escribe su código\nSe guarda como archivo .R\nCtrl+Enter para ejecutar línea\nCtrl+Shift+Enter para ejecutar todo\n\n\nPanel 2: Environment\n\nMuestra todas las variables creadas\nListas, vectores, data frames visibles\nHistory: historial de comandos\n\n\n\n\nPanel 3: Consola\n\nEjecuta R en tiempo real\nResultados aparecen aquí\nTambién puede escribir directamente\n\n\nPanel 4: Files/Plots/Help\n\nFiles: navegador de archivos\nPlots: gráficos generados\nPackages: paquetes instalados\nHelp: documentación"
+    "text": "Los 4 Paneles de RStudio\n\n\n\nPanel 1: Editor (Scripts)\n\nAquÃ­ escribe su cÃ³digo\nSe guarda como archivo .R\nCtrl+Enter para ejecutar lÃ­nea\nCtrl+Shift+Enter para ejecutar todo\n\n\n\n\nPanel 2: Environment\n\nMuestra todas las variables creadas\nListas, vectores, data frames visibles\nHistory: historial de comandos\n\n\n\n\n\n\n\nPanel 3: Consola\n\nEjecuta R en tiempo real\nResultados aparecen aquÃ­\nTambiÃ©n puede escribir directamente\n\n\n\n\nPanel 4: Files/Plots/Help\n\nFiles: navegador de archivos\nPlots: grÃ¡ficos generados\nPackages: paquetes instalados\nHelp: documentaciÃ³n"
   },
   {
     "objectID": "weeks/week05/slides.html#primeros-comandos-en-r",
     "href": "weeks/week05/slides.html#primeros-comandos-en-r",
-    "title": "Semana 5: Introducción a RStudio",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
     "section": "Primeros Comandos en R",
-    "text": "Primeros Comandos en R\n# Esto es un comentario (R ignora las líneas que empiezan con #)\n\n# Operaciones básicas\n2 + 3        # 5\n10 - 4       # 6\n3 * 7        # 21\n15 / 4       # 3.75\n2^8          # 256\nsqrt(16)     # 4\nabs(-7)      # 7\nlog(100)     # 4.60517 (logaritmo natural)\nlog10(100)   # 2 (logaritmo base 10)\n\nEn R, el operador de asignación es &lt;- (aunque = también funciona):\nx &lt;- 10\ny &lt;- 5\nx + y  # 15"
+    "text": "Primeros Comandos en R\n# Esto es un comentario (R ignora las lÃ­neas que empiezan con #)\n\n# Operaciones bÃ¡sicas\n2 + 3        # 5\n10 - 4       # 6\n3 * 7        # 21\n15 / 4       # 3.75\n2^8          # 256\nsqrt(16)     # 4\nabs(-7)      # 7\nlog(100)     # 4.60517 (logaritmo natural)\nlog10(100)   # 2 (logaritmo base 10)\n\nEn R, el operador de asignaciÃ³n es &lt;- (aunque = tambiÃ©n funciona):\nx &lt;- 10\ny &lt;- 5\nx + y  # 15"
   },
   {
     "objectID": "weeks/week05/slides.html#tipos-de-datos-en-r",
     "href": "weeks/week05/slides.html#tipos-de-datos-en-r",
-    "title": "Semana 5: Introducción a RStudio",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
     "section": "Tipos de Datos en R",
-    "text": "Tipos de Datos en R\n# Numeric (numérico)\nedad    &lt;- 25L         # entero (integer)\nsalario &lt;- 1500.50     # decimal (double)\n\n# Character (texto)\nnombre  &lt;- \"David\"\nciudad  &lt;- 'Quito'\n\n# Logical (lógico)\nactivo  &lt;- TRUE\ninactivo &lt;- FALSE\n\n# Verificar tipos\nclass(edad)     # \"integer\"\nclass(salario)  # \"numeric\"\nclass(nombre)   # \"character\"\nclass(activo)   # \"logical\"\n\n# Convertir tipos\nas.numeric(\"3.14\")   # 3.14\nas.character(42)     # \"42\"\nas.logical(1)        # TRUE"
+    "text": "Tipos de Datos en R\n# Numeric (numÃ©rico)\nedad    &lt;- 25L         # entero (integer)\nsalario &lt;- 1500.50     # decimal (double)\n\n# Character (texto)\nnombre  &lt;- \"David\"\nciudad  &lt;- 'Quito'\n\n# Logical (lÃ³gico)\nactivo  &lt;- TRUE\ninactivo &lt;- FALSE\n\n# Verificar tipos\nclass(edad)     # \"integer\"\nclass(salario)  # \"numeric\"\nclass(nombre)   # \"character\"\nclass(activo)   # \"logical\"\n\n# Convertir tipos\nas.numeric(\"3.14\")   # 3.14\nas.character(42)     # \"42\"\nas.logical(1)        # TRUE"
   },
   {
     "objectID": "weeks/week05/slides.html#paquetes-en-r",
     "href": "weeks/week05/slides.html#paquetes-en-r",
-    "title": "Semana 5: Introducción a RStudio",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
     "section": "Paquetes en R",
-    "text": "Paquetes en R\nLos paquetes extienden las capacidades de R base:\n# Instalar un paquete (solo una vez)\ninstall.packages(\"dplyr\")\ninstall.packages(\"ggplot2\")\ninstall.packages(\"readxl\")\n\n# Cargar el paquete para usarlo\nlibrary(dplyr)\nlibrary(ggplot2)\n\n# Ver todos los paquetes instalados\ninstalled.packages()[, \"Package\"]\n\n# Obtener ayuda sobre un paquete o función\n?dplyr\nhelp(\"mean\")\n?ggplot2\n\n\n\n\n\n\nTip\n\n\nLos paquetes más importantes para este curso: - dplyr — manipulación de datos - ggplot2 — visualización - readxl — importar Excel - tidyr — limpieza de datos"
+    "text": "Paquetes en R\nLos paquetes extienden las capacidades de R base:\n# Instalar un paquete (solo una vez)\ninstall.packages(\"dplyr\")\ninstall.packages(\"ggplot2\")\ninstall.packages(\"readxl\")\n\n# Cargar el paquete para usarlo\nlibrary(dplyr)\nlibrary(ggplot2)\n\n# Ver todos los paquetes instalados\ninstalled.packages()[, \"Package\"]\n\n# Obtener ayuda sobre un paquete o funciÃ³n\n?dplyr\nhelp(\"mean\")\n?ggplot2\n\n\n\n\n\n\nTip\n\n\n\nLos paquetes mÃ¡s importantes para este curso: - dplyr â€” manipulaciÃ³n de datos - ggplot2 â€” visualizaciÃ³n - readxl â€” importar Excel - tidyr â€” limpieza de datos"
   },
   {
     "objectID": "weeks/week05/slides.html#r-comparado-con-lo-que-ya-conoce",
     "href": "weeks/week05/slides.html#r-comparado-con-lo-que-ya-conoce",
-    "title": "Semana 5: Introducción a RStudio",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
     "section": "R Comparado con lo que ya conoce",
-    "text": "R Comparado con lo que ya conoce\nSi ya sabe Python, R le resultará familiar:\n\n\n\nConcepto\nPython\nR\n\n\n\n\nLista/Vector\n[1, 2, 3]\nc(1, 2, 3)\n\n\nComentario\n# texto\n# texto\n\n\nAsignación\nx = 5\nx &lt;- 5\n\n\nImprimir\nprint(x)\nprint(x) o cat(x)\n\n\nLongitud\nlen(x)\nlength(x)\n\n\nSuma\nsum(x)\nsum(x)\n\n\nMedia\nnp.mean(x)\nmean(x)\n\n\nPara loop\nfor i in x:\nfor (i in x) {}"
+    "text": "R Comparado con lo que ya conoce\nSi ya sabe Python, R le resultarÃ¡ familiar:\n\n\n\nConcepto\nPython\nR\n\n\n\n\nLista/Vector\n[1, 2, 3]\nc(1, 2, 3)\n\n\nComentario\n# texto\n# texto\n\n\nAsignaciÃ³n\nx = 5\nx &lt;- 5\n\n\nImprimir\nprint(x)\nprint(x) o cat(x)\n\n\nLongitud\nlen(x)\nlength(x)\n\n\nSuma\nsum(x)\nsum(x)\n\n\nMedia\nnp.mean(x)\nmean(x)\n\n\nPara loop\nfor i in x:\nfor (i in x) {}"
   },
   {
-    "objectID": "weeks/week05/slides.html#próxima-clase",
-    "href": "weeks/week05/slides.html#próxima-clase",
-    "title": "Semana 5: Introducción a RStudio",
-    "section": "Próxima Clase",
-    "text": "Próxima Clase\n\nSemana 6 — Primeros Pasos en R\n\nVectores: la estructura de datos fundamental en R\nMatrices y operaciones matriciales\nData Frames: el equivalente de una tabla en R\nFunciones de estadística descriptiva con R\n\n\nPrepare su computadora: 1. Instale R desde cran.r-project.org 2. Instale RStudio desde posit.co 3. Abra RStudio y ejecute: print(\"Hola R!\")\n¡En la próxima clase empezamos a programar! 💻"
+    "objectID": "weeks/week05/slides.html#prã³xima-clase",
+    "href": "weeks/week05/slides.html#prã³xima-clase",
+    "title": "Semana 5: IntroducciÃ³n a RStudio",
+    "section": "PrÃ³xima Clase",
+    "text": "PrÃ³xima Clase\n\nSemana 6 â€” Primeros Pasos en R\n\nVectores: la estructura de datos fundamental en R\nMatrices y operaciones matriciales\nData Frames: el equivalente de una tabla en R\nFunciones de estadÃ­stica descriptiva con R\n\n\nPrepare su computadora: 1. Instale R desde cran.r-project.org 2. Instale RStudio desde posit.co 3. Abra RStudio y ejecute: print(\"Hola R!\")\nÂ¡En la prÃ³xima clase empezamos a programar! ðŸ’»"
   },
   {
     "objectID": "weeks/week06/page.html",
@@ -1725,60 +1767,67 @@
     ]
   },
   {
+    "objectID": "weeks/week07/slides.html",
+    "href": "weeks/week07/slides.html",
+    "title": "Semana 7: GestiÃ³n de Datos en R",
+    "section": "",
+    "text": "ðŸ“‚ Datos Crudos\n      â†“\n   Importar (read.csv, read_excel)\n      â†“\n   Explorar (head, str, summary)\n      â†“\n   Limpiar (na.omit, mutate, filter)\n      â†“\n   Transformar (group_by, summarise, arrange)\n      â†“\nðŸ“Š AnÃ¡lisis y VisualizaciÃ³n\n      â†“\nðŸ“ Informe / DecisiÃ³n\nEsta semana cubrimos todos estos pasos con datos reales."
+  },
+  {
     "objectID": "weeks/week07/slides.html#el-flujo-de-trabajo-en-ciencia-de-datos",
     "href": "weeks/week07/slides.html#el-flujo-de-trabajo-en-ciencia-de-datos",
-    "title": "Semana 7: Gestión de Datos en R",
-    "section": "El Flujo de Trabajo en Ciencia de Datos",
-    "text": "El Flujo de Trabajo en Ciencia de Datos\n📂 Datos Crudos\n      ↓\n   Importar (read.csv, read_excel)\n      ↓\n   Explorar (head, str, summary)\n      ↓\n   Limpiar (na.omit, mutate, filter)\n      ↓\n   Transformar (group_by, summarise, arrange)\n      ↓\n📊 Análisis y Visualización\n      ↓\n📝 Informe / Decisión\nEsta semana cubrimos todos estos pasos con datos reales."
+    "title": "Semana 7: GestiÃ³n de Datos en R",
+    "section": "",
+    "text": "ðŸ“‚ Datos Crudos\n      â†“\n   Importar (read.csv, read_excel)\n      â†“\n   Explorar (head, str, summary)\n      â†“\n   Limpiar (na.omit, mutate, filter)\n      â†“\n   Transformar (group_by, summarise, arrange)\n      â†“\nðŸ“Š AnÃ¡lisis y VisualizaciÃ³n\n      â†“\nðŸ“ Informe / DecisiÃ³n\nEsta semana cubrimos todos estos pasos con datos reales."
   },
   {
     "objectID": "weeks/week07/slides.html#importar-datos",
     "href": "weeks/week07/slides.html#importar-datos",
-    "title": "Semana 7: Gestión de Datos en R",
+    "title": "Semana 7: GestiÃ³n de Datos en R",
     "section": "Importar Datos",
-    "text": "Importar Datos\n# ── CSV ──────────────────────────────────────────────\ndatos &lt;- read.csv(\"archivo.csv\")\ndatos &lt;- read.csv(\"archivo.csv\",\n                  sep=\";\",            # separador punto y coma\n                  dec=\",\",            # decimal con coma (Europa/Latam)\n                  encoding=\"UTF-8\",   # caracteres especiales\n                  header=TRUE)        # primera fila = nombres\n\n# ── Excel ─────────────────────────────────────────────\nlibrary(readxl)\ndatos &lt;- read_excel(\"archivo.xlsx\")\ndatos &lt;- read_excel(\"archivo.xlsx\",\n                    sheet = \"Hoja2\",   # hoja específica\n                    skip = 2,          # saltar primeras 2 filas\n                    range = \"A1:E100\") # rango específico\n\n# ── Exportar resultados ───────────────────────────────\nwrite.csv(datos, \"resultados.csv\", row.names=FALSE)\n\n\n\n\n\n\nTip práctico\n\n\nEn RStudio: File → Import Dataset → From CSV/Excel abre un asistente visual para importar sin escribir código."
+    "text": "Importar Datos\n# â”€â”€ CSV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\ndatos &lt;- read.csv(\"archivo.csv\")\ndatos &lt;- read.csv(\"archivo.csv\",\n                  sep=\";\",            # separador punto y coma\n                  dec=\",\",            # decimal con coma (Europa/Latam)\n                  encoding=\"UTF-8\",   # caracteres especiales\n                  header=TRUE)        # primera fila = nombres\n\n# â”€â”€ Excel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nlibrary(readxl)\ndatos &lt;- read_excel(\"archivo.xlsx\")\ndatos &lt;- read_excel(\"archivo.xlsx\",\n                    sheet = \"Hoja2\",   # hoja especÃ­fica\n                    skip = 2,          # saltar primeras 2 filas\n                    range = \"A1:E100\") # rango especÃ­fico\n\n# â”€â”€ Exportar resultados â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nwrite.csv(datos, \"resultados.csv\", row.names=FALSE)\n\n\n\n\n\n\nTipTip prÃ¡ctico\n\n\n\nEn RStudio: File â†’ Import Dataset â†’ From CSV/Excel abre un asistente visual para importar sin escribir cÃ³digo."
   },
   {
-    "objectID": "weeks/week07/slides.html#exploración-inicial-del-dataset",
-    "href": "weeks/week07/slides.html#exploración-inicial-del-dataset",
-    "title": "Semana 7: Gestión de Datos en R",
-    "section": "Exploración Inicial del Dataset",
-    "text": "Exploración Inicial del Dataset\n# Siempre comience con estas funciones:\nhead(datos, 10)        # primeras 10 filas\ntail(datos, 5)         # últimas 5 filas\nstr(datos)             # estructura y tipos\nsummary(datos)         # estadísticas rápidas\ndim(datos)             # filas x columnas\nnames(datos)           # nombres de columnas\nnrow(datos); ncol(datos)\n\n# Contar valores faltantes\nsum(is.na(datos))              # total NAs\ncolSums(is.na(datos))          # NAs por columna\nmean(is.na(datos$columna))     # % NAs en una columna"
+    "objectID": "weeks/week07/slides.html#exploraciã³n-inicial-del-dataset",
+    "href": "weeks/week07/slides.html#exploraciã³n-inicial-del-dataset",
+    "title": "Semana 7: GestiÃ³n de Datos en R",
+    "section": "ExploraciÃ³n Inicial del Dataset",
+    "text": "ExploraciÃ³n Inicial del Dataset\n# Siempre comience con estas funciones:\nhead(datos, 10)        # primeras 10 filas\ntail(datos, 5)         # Ãºltimas 5 filas\nstr(datos)             # estructura y tipos\nsummary(datos)         # estadÃ­sticas rÃ¡pidas\ndim(datos)             # filas x columnas\nnames(datos)           # nombres de columnas\nnrow(datos); ncol(datos)\n\n# Contar valores faltantes\nsum(is.na(datos))              # total NAs\ncolSums(is.na(datos))          # NAs por columna\nmean(is.na(datos$columna))     # % NAs en una columna"
   },
   {
     "objectID": "weeks/week07/slides.html#limpieza-de-datos",
     "href": "weeks/week07/slides.html#limpieza-de-datos",
-    "title": "Semana 7: Gestión de Datos en R",
+    "title": "Semana 7: GestiÃ³n de Datos en R",
     "section": "Limpieza de Datos",
-    "text": "Limpieza de Datos\n# ── Valores faltantes (NA) ────────────────────────────\nis.na(datos$columna)           # vector de TRUE/FALSE\ndatos_limpios &lt;- na.omit(datos) # eliminar filas con NA\n\n# Reemplazar NA por la media\ndatos$salario[is.na(datos$salario)] &lt;- mean(datos$salario, na.rm=TRUE)\n\n# ── Duplicados ────────────────────────────────────────\nsum(duplicated(datos))           # contar duplicados\ndatos &lt;- datos[!duplicated(datos), ]  # eliminar duplicados\n\n# ── Convertir tipos ───────────────────────────────────\ndatos$fecha  &lt;- as.Date(datos$fecha, format=\"%Y-%m-%d\")\ndatos$salario &lt;- as.numeric(datos$salario)\ndatos$ciudad  &lt;- as.factor(datos$ciudad)\n\n# ── Filtrar outliers extremos ─────────────────────────\nQ1 &lt;- quantile(datos$salario, 0.25)\nQ3 &lt;- quantile(datos$salario, 0.75)\nIQR &lt;- Q3 - Q1\ndatos_sin_outliers &lt;- datos[datos$salario &gt;= Q1 - 1.5*IQR &\n                             datos$salario &lt;= Q3 + 1.5*IQR, ]"
+    "text": "Limpieza de Datos\n# â”€â”€ Valores faltantes (NA) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nis.na(datos$columna)           # vector de TRUE/FALSE\ndatos_limpios &lt;- na.omit(datos) # eliminar filas con NA\n\n# Reemplazar NA por la media\ndatos$salario[is.na(datos$salario)] &lt;- mean(datos$salario, na.rm=TRUE)\n\n# â”€â”€ Duplicados â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nsum(duplicated(datos))           # contar duplicados\ndatos &lt;- datos[!duplicated(datos), ]  # eliminar duplicados\n\n# â”€â”€ Convertir tipos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\ndatos$fecha  &lt;- as.Date(datos$fecha, format=\"%Y-%m-%d\")\ndatos$salario &lt;- as.numeric(datos$salario)\ndatos$ciudad  &lt;- as.factor(datos$ciudad)\n\n# â”€â”€ Filtrar outliers extremos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nQ1 &lt;- quantile(datos$salario, 0.25)\nQ3 &lt;- quantile(datos$salario, 0.75)\nIQR &lt;- Q3 - Q1\ndatos_sin_outliers &lt;- datos[datos$salario &gt;= Q1 - 1.5*IQR &\n                             datos$salario &lt;= Q3 + 1.5*IQR, ]"
   },
   {
-    "objectID": "weeks/week07/slides.html#el-paquete-dplyr-las-5-funciones-clave",
-    "href": "weeks/week07/slides.html#el-paquete-dplyr-las-5-funciones-clave",
-    "title": "Semana 7: Gestión de Datos en R",
-    "section": "El Paquete dplyr — Las 5 Funciones Clave",
-    "text": "El Paquete dplyr — Las 5 Funciones Clave\nlibrary(dplyr)\n\n# ── filter(): filtrar filas ───────────────────────────\ndatos %&gt;% filter(salario &gt; 1000)\ndatos %&gt;% filter(ciudad == \"Quito\" & genero == \"F\")\n\n# ── select(): seleccionar columnas ───────────────────\ndatos %&gt;% select(nombre, salario, ciudad)\ndatos %&gt;% select(-id)           # todas menos id\ndatos %&gt;% select(starts_with(\"nota\"))  # columnas que empiezan con \"nota\"\n\n# ── mutate(): crear/modificar columnas ───────────────\ndatos %&gt;% mutate(\n  salario_anual = salario * 12,\n  categoria = ifelse(salario &gt;= 1500, \"Alto\", \"Bajo\")\n)\n\n# ── group_by + summarise(): resumen por grupos ────────\ndatos %&gt;%\n  group_by(ciudad) %&gt;%\n  summarise(media = mean(salario), n = n())\n\n# ── arrange(): ordenar ───────────────────────────────\ndatos %&gt;% arrange(desc(salario))   # mayor a menor\ndatos %&gt;% arrange(ciudad, salario) # por ciudad, luego salario"
+    "objectID": "weeks/week07/slides.html#el-paquete-dplyr-â-las-5-funciones-clave",
+    "href": "weeks/week07/slides.html#el-paquete-dplyr-â-las-5-funciones-clave",
+    "title": "Semana 7: GestiÃ³n de Datos en R",
+    "section": "El Paquete dplyr â€” Las 5 Funciones Clave",
+    "text": "El Paquete dplyr â€” Las 5 Funciones Clave\nlibrary(dplyr)\n\n# â”€â”€ filter(): filtrar filas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\ndatos %&gt;% filter(salario &gt; 1000)\ndatos %&gt;% filter(ciudad == \"Quito\" & genero == \"F\")\n\n# â”€â”€ select(): seleccionar columnas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\ndatos %&gt;% select(nombre, salario, ciudad)\ndatos %&gt;% select(-id)           # todas menos id\ndatos %&gt;% select(starts_with(\"nota\"))  # columnas que empiezan con \"nota\"\n\n# â”€â”€ mutate(): crear/modificar columnas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\ndatos %&gt;% mutate(\n  salario_anual = salario * 12,\n  categoria = ifelse(salario &gt;= 1500, \"Alto\", \"Bajo\")\n)\n\n# â”€â”€ group_by + summarise(): resumen por grupos â”€â”€â”€â”€â”€â”€â”€â”€\ndatos %&gt;%\n  group_by(ciudad) %&gt;%\n  summarise(media = mean(salario), n = n())\n\n# â”€â”€ arrange(): ordenar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\ndatos %&gt;% arrange(desc(salario))   # mayor a menor\ndatos %&gt;% arrange(ciudad, salario) # por ciudad, luego salario"
   },
   {
     "objectID": "weeks/week07/slides.html#el-operador-pipe",
     "href": "weeks/week07/slides.html#el-operador-pipe",
-    "title": "Semana 7: Gestión de Datos en R",
+    "title": "Semana 7: GestiÃ³n de Datos en R",
     "section": "El Operador Pipe (%>%)",
-    "text": "El Operador Pipe (%&gt;%)\nEl operador %&gt;% (pipe) permite encadenar operaciones:\n# Sin pipe (difícil de leer):\narrange(summarise(group_by(filter(datos, salario&gt;800), ciudad),\n        media=mean(salario)), desc(media))\n\n# Con pipe (fácil de leer):\ndatos %&gt;%\n  filter(salario &gt; 800) %&gt;%\n  group_by(ciudad) %&gt;%\n  summarise(media = mean(salario)) %&gt;%\n  arrange(desc(media))\n\nLea el pipe %&gt;% como “y luego”: - Tome datos → y luego filtre → y luego agrupe → y luego resuma"
+    "text": "El Operador Pipe (%&gt;%)\nEl operador %&gt;% (pipe) permite encadenar operaciones:\n# Sin pipe (difÃ­cil de leer):\narrange(summarise(group_by(filter(datos, salario&gt;800), ciudad),\n        media=mean(salario)), desc(media))\n\n# Con pipe (fÃ¡cil de leer):\ndatos %&gt;%\n  filter(salario &gt; 800) %&gt;%\n  group_by(ciudad) %&gt;%\n  summarise(media = mean(salario)) %&gt;%\n  arrange(desc(media))\n\nLea el pipe %&gt;% como “y luego”: - Tome datos â†’ y luego filtre â†’ y luego agrupe â†’ y luego resuma"
   },
   {
-    "objectID": "weeks/week07/slides.html#análisis-descriptivo-completo",
-    "href": "weeks/week07/slides.html#análisis-descriptivo-completo",
-    "title": "Semana 7: Gestión de Datos en R",
-    "section": "Análisis Descriptivo Completo",
-    "text": "Análisis Descriptivo Completo\n# Pipeline completo de análisis\nresumen_completo &lt;- datos %&gt;%\n  filter(!is.na(salario)) %&gt;%\n  group_by(departamento) %&gt;%\n  summarise(\n    n           = n(),\n    media       = round(mean(salario), 2),\n    mediana     = median(salario),\n    desv_std    = round(sd(salario), 2),\n    cv          = round(sd(salario)/mean(salario)*100, 1),\n    q1          = quantile(salario, 0.25),\n    q3          = quantile(salario, 0.75),\n    min         = min(salario),\n    max         = max(salario)\n  ) %&gt;%\n  arrange(desc(media))\n\nprint(resumen_completo)"
+    "objectID": "weeks/week07/slides.html#anãlisis-descriptivo-completo",
+    "href": "weeks/week07/slides.html#anãlisis-descriptivo-completo",
+    "title": "Semana 7: GestiÃ³n de Datos en R",
+    "section": "AnÃ¡lisis Descriptivo Completo",
+    "text": "AnÃ¡lisis Descriptivo Completo\n# Pipeline completo de anÃ¡lisis\nresumen_completo &lt;- datos %&gt;%\n  filter(!is.na(salario)) %&gt;%\n  group_by(departamento) %&gt;%\n  summarise(\n    n           = n(),\n    media       = round(mean(salario), 2),\n    mediana     = median(salario),\n    desv_std    = round(sd(salario), 2),\n    cv          = round(sd(salario)/mean(salario)*100, 1),\n    q1          = quantile(salario, 0.25),\n    q3          = quantile(salario, 0.75),\n    min         = min(salario),\n    max         = max(salario)\n  ) %&gt;%\n  arrange(desc(media))\n\nprint(resumen_completo)"
   },
   {
-    "objectID": "weeks/week07/slides.html#app-2-esta-semana",
-    "href": "weeks/week07/slides.html#app-2-esta-semana",
-    "title": "Semana 7: Gestión de Datos en R",
-    "section": "APP 2 — Esta Semana",
-    "text": "APP 2 — Esta Semana\nEsta semana tiene la Práctica Experimental APP 2 (8 horas):\n\nDataset real: Datos de desigualdad salarial en Ecuador 2023\n\nImportar datos desde CSV\nLimpiar y verificar calidad del dataset\nCalcular estadísticas descriptivas completas\nAnálisis por región, género y sector\nVisualizaciones interpretativas\nConclusiones sobre la problemática social\n\n\n¡El análisis de datos tiene impacto real en la sociedad! 🌍"
+    "objectID": "weeks/week07/slides.html#app-2-â-esta-semana",
+    "href": "weeks/week07/slides.html#app-2-â-esta-semana",
+    "title": "Semana 7: GestiÃ³n de Datos en R",
+    "section": "APP 2 â€” Esta Semana",
+    "text": "APP 2 â€” Esta Semana\nEsta semana tiene la PrÃ¡ctica Experimental APP 2 (8 horas):\n\nDataset real: Datos de desigualdad salarial en Ecuador 2023\n\nImportar datos desde CSV\nLimpiar y verificar calidad del dataset\nCalcular estadÃ­sticas descriptivas completas\nAnÃ¡lisis por regiÃ³n, gÃ©nero y sector\nVisualizaciones interpretativas\nConclusiones sobre la problemÃ¡tica social\n\n\nÂ¡El anÃ¡lisis de datos tiene impacto real en la sociedad! ðŸŒ"
   },
   {
     "objectID": "weeks/week09/page.html",

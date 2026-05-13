@@ -1,19 +1,27 @@
----
+﻿---
 title: "Semana 2: Datos Agrupados"
 subtitle: "Tablas de Frecuencia y Medidas de Tendencia Central para Datos Agrupados"
 author: "Ing. David Minango PhD"
-institute: "ISTER — Sistemas y Gestión de Data"
+institute: "ISTER â€” Sistemas y GestiÃ³n de Data"
 date: "2026"
 format:
   revealjs:
     theme: [default, ../../styles-slides.css]
     slide-number: true
     logo: ../../figures/logos/ister_logo.png
-    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
+    footer: "Herramientas EstadÃ­sticas 2026 | Ing. David Minango PhD"
     transition: slide
     background-transition: fade
     highlight-style: github
     chalkboard: true
+    width: 1280
+    height: 720
+    margin: 0.04
+    min-scale: 0.1
+    max-scale: 2.0
+    center: true
+    controls: true
+    progress: true
 include-in-header:
   text: |
     <style>
@@ -24,42 +32,42 @@ include-in-header:
     </style>
 ---
 
-## Repaso: ¿Qué vimos la semana pasada? {background-color="#003366" color="white"}
+## Repaso: Â¿QuÃ© vimos la semana pasada? {background-color="#003366" color="white"}
 
-Semana 1 — **Datos No Agrupados:**
+Semana 1 â€” **Datos No Agrupados:**
 
 - Media: $\bar{x} = \frac{\sum x_i}{n}$
 - Mediana: valor central en datos ordenados
-- Moda: valor que más se repite
-- Rango, varianza, desviación estándar, CV
+- Moda: valor que mÃ¡s se repite
+- Rango, varianza, desviaciÃ³n estÃ¡ndar, CV
 
 <br>
 
-### Esta semana: ¿Cuándo y por qué **agrupar** los datos?
+### Esta semana: Â¿CuÃ¡ndo y por quÃ© **agrupar** los datos?
 
 ---
 
-## ¿Datos Agrupados vs No Agrupados?
+## Â¿Datos Agrupados vs No Agrupados?
 
 :::: {.columns}
 ::: {.column width="50%"}
-### 📋 No Agrupados
+### ðŸ“‹ No Agrupados
 Cada valor individual se analiza por separado.
 
 **Apropiado cuando:**
 - Pocos datos (n < 30)
 - Pocos valores distintos
-- Se necesita precisión exacta
+- Se necesita precisiÃ³n exacta
 
 **Ejemplo:** `5, 7, 8, 9, 10, 7, 8`
 :::
 
 ::: {.column width="50%"}
-### 📊 Agrupados
+### ðŸ“Š Agrupados
 Los datos se organizan en **intervalos o clases**.
 
 **Apropiado cuando:**
-- Muchos datos (n ≥ 30)
+- Muchos datos (n â‰¥ 30)
 - Muchos valores distintos (datos continuos)
 - Se busca identificar patrones generales
 
@@ -68,7 +76,7 @@ Los datos se organizan en **intervalos o clases**.
 ::::
 
 ::: {.callout-tip}
-## Regla práctica
+## Regla prÃ¡ctica
 Si n > 30 o el rango de valores es muy amplio, **agrupe los datos**.
 :::
 
@@ -76,20 +84,20 @@ Si n > 30 o el rango de valores es muy amplio, **agrupe los datos**.
 
 ## Paso 1: Regla de Sturges
 
-Para determinar el número óptimo de **clases o intervalos**:
+Para determinar el nÃºmero Ã³ptimo de **clases o intervalos**:
 
 ::: {.formula-slide}
 $$k = 1 + 3.322 \times \log_{10}(n)$$
 :::
 
-donde **k** = número de clases y **n** = total de observaciones.
+donde **k** = nÃºmero de clases y **n** = total de observaciones.
 
 **Ejemplo:** n = 40 datos
 
 $$k = 1 + 3.322 \times \log_{10}(40) = 1 + 3.322 \times 1.602 = 6.32 \approx \mathbf{7 \text{ clases}}$$
 
 ::: {.highlight-box}
-**Regla general:** Redondear k hacia arriba (usar techo). El número de clases suele estar entre **5 y 20**.
+**Regla general:** Redondear k hacia arriba (usar techo). El nÃºmero de clases suele estar entre **5 y 20**.
 :::
 
 ---
@@ -105,24 +113,24 @@ $$c = \frac{x_{max} - x_{min}}{k} = \frac{\text{Rango}}{k}$$
 **Continuando el ejemplo:**
 - Salarios entre $400 y $1,200 (n=40)
 - k = 7 clases
-- c = (1200 - 400) / 7 = 800 / 7 ≈ **114.3 → redondeamos a 120**
+- c = (1200 - 400) / 7 = 800 / 7 â‰ˆ **114.3 â†’ redondeamos a 120**
 
 ::: {.callout-note}
-Se acostumbra redondear c a un número conveniente (múltiplo de 10, 5, etc.) para que los límites sean más legibles.
+Se acostumbra redondear c a un nÃºmero conveniente (mÃºltiplo de 10, 5, etc.) para que los lÃ­mites sean mÃ¡s legibles.
 :::
 
 ---
 
-## Paso 3: Construcción de la Tabla de Frecuencias
+## Paso 3: ConstrucciÃ³n de la Tabla de Frecuencias
 
 La tabla de frecuencias para datos agrupados tiene las siguientes columnas:
 
-| Columna | Símbolo | Descripción |
+| Columna | SÃ­mbolo | DescripciÃ³n |
 |---|:---:|---|
-| Clase (intervalo) | $[L_i, L_s)$ | Límite inferior y superior |
+| Clase (intervalo) | $[L_i, L_s)$ | LÃ­mite inferior y superior |
 | Marca de clase | $m_i$ | Punto medio del intervalo |
 | Frecuencia absoluta | $f_i$ | Conteo de datos en la clase |
-| Frecuencia relativa | $h_i = f_i/n$ | Proporción de datos |
+| Frecuencia relativa | $h_i = f_i/n$ | ProporciÃ³n de datos |
 | Frecuencia acumulada | $F_i$ | Suma acumulada de $f_i$ |
 | Frec. rel. acumulada | $H_i$ | Suma acumulada de $h_i$ |
 
@@ -172,7 +180,7 @@ $$Me = L_i + \frac{\frac{n}{2} - F_{i-1}}{f_i} \times c$$
 :::
 
 Donde:
-- $L_i$ = límite inferior de la clase mediana
+- $L_i$ = lÃ­mite inferior de la clase mediana
 - $F_{i-1}$ = frecuencia acumulada **antes** de la clase mediana
 - $f_i$ = frecuencia de la clase mediana
 - $c$ = amplitud de clase
@@ -192,7 +200,7 @@ $$Mo = L_i + \frac{d_1}{d_1 + d_2} \times c$$
 :::
 
 Donde:
-- $L_i$ = límite inferior de la clase modal
+- $L_i$ = lÃ­mite inferior de la clase modal
 - $d_1 = f_{modal} - f_{anterior}$
 - $d_2 = f_{modal} - f_{siguiente}$
 - $c$ = amplitud de clase
@@ -205,15 +213,15 @@ Donde:
 
 ---
 
-## Comparación: Agrupados vs No Agrupados
+## ComparaciÃ³n: Agrupados vs No Agrupados
 
 | | No Agrupados | Agrupados |
 |---|---|---|
 | **Media** | $\frac{\sum x_i}{n}$ | $\frac{\sum f_i \cdot m_i}{n}$ |
-| **Mediana** | Valor en posición central | Fórmula de interpolación |
-| **Moda** | Valor más frecuente | Fórmula con $d_1$ y $d_2$ |
-| **Precisión** | Exacta | Aproximada |
-| **Uso** | n pequeño | n grande |
+| **Mediana** | Valor en posiciÃ³n central | FÃ³rmula de interpolaciÃ³n |
+| **Moda** | Valor mÃ¡s frecuente | FÃ³rmula con $d_1$ y $d_2$ |
+| **PrecisiÃ³n** | Exacta | Aproximada |
+| **Uso** | n pequeÃ±o | n grande |
 
 ::: {.callout-note}
 Los resultados para datos agrupados son **aproximaciones** porque usamos la marca de clase (punto medio) como representante de todos los valores del intervalo.
@@ -224,30 +232,31 @@ Los resultados para datos agrupados son **aproximaciones** porque usamos la marc
 ## Resumen del Proceso {background-color="#003366" color="white"}
 
 ```
-Datos → ¿n ≥ 30? → SÍ: Agrupar
-                 ↓
-     1. k = 1 + 3.322 × log₁₀(n)
+Datos â†’ Â¿n â‰¥ 30? â†’ SÃ: Agrupar
+                 â†“
+     1. k = 1 + 3.322 Ã— logâ‚â‚€(n)
      2. c = Rango / k
      3. Construir tabla de frecuencias
      4. Calcular mi = (Li + Ls) / 2
-     5. Media = Σ(fi × mi) / n
+     5. Media = Î£(fi Ã— mi) / n
      6. Mediana: encontrar clase, interpolar
-     7. Moda: clase modal, aplicar fórmula
+     7. Moda: clase modal, aplicar fÃ³rmula
 ```
 
 ---
 
-## Próxima Clase (Viernes)
+## PrÃ³xima Clase (Viernes)
 
 ::: {.highlight-box}
-### Continuación Semana 2
-- Práctica completa con Python y R
-- Construcción automática de tablas de frecuencias
-- Cálculo de las tres medidas para un dataset real
+### ContinuaciÃ³n Semana 2
+- PrÃ¡ctica completa con Python y R
+- ConstrucciÃ³n automÃ¡tica de tablas de frecuencias
+- CÃ¡lculo de las tres medidas para un dataset real
 :::
 
 **Taller:** Dataset de salarios reales de empleados ecuatorianos. Construya la tabla de frecuencias y calcule media, mediana y moda.
 
 <br>
 
-¡Practique con el taller disponible en el sitio! 💻
+Â¡Practique con el taller disponible en el sitio! ðŸ’»
+
