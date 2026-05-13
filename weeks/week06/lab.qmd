@@ -1,0 +1,205 @@
+---
+title: "💻 Taller Práctico 6"
+subtitle: "Vectores, Data Frames y Estadística Descriptiva en R"
+author: "Ing. David Minango PhD"
+---
+
+::: {.info-box}
+**Duración estimada:** 90 minutos | **Dificultad:** Media
+**Herramientas:** R / RStudio + Python opcional
+:::
+
+## Contexto
+
+Una empresa de telecomunicaciones tiene datos de sus empleados en 4 departamentos. Usará R para analizar las diferencias salariales entre departamentos y determinar si la empresa necesita revisar su política de compensaciones.
+
+---
+
+## Parte 1 — Crear el Dataset en R
+
+```r
+# ─── Cree este data frame en R ────────────────────
+set.seed(2026)
+
+empleados <- data.frame(
+  id          = 1:50,
+  departamento = sample(c("Ventas","Tecnología","Soporte","Operaciones"), 50, replace=TRUE),
+  genero      = sample(c("M","F"), 50, replace=TRUE),
+  anios_exp   = sample(1:15, 50, replace=TRUE),
+  salario     = c(
+    # Ventas (más variable)
+    round(runif(13, 800, 1800)),
+    # Tecnología (más alto)
+    round(runif(13, 1200, 2500)),
+    # Soporte (más bajo)
+    round(runif(12, 600, 1200)),
+    # Operaciones (medio)
+    round(runif(12, 900, 1600))
+  )
+)
+
+# Explore el dataset
+cat("Dimensiones:", dim(empleados), "\n")
+cat("\nPrimeras filas:\n")
+print(head(empleados))
+cat("\nEstructura:\n")
+str(empleados)
+cat("\nResumen:\n")
+print(summary(empleados))
+```
+
+---
+
+## Parte 2 — Manipulación con Vectores
+
+```r
+# Acceda a los salarios y calcule:
+salarios <- empleados$salario
+
+# 2.1 Estadísticas básicas
+cat("Media salarial:   $", round(mean(salarios), 2), "\n")
+cat("Mediana salarial: $", median(salarios), "\n")
+cat("Mínimo:           $", min(salarios), "\n")
+cat("Máximo:           $", max(salarios), "\n")
+cat("Desv. Estándar:   $", round(sd(salarios), 2), "\n")
+cat("CV:               ", round(sd(salarios)/mean(salarios)*100, 2), "%\n")
+
+# 2.2 Cuartiles y percentiles
+cat("\nCuartiles:\n")
+print(quantile(salarios))
+cat("Percentil 90: $", quantile(salarios, 0.90), "\n")
+
+# 2.3 Filtros
+empleados_alto <- salarios[salarios > 1500]
+cat("\nEmpleados con salario > $1500:", length(empleados_alto))
+cat("\nPorcentaje:", round(length(empleados_alto)/length(salarios)*100, 1), "%\n")
+
+# 2.4 ¿Cuántos empleados ganan más que el promedio?
+sobre_media <- sum(salarios > mean(salarios))
+cat("Ganan más que la media:", sobre_media, "/", length(salarios), "\n")
+```
+
+---
+
+## Parte 3 — Análisis por Grupos con dplyr
+
+```r
+library(dplyr)
+
+# 3.1 Estadísticas por departamento
+resumen_dept <- empleados %>%
+  group_by(departamento) %>%
+  summarise(
+    n              = n(),
+    salario_medio  = round(mean(salario), 0),
+    salario_mediana = median(salario),
+    desv_std       = round(sd(salario), 0),
+    cv             = round(sd(salario)/mean(salario)*100, 1),
+    salario_min    = min(salario),
+    salario_max    = max(salario)
+  ) %>%
+  arrange(desc(salario_medio))
+
+cat("=== SALARIOS POR DEPARTAMENTO ===\n")
+print(as.data.frame(resumen_dept))
+
+# 3.2 Estadísticas por género
+resumen_genero <- empleados %>%
+  group_by(genero) %>%
+  summarise(
+    n             = n(),
+    salario_medio = round(mean(salario), 0),
+    salario_mediana = median(salario)
+  )
+
+cat("\n=== SALARIOS POR GÉNERO ===\n")
+print(as.data.frame(resumen_genero))
+
+# 3.3 Correlación salario vs años de experiencia
+cor_salario_exp <- cor(empleados$salario, empleados$anios_exp)
+cat(sprintf("\nCorrelación salario~experiencia: %.4f\n", cor_salario_exp))
+```
+
+---
+
+## Parte 4 — Visualización Completa
+
+```r
+par(mfrow = c(2, 3))
+
+# 4.1 Histograma de salarios
+hist(empleados$salario, breaks = 10, col = "#0055a5", border = "white",
+     main = "Distribución Salarial", xlab = "Salario (USD)")
+abline(v = mean(empleados$salario), col="red", lwd=2, lty=2)
+abline(v = median(empleados$salario), col="green", lwd=2, lty=3)
+
+# 4.2 Boxplot por departamento
+boxplot(salario ~ departamento, data = empleados,
+        col = c("#0055a5","#28a745","#ffc107","#dc3545"),
+        border = "#333",
+        main = "Salarios por Departamento",
+        xlab = "", ylab = "Salario (USD)", las = 2)
+
+# 4.3 Boxplot por género
+boxplot(salario ~ genero, data = empleados,
+        col = c("#e8f4fd","#fff3cd"),
+        main = "Salarios por Género",
+        xlab = "Género", ylab = "Salario (USD)")
+
+# 4.4 Scatter: experiencia vs salario
+plot(empleados$anios_exp, empleados$salario,
+     col = "#0055a5", pch = 19, cex = 1.1,
+     main = "Experiencia vs Salario",
+     xlab = "Años de Experiencia", ylab = "Salario (USD)")
+abline(lm(salario ~ anios_exp, data = empleados),
+       col = "red", lwd = 2)
+
+# 4.5 Barplot media salarial por departamento
+medias <- tapply(empleados$salario, empleados$departamento, mean)
+barplot(sort(medias, decreasing=TRUE),
+        col = "#0055a5", border = "white",
+        main = "Media Salarial por Departamento",
+        ylab = "Salario (USD)", las = 2)
+
+# 4.6 Tabla de frecuencias visual
+tabla_dept <- table(empleados$departamento)
+pie(tabla_dept,
+    col = c("#0055a5","#28a745","#ffc107","#dc3545"),
+    main = "Distribución de Empleados")
+
+par(mfrow = c(1, 1))
+```
+
+---
+
+## Parte 5 — Preguntas de Análisis
+
+**5.1** ¿Qué departamento tiene el salario más alto en promedio? ¿Y el más bajo?
+
+**5.2** Compare el coeficiente de variación entre departamentos. ¿Cuál tiene salarios más homogéneos?
+
+**5.3** ¿Existe diferencia salarial entre hombres y mujeres en la empresa? ¿Es estadísticamente significativa o podría ser aleatoria? (Solo analice descriptivamente, sin tests formales)
+
+**5.4** La correlación entre años de experiencia y salario que calculó: ¿es alta, media o baja? ¿Qué significa?
+
+**5.5** Filtre los empleados del departamento "Tecnología" y calcule cuántos ganan más de $2,000. ¿Qué porcentaje representa?
+
+```r
+# Pista para 5.5:
+tecnologia <- empleados %>% filter(departamento == "Tecnología")
+# TU CÓDIGO AQUÍ
+```
+
+**5.6** Redacte un informe ejecutivo de 5-6 oraciones describiendo la situación salarial de la empresa y haciendo una recomendación.
+
+---
+
+::: {.callout-tip}
+## Entrega
+**Nombre:** `Taller6_[SuNombre]_HEstadisticas.R`
+Incluya: código completo, output de la consola, gráficos (capturas o exportados) y respuestas a las preguntas.
+:::
+
+---
+
+*Taller 6 de 7 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

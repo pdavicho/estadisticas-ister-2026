@@ -1,0 +1,194 @@
+---
+title: "💻 Taller Práctico 3"
+subtitle: "Medidas de Dispersión para Datos Agrupados"
+author: "Ing. David Minango PhD"
+---
+
+::: {.info-box}
+**Duración estimada:** 90 minutos | **Dificultad:** Media
+**Herramientas:** Python y R | **Dataset:** Notas de estudiantes (datos reales simulados)
+:::
+
+## Contexto
+
+El departamento académico del ISTER registró las calificaciones finales de **42 estudiantes** de la carrera de Sistemas en el período anterior. Como analista, debe calcular las medidas de dispersión para determinar si el rendimiento fue homogéneo o heterogéneo.
+
+**Dataset — Calificaciones finales (sobre 100):**
+```
+72, 85, 63, 91, 78, 55, 88, 74, 67, 93,
+80, 58, 76, 84, 69, 96, 71, 62, 87, 75,
+60, 82, 70, 88, 65, 79, 92, 68, 77, 83,
+57, 86, 73, 61, 90, 76, 64, 85, 70, 94,
+59, 81
+```
+
+---
+
+## Ejercicio 1 — Tabla de Frecuencias con Dispersión (Python)
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+notas = [
+    72, 85, 63, 91, 78, 55, 88, 74, 67, 93,
+    80, 58, 76, 84, 69, 96, 71, 62, 87, 75,
+    60, 82, 70, 88, 65, 79, 92, 68, 77, 83,
+    57, 86, 73, 61, 90, 76, 64, 85, 70, 94,
+    59, 81
+]
+
+n = len(notas)
+k = int(np.ceil(1 + 3.322 * np.log10(n)))
+c = # TU CÓDIGO: amplitud (rango/k, redondeada a 5)
+inicio = 55
+
+print(f"k = {k} clases | c = {c}")
+
+# Construya la tabla de frecuencias
+limites = [inicio + i * c for i in range(k + 1)]
+marcas, frecuencias = [], []
+
+for i in range(k):
+    li, ls = limites[i], limites[i + 1]
+    mi = (li + ls) / 2
+    marcas.append(mi)
+    if i < k - 1:
+        fi = sum(1 for x in notas if li <= x < ls)
+    else:
+        fi = sum(1 for x in notas if li <= x <= ls)
+    frecuencias.append(fi)
+
+# Calcule la media agrupada
+media = # TU CÓDIGO
+
+# Calcule la columna de dispersión: fi*(mi - x̄)²
+tabla = pd.DataFrame({
+    'mi': marcas,
+    'fi': frecuencias
+})
+tabla['fi_mi']       = tabla['fi'] * tabla['mi']
+tabla['mi_menos_x']  = tabla['mi'] - media
+tabla['cuadrado']    = tabla['mi_menos_x'] ** 2
+tabla['fi_cuadrado'] = tabla['fi'] * tabla['cuadrado']
+
+# Calcule varianza, desviación estándar y CV
+varianza  = # TU CÓDIGO: Σ fi*(mi-x̄)² / n
+desv_std  = # TU CÓDIGO: raíz de varianza
+cv        = # TU CÓDIGO: (s/x̄) × 100
+
+print(f"\nMedia:           {media:.2f} pts")
+print(f"Varianza:        {varianza:.4f}")
+print(f"Desv. Estándar:  {desv_std:.4f} pts")
+print(f"Coef. Variación: {cv:.2f}%")
+
+# Imprima la tabla completa
+print("\n📋 TABLA COMPLETA CON DISPERSIÓN")
+print(tabla[['mi','fi','fi_mi','mi_menos_x','cuadrado','fi_cuadrado']].to_string(index=False))
+print(f"SUMA fi*(mi-x̄)²: {tabla['fi_cuadrado'].sum():.4f}")
+
+# Gráfico con bandas de dispersión
+plt.figure(figsize=(10, 5))
+ancho = c * 0.9
+plt.bar(marcas, frecuencias, width=ancho, color='#0055a5',
+        edgecolor='white', alpha=0.8)
+plt.axvline(media, color='red', lw=2, ls='--', label=f'Media={media:.1f}')
+plt.axvspan(media-desv_std, media+desv_std, alpha=0.15, color='red', label=f'x̄±s')
+plt.axvline(70, color='black', lw=1.5, ls=':', label='Aprobación (70 pts)')
+plt.xlabel('Calificación')
+plt.ylabel('Número de Estudiantes')
+plt.title('Distribución de Calificaciones — ISTER')
+plt.legend()
+plt.grid(axis='y', alpha=0.3)
+plt.show()
+```
+
+---
+
+## Ejercicio 2 — Análisis en R
+
+```r
+notas <- c(
+  72, 85, 63, 91, 78, 55, 88, 74, 67, 93,
+  80, 58, 76, 84, 69, 96, 71, 62, 87, 75,
+  60, 82, 70, 88, 65, 79, 92, 68, 77, 83,
+  57, 86, 73, 61, 90, 76, 64, 85, 70, 94,
+  59, 81
+)
+
+n   <- length(notas)
+k   <- ceiling(1 + 3.322 * log10(n))
+c   <- # TU CÓDIGO
+ini <- 55
+lim <- seq(ini, ini + k*c, by = c)
+
+h     <- hist(notas, breaks = lim, plot = FALSE)
+mi    <- (h$breaks[-length(h$breaks)] + h$breaks[-1]) / 2
+fi    <- h$counts
+media <- sum(fi * mi) / n
+
+# Varianza agrupada
+varianza <- sum(fi * (mi - media)^2) / n
+desv_std <- sqrt(varianza)
+cv       <- (desv_std / media) * 100
+
+cat(sprintf("Media:           %.2f pts\n", media))
+cat(sprintf("Varianza:        %.4f\n", varianza))
+cat(sprintf("Desv. Estándar:  %.4f pts\n", desv_std))
+cat(sprintf("Coef. Variación: %.2f%%\n", cv))
+
+# ¿Cuántos estudiantes están dentro de x̄ ± s?
+dentro_1s <- sum(notas >= media - desv_std & notas <= media + desv_std)
+dentro_2s <- sum(notas >= media - 2*desv_std & notas <= media + 2*desv_std)
+cat(sprintf("\nDentro de x̄±s:  %d/%d (%.1f%%)\n", dentro_1s, n, 100*dentro_1s/n))
+cat(sprintf("Dentro de x̄±2s: %d/%d (%.1f%%)\n", dentro_2s, n, 100*dentro_2s/n))
+
+# Visualización
+hist(notas, breaks = lim, col = "#0055a5", border = "white",
+     main = "Calificaciones ISTER con Dispersión", xlab = "Nota")
+abline(v = media, col = "red", lwd = 2, lty = 2)
+abline(v = c(media-desv_std, media+desv_std), col = "orange", lwd = 2, lty = 3)
+abline(v = 70, col = "black", lwd = 1.5, lty = 4)
+legend("topright", cex = 0.8,
+       legend = c(paste("Media=",round(media,1)),
+                  paste("±s=",round(desv_std,1)),
+                  "Aprobación (70)"),
+       col = c("red","orange","black"), lty = c(2,3,4), lwd = 2)
+```
+
+---
+
+## Ejercicio 3 — Preguntas de Análisis
+
+**3.1** Complete la tabla de cálculo de varianza manualmente para al menos 3 clases:
+
+| Clase | $m_i$ | $f_i$ | $m_i - \bar{x}$ | $(m_i-\bar{x})^2$ | $f_i(m_i-\bar{x})^2$ |
+|---|---|---|---|---|---|
+| [55-65) | | | | | |
+| [65-75) | | | | | |
+| ... | | | | | |
+
+**3.2** Con el CV obtenido, ¿el rendimiento del curso fue homogéneo o heterogéneo? Justifique.
+
+**3.3** ¿Qué porcentaje de estudiantes **aprobó** (nota ≥ 70)? Calcule usando la columna $F_i$ de la tabla de frecuencias.
+
+**3.4** Usando la **regla empírica** (x̄ ± s, x̄ ± 2s), ¿el resultado obtenido en el código R coincide con lo esperado teóricamente?
+
+**3.5** Un estudiante sacó 55 puntos. Calcule cuántas **desviaciones estándar** se aleja de la media:
+$$z = \frac{x - \bar{x}}{s}$$
+¿Qué significa ese valor z?
+
+**3.6** Redacte un párrafo de conclusión para el departamento académico sobre el rendimiento del curso.
+
+---
+
+::: {.callout-tip}
+## Entrega
+**Nombre del archivo:** `Taller3_[SuNombre]_HEstadisticas`
+Incluya: código ejecutado, tabla de cálculo de varianza completa y respuestas a las preguntas.
+:::
+
+---
+
+*Taller 3 de 7 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

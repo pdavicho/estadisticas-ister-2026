@@ -1,0 +1,190 @@
+---
+title: "Semana 4 — Variables Aleatorias y Probabilidad"
+subtitle: "Fundamentos de Probabilidad y Distribuciones"
+author: "Ing. David Minango PhD"
+---
+
+Esta semana hacemos la transición de la **estadística descriptiva** (describir lo que tenemos) hacia los fundamentos del pensamiento **probabilístico** (modelar lo que puede ocurrir). Las variables aleatorias y las distribuciones de probabilidad son la base de toda la estadística inferencial.
+
+::: {.objetivos-box}
+**Objetivos:**
+
+- Distinguir entre variables aleatorias discretas y continuas
+- Calcular valor esperado y varianza para distribuciones discretas
+- Comprender la distribución normal y su importancia práctica
+- Estandarizar valores usando la transformación Z
+- Simular distribuciones en Python y R
+:::
+
+## 👨‍🏫 Presentación de Clase
+
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
+
+## 🐍 Ejemplo Práctico en Python
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# ── DISTRIBUCIÓN DISCRETA ────────────────────────────────
+print("=" * 50)
+print("VARIABLE ALEATORIA DISCRETA")
+print("Número de bugs por módulo de software")
+print("=" * 50)
+
+# Función de probabilidad
+valores = [0, 1, 2, 3, 4]
+probabilidades = [0.40, 0.30, 0.20, 0.07, 0.03]
+
+# Verificar que suman 1
+print(f"Σ P(X=x) = {sum(probabilidades):.2f} ✅")
+
+# Valor esperado: E(X) = Σ x·P(x)
+E_X = sum(v * p for v, p in zip(valores, probabilidades))
+print(f"E(X) = {E_X:.4f} bugs esperados por módulo")
+
+# Varianza: Var(X) = Σ (x-μ)² · P(x)
+Var_X = sum((v - E_X)**2 * p for v, p in zip(valores, probabilidades))
+SD_X = np.sqrt(Var_X)
+print(f"Var(X) = {Var_X:.4f}")
+print(f"σ(X)   = {SD_X:.4f}")
+
+# ── DISTRIBUCIÓN BINOMIAL ────────────────────────────────
+print("\n" + "=" * 50)
+print("DISTRIBUCIÓN BINOMIAL")
+print("n=10 sistemas, p=0.30 con bug")
+print("=" * 50)
+
+n_bin, p_bin = 10, 0.30
+binom = stats.binom(n=n_bin, p=p_bin)
+
+print(f"E(X) = np = {n_bin * p_bin}")
+print(f"P(X = 3) = {binom.pmf(3):.4f}")
+print(f"P(X ≤ 5) = {binom.cdf(5):.4f}")
+print(f"P(X ≥ 4) = {1 - binom.cdf(3):.4f}")
+
+# ── DISTRIBUCIÓN NORMAL ──────────────────────────────────
+print("\n" + "=" * 50)
+print("DISTRIBUCIÓN NORMAL")
+print("Tiempos de carga: μ=3 seg, σ=0.5 seg")
+print("=" * 50)
+
+mu, sigma = 3.0, 0.5
+normal = stats.norm(loc=mu, scale=sigma)
+
+print(f"P(X < 3.5) = {normal.cdf(3.5):.4f}")
+print(f"P(2.5 < X < 3.5) = {normal.cdf(3.5) - normal.cdf(2.5):.4f}")
+print(f"P(X > 4.0) = {1 - normal.cdf(4.0):.4f}")
+
+# Estandarización
+x_val = 3.5
+z = (x_val - mu) / sigma
+print(f"\nZ = ({x_val} - {mu}) / {sigma} = {z}")
+print(f"P(Z < {z}) = {stats.norm.cdf(z):.4f}")
+
+# ── VISUALIZACIÓN ────────────────────────────────────────
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+# 1. Distribución discreta
+axes[0].bar(valores, probabilidades, color='#0055a5', edgecolor='white', alpha=0.85)
+axes[0].axvline(E_X, color='red', lw=2, ls='--', label=f'E(X)={E_X:.2f}')
+axes[0].set_xlabel('Número de bugs')
+axes[0].set_ylabel('P(X=x)')
+axes[0].set_title('Distribución Discreta\n(Bugs por módulo)')
+axes[0].legend()
+
+# 2. Distribución Binomial
+x_bin = np.arange(0, n_bin + 1)
+axes[1].bar(x_bin, binom.pmf(x_bin), color='#28a745', edgecolor='white', alpha=0.85)
+axes[1].set_xlabel('Número de sistemas con bug')
+axes[1].set_ylabel('P(X=k)')
+axes[1].set_title(f'Binomial(n={n_bin}, p={p_bin})')
+
+# 3. Distribución Normal
+x_norm = np.linspace(mu - 4*sigma, mu + 4*sigma, 300)
+axes[2].plot(x_norm, normal.pdf(x_norm), color='#003366', lw=2.5)
+
+# Sombrear área P(X < 3.5)
+x_fill = np.linspace(mu - 4*sigma, 3.5, 200)
+axes[2].fill_between(x_fill, normal.pdf(x_fill), alpha=0.3, color='#0055a5',
+                     label=f'P(X<3.5)={normal.cdf(3.5):.3f}')
+axes[2].axvline(mu, color='red', lw=2, ls='--', label=f'μ={mu}')
+axes[2].axvline(3.5, color='green', lw=2, ls='--', label='x=3.5')
+axes[2].set_xlabel('Tiempo de carga (seg)')
+axes[2].set_ylabel('Densidad f(x)')
+axes[2].set_title(f'Normal(μ={mu}, σ={sigma})')
+axes[2].legend(fontsize=8)
+
+plt.suptitle('Distribuciones de Probabilidad — Semana 4', fontweight='bold')
+plt.tight_layout()
+plt.show()
+```
+
+## 📊 Ejemplo Práctico en R
+
+```r
+# ── DISTRIBUCIÓN DISCRETA ─────────────────────────────────
+cat("VARIABLE ALEATORIA DISCRETA\n")
+valores <- 0:4
+probs   <- c(0.40, 0.30, 0.20, 0.07, 0.03)
+
+E_X   <- sum(valores * probs)
+Var_X <- sum((valores - E_X)^2 * probs)
+SD_X  <- sqrt(Var_X)
+
+cat(sprintf("E(X) = %.4f\n", E_X))
+cat(sprintf("Var(X) = %.4f | SD = %.4f\n", Var_X, SD_X))
+
+# ── DISTRIBUCIÓN BINOMIAL ─────────────────────────────────
+cat("\nDISTRIBUCIÓN BINOMIAL  n=10, p=0.30\n")
+cat(sprintf("E(X) = %.1f\n", 10 * 0.30))
+cat(sprintf("P(X = 3) = %.4f\n", dbinom(3, size=10, prob=0.30)))
+cat(sprintf("P(X ≤ 5) = %.4f\n", pbinom(5, size=10, prob=0.30)))
+
+# ── DISTRIBUCIÓN NORMAL ───────────────────────────────────
+cat("\nDISTRIBUCIÓN NORMAL  μ=3, σ=0.5\n")
+cat(sprintf("P(X < 3.5) = %.4f\n", pnorm(3.5, mean=3, sd=0.5)))
+cat(sprintf("P(2.5<X<3.5) = %.4f\n",
+            pnorm(3.5, 3, 0.5) - pnorm(2.5, 3, 0.5)))
+cat(sprintf("P(X > 4.0) = %.4f\n",
+            pnorm(4.0, 3, 0.5, lower.tail=FALSE)))
+
+# Visualización
+par(mfrow = c(1, 3))
+
+# Discreta
+barplot(probs, names.arg = valores, col="#0055a5",
+        main="Distribución Discreta\n(Bugs por módulo)",
+        xlab="Número de bugs", ylab="P(X=x)")
+abline(v = E_X + 0.5, col="red", lwd=2, lty=2)
+
+# Binomial
+x_b <- 0:10
+barplot(dbinom(x_b, 10, 0.3), names.arg=x_b, col="#28a745",
+        main="Binomial(n=10, p=0.30)",
+        xlab="# sistemas con bug", ylab="P(X=k)")
+
+# Normal
+x_n <- seq(1, 5, length.out=300)
+y_n <- dnorm(x_n, mean=3, sd=0.5)
+plot(x_n, y_n, type="l", col="#003366", lwd=2.5,
+     main="Normal(μ=3, σ=0.5)", xlab="Tiempo (seg)", ylab="f(x)")
+x_fill <- seq(1, 3.5, length.out=200)
+polygon(c(x_fill, rev(x_fill)),
+        c(dnorm(x_fill, 3, 0.5), rep(0, length(x_fill))),
+        col=rgb(0,85,165,80,maxColorValue=255))
+abline(v=3, col="red", lwd=2, lty=2)
+
+par(mfrow=c(1,1))
+```
+
+## 💻 Taller Práctico
+
+👉 **[Ir al Taller Práctico 4 →](lab.qmd)**
+
+---
+
+*Semana 4 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

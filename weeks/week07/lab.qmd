@@ -1,0 +1,388 @@
+---
+title: "💻 Taller APP 2 — Semana 7"
+subtitle: "Análisis de Datos Reales con RStudio: Desigualdad Salarial en Ecuador"
+author: "Ing. David Minango PhD"
+---
+
+::: {.info-box}
+**PRÁCTICA EXPERIMENTAL APP 2** | Duración: 8 horas
+
+Esta práctica corresponde a la **segunda evaluación experimental** del curso (10 puntos Parcial 2).
+Analizará datos reales de desigualdad salarial en Ecuador usando R y Python, presentando conclusiones con impacto social.
+:::
+
+## Contexto y Problemática
+
+La **brecha salarial** es uno de los principales problemas de equidad en Ecuador y América Latina. Según el INEC (Instituto Nacional de Estadística y Censos), existen diferencias significativas de ingresos por género, región geográfica, nivel educativo y sector (público/privado/informal).
+
+En esta práctica, usted asumirá el rol de **analista de datos** para el Ministerio de Trabajo, con el objetivo de cuantificar y visualizar estas brechas usando herramientas estadísticas.
+
+## Instrucciones Generales
+
+1. Trabaje en RStudio (o Google Colab con R) para el análisis principal
+2. Complemente con Python para la visualización final
+3. Documente **cada paso** con comentarios en el código
+4. Interprete **todos los resultados** en el contexto de la problemática social
+5. Presente sus hallazgos en un informe ejecutivo
+
+---
+
+## Fase 1 — Obtención y Carga del Dataset
+
+Descargue el dataset desde Moodle o genérelo con el siguiente código:
+
+```r
+# ══════════════════════════════════════════════════════════════
+# APP 2 — Análisis de Desigualdad Salarial Ecuador
+# Herramientas Estadísticas | ISTER 2026
+# Estudiante: [SU NOMBRE]
+# Fecha: [FECHA]
+# ══════════════════════════════════════════════════════════════
+
+library(dplyr)
+library(ggplot2)  # si está disponible
+
+set.seed(2026)
+n <- 300
+
+datos_ecuador <- data.frame(
+  id        = 1:n,
+  region    = sample(c("Costa","Sierra","Oriente","Insular"), n,
+                     replace=TRUE, prob=c(0.43, 0.44, 0.11, 0.02)),
+  provincia = sample(c("Pichincha","Guayas","Azuay","Manabí",
+                        "Tungurahua","Otras"), n, replace=TRUE),
+  sector    = sample(c("Público","Privado Formal","Informal"), n,
+                     replace=TRUE, prob=c(0.28, 0.42, 0.30)),
+  genero    = sample(c("Hombre","Mujer"), n, replace=TRUE, prob=c(0.51, 0.49)),
+  nivel_edu = factor(
+    sample(c("Sin instrucción","Primaria","Secundaria","Superior","Postgrado"), n,
+           replace=TRUE, prob=c(0.05, 0.20, 0.35, 0.32, 0.08)),
+    levels=c("Sin instrucción","Primaria","Secundaria","Superior","Postgrado"),
+    ordered=TRUE
+  ),
+  edad      = sample(18:65, n, replace=TRUE),
+  anios_exp = sample(0:40, n, replace=TRUE),
+  horas_sem = sample(20:60, n, replace=TRUE),
+  salario   = round(pmax(400, rnorm(n,
+    mean = 850 + 200*(as.numeric(factor(sample(c("Hombre","Mujer"), n, TRUE, c(.51,.49)))) - 1.5) +
+           150*(as.numeric(factor(sample(c("Público","Privado Formal","Informal"), n, TRUE, c(.28,.42,.30)))) - 2),
+    sd = 380)))
+)
+
+# Introducir valores faltantes realistas
+set.seed(99)
+datos_ecuador$salario[sample(1:n, 15)] <- NA
+datos_ecuador$nivel_edu[sample(1:n, 8)] <- NA
+datos_ecuador$horas_sem[sample(1:n, 5)] <- NA
+
+# Guardar para uso posterior
+write.csv(datos_ecuador, "datos_salarios_ecuador_app2.csv", row.names=FALSE)
+
+cat("✅ Dataset cargado\n")
+cat("Dimensiones:", dim(datos_ecuador), "\n")
+cat("NAs por columna:\n")
+print(colSums(is.na(datos_ecuador)))
+```
+
+---
+
+## Fase 2 — Diagnóstico y Limpieza de Datos
+
+```r
+# 2.1 Exploración inicial
+cat("\n=== EXPLORACIÓN INICIAL ===\n")
+head(datos_ecuador, 10)
+str(datos_ecuador)
+summary(datos_ecuador)
+
+# 2.2 Diagnóstico de calidad
+cat("\n=== DIAGNÓSTICO DE CALIDAD ===\n")
+cat("Filas totales:", nrow(datos_ecuador), "\n")
+cat("Columnas:", ncol(datos_ecuador), "\n")
+cat("NAs totales:", sum(is.na(datos_ecuador)), "\n")
+cat("Duplicados:", sum(duplicated(datos_ecuador)), "\n")
+
+# 2.3 Tratamiento de valores faltantes
+# TU CÓDIGO: ¿Qué estrategia usa para tratar cada columna con NAs?
+# Documente su decisión para cada variable
+
+# Opción A: reemplazar salario con mediana
+datos_ecuador$salario[is.na(datos_ecuador$salario)] <- median(datos_ecuador$salario, na.rm=TRUE)
+
+# Opción B: eliminar filas con NA (explique cuándo usar cada enfoque)
+datos_limpios <- na.omit(datos_ecuador)
+
+cat("\n✅ Después de limpieza:", nrow(datos_limpios), "observaciones\n")
+cat("Observaciones eliminadas:", n - nrow(datos_limpios), "\n")
+
+# 2.4 Detección y manejo de outliers
+Q1  <- quantile(datos_limpios$salario, 0.25)
+Q3  <- quantile(datos_limpios$salario, 0.75)
+IQR_val <- Q3 - Q1
+lim_inf <- Q1 - 1.5 * IQR_val
+lim_sup <- Q3 + 1.5 * IQR_val
+
+outliers_idx <- which(datos_limpios$salario < lim_inf | datos_limpios$salario > lim_sup)
+cat(sprintf("\nOutliers: %d (%.1f%%)\n", length(outliers_idx), 100*length(outliers_idx)/nrow(datos_limpios)))
+cat("Sus salarios:", datos_limpios$salario[outliers_idx], "\n")
+# DECISIÓN: ¿Mantiene o elimina los outliers? Justifique
+```
+
+---
+
+## Fase 3 — Análisis Estadístico Descriptivo
+
+```r
+# 3.1 Estadísticas globales del salario
+cat("=== ESTADÍSTICAS GLOBALES ===\n")
+n_valido    <- nrow(datos_limpios)
+media_sal   <- mean(datos_limpios$salario)
+mediana_sal <- median(datos_limpios$salario)
+desv_sal    <- sd(datos_limpios$salario)
+cv_sal      <- desv_sal / media_sal * 100
+asimetria   <- (3 * (media_sal - mediana_sal)) / desv_sal  # asimetría de Pearson
+
+cat(sprintf("n = %d\n", n_valido))
+cat(sprintf("Media:   $%.2f\n", media_sal))
+cat(sprintf("Mediana: $%.2f\n", mediana_sal))
+cat(sprintf("Moda (aprox.): mayor frecuencia en histograma\n"))
+cat(sprintf("Desv. Estándar: $%.2f\n", desv_sal))
+cat(sprintf("CV: %.2f%%\n", cv_sal))
+cat(sprintf("Coef. Asimetría (Pearson): %.4f\n", asimetria))
+cat(sprintf("  → %s\n", ifelse(asimetria > 0, "Asimetría positiva (cola a la derecha)", "Asimetría negativa")))
+
+# 3.2 Distribución por cuartiles
+cat("\n=== DISTRIBUCIÓN POR CUARTILES ===\n")
+print(quantile(datos_limpios$salario, c(0,0.25,0.50,0.75,0.90,0.95,1)))
+
+# 3.3 Por región
+cat("\n=== ANÁLISIS POR REGIÓN ===\n")
+resumen_region <- datos_limpios %>%
+  group_by(region) %>%
+  summarise(
+    n = n(),
+    media = round(mean(salario)),
+    mediana = median(salario),
+    cv = round(sd(salario)/mean(salario)*100, 1),
+    q1 = quantile(salario, 0.25),
+    q3 = quantile(salario, 0.75)
+  ) %>%
+  arrange(desc(media))
+print(as.data.frame(resumen_region))
+
+# 3.4 Brecha de género (indicador clave)
+cat("\n=== BRECHA SALARIAL DE GÉNERO ===\n")
+por_genero <- datos_limpios %>%
+  group_by(genero) %>%
+  summarise(media = round(mean(salario)), mediana = median(salario), n = n())
+print(as.data.frame(por_genero))
+
+media_h <- por_genero$media[por_genero$genero=="Hombre"]
+media_m <- por_genero$media[por_genero$genero=="Mujer"]
+brecha_abs <- media_h - media_m
+brecha_pct <- brecha_abs / media_h * 100
+
+cat(sprintf("Brecha absoluta: $%.0f\n", brecha_abs))
+cat(sprintf("Brecha relativa: %.1f%% (las mujeres ganan %.1f%% menos)\n", brecha_pct, brecha_pct))
+
+# 3.5 Por sector
+cat("\n=== ANÁLISIS POR SECTOR ===\n")
+por_sector <- datos_limpios %>%
+  group_by(sector) %>%
+  summarise(n=n(), media=round(mean(salario)), mediana=median(salario), cv=round(sd(salario)/mean(salario)*100,1)) %>%
+  arrange(desc(media))
+print(as.data.frame(por_sector))
+
+# 3.6 Por nivel educativo
+cat("\n=== SALARIO POR NIVEL EDUCATIVO ===\n")
+por_edu <- datos_limpios %>%
+  group_by(nivel_edu) %>%
+  summarise(n=n(), media=round(mean(salario)), mediana=median(salario)) %>%
+  arrange(nivel_edu)
+print(as.data.frame(por_edu))
+
+# 3.7 Correlaciones
+cat("\n=== CORRELACIONES ===\n")
+cor_sal_exp  <- cor(datos_limpios$salario, datos_limpios$anios_exp)
+cor_sal_edad <- cor(datos_limpios$salario, datos_limpios$edad)
+cor_sal_hrs  <- cor(datos_limpios$salario, datos_limpios$horas_sem)
+cat(sprintf("Salario ~ Experiencia: r = %.4f\n", cor_sal_exp))
+cat(sprintf("Salario ~ Edad:        r = %.4f\n", cor_sal_edad))
+cat(sprintf("Salario ~ Horas/sem:   r = %.4f\n", cor_sal_hrs))
+```
+
+---
+
+## Fase 4 — Visualizaciones
+
+```r
+par(mfrow=c(3, 2), mar=c(4,4,3,1))
+
+# 1. Histograma con medidas de tendencia central
+hist(datos_limpios$salario, breaks=20, col="#0055a5", border="white",
+     main="Distribución Salarial Ecuador 2023", xlab="Salario (USD)", ylab="Frecuencia")
+abline(v=media_sal,   col="red",    lwd=2, lty=2)
+abline(v=mediana_sal, col="green",  lwd=2, lty=3)
+legend("topright", cex=0.75,
+       legend=c(paste("Media=$",round(media_sal)),
+                paste("Mediana=$",round(mediana_sal))),
+       col=c("red","green"), lty=c(2,3), lwd=2)
+
+# 2. Boxplot por región
+boxplot(salario ~ region, data=datos_limpios, las=2,
+        col=c("#0055a5","#28a745","#ffc107","#dc3545"),
+        main="Salario por Región", ylab="USD", xlab="")
+
+# 3. Boxplot por género
+boxplot(salario ~ genero, data=datos_limpios,
+        col=c("#4a90d9","#e84393"),
+        main=paste0("Brecha Salarial de Género\n(",round(brecha_pct,1),"% menos para mujeres)"),
+        ylab="Salario (USD)")
+
+# 4. Barplot por sector
+medias_sector <- tapply(datos_limpios$salario, datos_limpios$sector, mean)
+barplot(sort(medias_sector, decreasing=TRUE),
+        col=c("#003366","#0055a5","#7ba3d4"),
+        main="Salario Medio por Sector", ylab="USD", las=1)
+
+# 5. Salario por nivel educativo
+medias_edu <- tapply(datos_limpios$salario, datos_limpios$nivel_edu, mean)
+barplot(medias_edu,
+        col="#28a745", border="white",
+        main="Retorno Económico de la Educación",
+        ylab="Salario Medio (USD)", las=2)
+
+# 6. Scatter: experiencia vs salario coloreado por género
+plot(datos_limpios$anios_exp, datos_limpios$salario,
+     col=ifelse(datos_limpios$genero=="Hombre","#4a90d9","#e84393"),
+     pch=19, cex=0.7, alpha=0.7,
+     main=paste0("Experiencia vs Salario\n(r=",round(cor_sal_exp,3),")"),
+     xlab="Años de Experiencia", ylab="Salario (USD)")
+abline(lm(salario~anios_exp, data=datos_limpios), col="gray30", lwd=2)
+legend("topleft", cex=0.8,
+       legend=c("Hombre","Mujer"),
+       col=c("#4a90d9","#e84393"), pch=19)
+
+par(mfrow=c(1,1))
+```
+
+---
+
+## Fase 5 — Análisis Final en Python
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Cargar datos
+df = pd.read_csv("datos_salarios_ecuador_app2.csv")
+df.dropna(inplace=True)
+
+print("Dataset:", df.shape)
+print("\nMedia por región:")
+print(df.groupby('region')['salario'].mean().sort_values(ascending=False).round(2))
+
+print("\nBrecha de género:")
+por_genero = df.groupby('genero')['salario'].agg(['mean','median'])
+print(por_genero.round(2))
+
+# Visualización final con Python
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+fig.suptitle('Análisis de Desigualdad Salarial — Ecuador 2023', fontsize=14, fontweight='bold')
+
+# Histograma
+axes[0,0].hist(df['salario'], bins=20, color='#0055a5', edgecolor='white')
+axes[0,0].axvline(df['salario'].mean(), color='red', lw=2, linestyle='--', label='Media')
+axes[0,0].axvline(df['salario'].median(), color='green', lw=2, linestyle='--', label='Mediana')
+axes[0,0].set_title('Distribución Salarial')
+axes[0,0].legend()
+
+# Brecha género
+genero_media = df.groupby('genero')['salario'].mean()
+axes[0,1].bar(genero_media.index, genero_media.values,
+              color=['#4a90d9','#e84393'], edgecolor='white')
+axes[0,1].set_title('Salario Medio por Género')
+axes[0,1].set_ylabel('USD')
+
+# Por sector
+sector_media = df.groupby('sector')['salario'].mean().sort_values()
+axes[1,0].barh(sector_media.index, sector_media.values, color='#28a745')
+axes[1,0].set_title('Salario por Sector')
+axes[1,0].set_xlabel('USD')
+
+# Por nivel educativo
+edu_order = ['Sin instrucción','Primaria','Secundaria','Superior','Postgrado']
+edu_media = df.groupby('nivel_edu')['salario'].mean()
+edu_media = edu_media.reindex([e for e in edu_order if e in edu_media.index])
+axes[1,1].bar(range(len(edu_media)), edu_media.values,
+              color='#ffc107', edgecolor='white')
+axes[1,1].set_xticks(range(len(edu_media)))
+axes[1,1].set_xticklabels(edu_media.index, rotation=25, ha='right', fontsize=8)
+axes[1,1].set_title('Retorno de la Educación')
+axes[1,1].set_ylabel('Salario Medio (USD)')
+
+plt.tight_layout()
+plt.savefig('analisis_salarial_ecuador.png', dpi=150, bbox_inches='tight')
+plt.show()
+print("✅ Gráfico guardado")
+```
+
+---
+
+## Fase 6 — Informe Ejecutivo
+
+Redacte un informe con la siguiente estructura (mínimo 400 palabras):
+
+### Estructura del Informe
+
+**1. Introducción** (50 palabras)
+- Contexto del problema y objetivo del análisis
+
+**2. Metodología** (50 palabras)
+- Dataset usado, herramientas (R y Python), limpieza aplicada
+
+**3. Resultados Estadísticos** (200 palabras)
+Incluya una tabla resumen como:
+
+| Dimensión | Media | Mediana | CV | Observación |
+|---|---|---|---|---|
+| Global | $X | $X | X% | |
+| Costa | $X | | | |
+| Sierra | $X | | | |
+| Hombres | $X | | | |
+| Mujeres | $X | | | Brecha: X% |
+| Público | $X | | | |
+| Informal | $X | | | |
+
+**4. Análisis de Brechas** (100 palabras)
+- Brecha de género: ¿cuánto ganan menos las mujeres?
+- Brecha regional: ¿qué región tiene mayor desigualdad?
+- Impacto de la educación: ¿cuánto "paga" un año más de educación?
+
+**5. Conclusiones y Recomendaciones** (100 palabras)
+- 3 hallazgos principales
+- 2 recomendaciones de política pública para el Ministerio de Trabajo
+
+---
+
+::: {.callout-tip}
+## Entrega APP 2
+**Nombre del archivo:** `APP2_[SuNombre]_HEstadisticas`
+
+Entregue:
+1. Script R completo (`.R`) con todo el análisis y comentarios
+2. Script Python (`.py` o `.ipynb`) con la visualización final
+3. Informe ejecutivo en PDF (puede ser Word → PDF)
+4. Gráficos exportados (PNG o PDF)
+
+**Criterios de evaluación:**
+- Correctitud estadística de los cálculos (40%)
+- Calidad de la limpieza y tratamiento de datos (20%)
+- Visualizaciones claras y bien etiquetadas (20%)
+- Interpretación y conclusiones en contexto real (20%)
+:::
+
+---
+
+*APP 2 — Semana 7 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

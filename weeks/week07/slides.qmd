@@ -1,0 +1,222 @@
+---
+title: "Semana 7: Gestión de Datos en R"
+subtitle: "Importar, Limpiar y Transformar Datos con dplyr"
+author: "Ing. David Minango PhD"
+institute: "ISTER — Sistemas y Gestión de Data"
+date: "2026"
+format:
+  revealjs:
+    theme: [default, ../../styles-slides.css]
+    slide-number: true
+    logo: ../../figures/logos/ister_logo.png
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
+    transition: slide
+    highlight-style: github
+    chalkboard: true
+include-in-header:
+  text: |
+    <style>
+    .reveal h1, .reveal h2 { color: #003366; }
+    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; }
+    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; }
+    </style>
+---
+
+## El Flujo de Trabajo en Ciencia de Datos {background-color="#003366" color="white"}
+
+```
+📂 Datos Crudos
+      ↓
+   Importar (read.csv, read_excel)
+      ↓
+   Explorar (head, str, summary)
+      ↓
+   Limpiar (na.omit, mutate, filter)
+      ↓
+   Transformar (group_by, summarise, arrange)
+      ↓
+📊 Análisis y Visualización
+      ↓
+📝 Informe / Decisión
+```
+
+Esta semana cubrimos **todos** estos pasos con datos reales.
+
+---
+
+## Importar Datos
+
+```r
+# ── CSV ──────────────────────────────────────────────
+datos <- read.csv("archivo.csv")
+datos <- read.csv("archivo.csv",
+                  sep=";",            # separador punto y coma
+                  dec=",",            # decimal con coma (Europa/Latam)
+                  encoding="UTF-8",   # caracteres especiales
+                  header=TRUE)        # primera fila = nombres
+
+# ── Excel ─────────────────────────────────────────────
+library(readxl)
+datos <- read_excel("archivo.xlsx")
+datos <- read_excel("archivo.xlsx",
+                    sheet = "Hoja2",   # hoja específica
+                    skip = 2,          # saltar primeras 2 filas
+                    range = "A1:E100") # rango específico
+
+# ── Exportar resultados ───────────────────────────────
+write.csv(datos, "resultados.csv", row.names=FALSE)
+```
+
+::: {.callout-tip}
+## Tip práctico
+En RStudio: **File → Import Dataset → From CSV/Excel** abre un asistente visual para importar sin escribir código.
+:::
+
+---
+
+## Exploración Inicial del Dataset
+
+```r
+# Siempre comience con estas funciones:
+head(datos, 10)        # primeras 10 filas
+tail(datos, 5)         # últimas 5 filas
+str(datos)             # estructura y tipos
+summary(datos)         # estadísticas rápidas
+dim(datos)             # filas x columnas
+names(datos)           # nombres de columnas
+nrow(datos); ncol(datos)
+
+# Contar valores faltantes
+sum(is.na(datos))              # total NAs
+colSums(is.na(datos))          # NAs por columna
+mean(is.na(datos$columna))     # % NAs en una columna
+```
+
+---
+
+## Limpieza de Datos
+
+```r
+# ── Valores faltantes (NA) ────────────────────────────
+is.na(datos$columna)           # vector de TRUE/FALSE
+datos_limpios <- na.omit(datos) # eliminar filas con NA
+
+# Reemplazar NA por la media
+datos$salario[is.na(datos$salario)] <- mean(datos$salario, na.rm=TRUE)
+
+# ── Duplicados ────────────────────────────────────────
+sum(duplicated(datos))           # contar duplicados
+datos <- datos[!duplicated(datos), ]  # eliminar duplicados
+
+# ── Convertir tipos ───────────────────────────────────
+datos$fecha  <- as.Date(datos$fecha, format="%Y-%m-%d")
+datos$salario <- as.numeric(datos$salario)
+datos$ciudad  <- as.factor(datos$ciudad)
+
+# ── Filtrar outliers extremos ─────────────────────────
+Q1 <- quantile(datos$salario, 0.25)
+Q3 <- quantile(datos$salario, 0.75)
+IQR <- Q3 - Q1
+datos_sin_outliers <- datos[datos$salario >= Q1 - 1.5*IQR &
+                             datos$salario <= Q3 + 1.5*IQR, ]
+```
+
+---
+
+## El Paquete dplyr — Las 5 Funciones Clave
+
+```r
+library(dplyr)
+
+# ── filter(): filtrar filas ───────────────────────────
+datos %>% filter(salario > 1000)
+datos %>% filter(ciudad == "Quito" & genero == "F")
+
+# ── select(): seleccionar columnas ───────────────────
+datos %>% select(nombre, salario, ciudad)
+datos %>% select(-id)           # todas menos id
+datos %>% select(starts_with("nota"))  # columnas que empiezan con "nota"
+
+# ── mutate(): crear/modificar columnas ───────────────
+datos %>% mutate(
+  salario_anual = salario * 12,
+  categoria = ifelse(salario >= 1500, "Alto", "Bajo")
+)
+
+# ── group_by + summarise(): resumen por grupos ────────
+datos %>%
+  group_by(ciudad) %>%
+  summarise(media = mean(salario), n = n())
+
+# ── arrange(): ordenar ───────────────────────────────
+datos %>% arrange(desc(salario))   # mayor a menor
+datos %>% arrange(ciudad, salario) # por ciudad, luego salario
+```
+
+---
+
+## El Operador Pipe (%>%)
+
+El operador `%>%` (pipe) permite **encadenar operaciones**:
+
+```r
+# Sin pipe (difícil de leer):
+arrange(summarise(group_by(filter(datos, salario>800), ciudad),
+        media=mean(salario)), desc(media))
+
+# Con pipe (fácil de leer):
+datos %>%
+  filter(salario > 800) %>%
+  group_by(ciudad) %>%
+  summarise(media = mean(salario)) %>%
+  arrange(desc(media))
+```
+
+::: {.highlight-box}
+Lea el pipe `%>%` como "**y luego**":
+- Tome `datos` → **y luego** filtre → **y luego** agrupe → **y luego** resuma
+:::
+
+---
+
+## Análisis Descriptivo Completo
+
+```r
+# Pipeline completo de análisis
+resumen_completo <- datos %>%
+  filter(!is.na(salario)) %>%
+  group_by(departamento) %>%
+  summarise(
+    n           = n(),
+    media       = round(mean(salario), 2),
+    mediana     = median(salario),
+    desv_std    = round(sd(salario), 2),
+    cv          = round(sd(salario)/mean(salario)*100, 1),
+    q1          = quantile(salario, 0.25),
+    q3          = quantile(salario, 0.75),
+    min         = min(salario),
+    max         = max(salario)
+  ) %>%
+  arrange(desc(media))
+
+print(resumen_completo)
+```
+
+---
+
+## APP 2 — Esta Semana {background-color="#003366" color="white"}
+
+Esta semana tiene la **Práctica Experimental APP 2** (8 horas):
+
+::: {.highlight-box}
+**Dataset real:** Datos de desigualdad salarial en Ecuador 2023
+
+1. Importar datos desde CSV
+2. Limpiar y verificar calidad del dataset
+3. Calcular estadísticas descriptivas completas
+4. Análisis por región, género y sector
+5. Visualizaciones interpretativas
+6. Conclusiones sobre la problemática social
+:::
+
+**¡El análisis de datos tiene impacto real en la sociedad!** 🌍

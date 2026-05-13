@@ -1,0 +1,168 @@
+---
+title: "Semana 6 — Primeros Pasos en R"
+subtitle: "Vectores, Matrices, Data Frames y Funciones Esenciales"
+author: "Ing. David Minango PhD"
+---
+
+Con RStudio ya instalado y configurado, esta semana nos sumergimos en las **estructuras de datos fundamentales de R**: vectores, matrices y data frames. Estas son las herramientas que usaremos para todos los análisis estadísticos del resto del curso.
+
+::: {.objetivos-box}
+**Objetivos:**
+
+- Crear y manipular vectores en R
+- Entender matrices y sus operaciones
+- Trabajar con data frames (la estructura más usada en análisis de datos)
+- Aplicar funciones estadísticas descriptivas con R
+- Comparar la sintaxis R vs Python
+:::
+
+## 👨‍🏫 Presentación de Clase
+
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
+
+## 📊 Ejemplo Práctico en R
+
+### Análisis completo de un dataset de estudiantes
+
+```r
+library(dplyr)
+
+# ── Crear el dataset ─────────────────────────────────
+set.seed(123)  # Para reproducibilidad
+n <- 30
+
+estudiantes <- data.frame(
+  id       = 1:n,
+  nombre   = paste("Estudiante", 1:n),
+  nota_T1  = round(runif(n, min=55, max=98), 1),
+  nota_T2  = round(runif(n, min=50, max=100), 1),
+  ciudad   = sample(c("Quito","Guayaquil","Cuenca","Ambato"), n, replace=TRUE),
+  genero   = sample(c("M","F"), n, replace=TRUE)
+)
+
+# Calcular nota final
+estudiantes$nota_final <- round((estudiantes$nota_T1 + estudiantes$nota_T2) / 2, 1)
+estudiantes$estado <- ifelse(estudiantes$nota_final >= 70, "Aprobado", "Reprobado")
+
+cat("=== EXPLORACIÓN DEL DATASET ===\n")
+cat("Dimensiones:", nrow(estudiantes), "filas x", ncol(estudiantes), "columnas\n")
+cat("\nPrimeras 5 filas:\n")
+print(head(estudiantes, 5))
+cat("\nEstructura:\n")
+str(estudiantes)
+
+# ── Estadísticas descriptivas ─────────────────────────
+cat("\n=== ESTADÍSTICAS DESCRIPTIVAS ===\n")
+cat("Media nota final:   ", mean(estudiantes$nota_final), "\n")
+cat("Mediana nota final: ", median(estudiantes$nota_final), "\n")
+cat("Desv. Estándar:     ", round(sd(estudiantes$nota_final), 4), "\n")
+cat("Rango:              ", diff(range(estudiantes$nota_final)), "\n")
+cat("\nResumen completo:\n")
+print(summary(estudiantes$nota_final))
+
+# ── Análisis por grupos ───────────────────────────────
+cat("\n=== APROBADOS vs REPROBADOS ===\n")
+tabla_estado <- table(estudiantes$estado)
+print(tabla_estado)
+cat("Tasa de aprobación:", round(prop.table(tabla_estado)["Aprobado"] * 100, 1), "%\n")
+
+# ── Estadísticas por ciudad (con dplyr) ───────────────
+cat("\n=== ANÁLISIS POR CIUDAD ===\n")
+por_ciudad <- estudiantes %>%
+  group_by(ciudad) %>%
+  summarise(
+    n           = n(),
+    media       = round(mean(nota_final), 2),
+    mediana     = median(nota_final),
+    desv_std    = round(sd(nota_final), 2),
+    aprobados   = sum(estado == "Aprobado"),
+    tasa_apro   = round(mean(estado == "Aprobado") * 100, 1)
+  ) %>%
+  arrange(desc(media))
+
+print(as.data.frame(por_ciudad))
+
+# ── Visualización ────────────────────────────────────
+par(mfrow = c(2, 2))
+
+# 1. Histograma de notas finales
+hist(estudiantes$nota_final,
+     breaks = 8, col = "#0055a5", border = "white",
+     main = "Distribución de Notas Finales",
+     xlab = "Nota Final", ylab = "Frecuencia")
+abline(v = mean(estudiantes$nota_final), col="red", lwd=2, lty=2)
+abline(v = 70, col="green", lwd=2, lty=3)
+legend("topleft", cex=0.75,
+       legend=c(paste("Media=",round(mean(estudiantes$nota_final),1)), "Aprobación (70)"),
+       col=c("red","green"), lty=c(2,3), lwd=2)
+
+# 2. Boxplot por ciudad
+boxplot(nota_final ~ ciudad, data = estudiantes,
+        col = "#e8f4fd", border = "#003366",
+        main = "Notas por Ciudad",
+        xlab = "Ciudad", ylab = "Nota Final",
+        las = 2)
+abline(h = 70, col = "red", lty = 2)
+
+# 3. Barplot tasa de aprobación por ciudad
+tasa <- tapply(estudiantes$estado == "Aprobado", estudiantes$ciudad, mean) * 100
+barplot(sort(tasa, decreasing=TRUE),
+        col = "#28a745", border = "white",
+        main = "Tasa de Aprobación por Ciudad",
+        ylab = "% Aprobados", las = 1)
+abline(h = mean(tasa), col = "red", lty = 2)
+
+# 4. Scatter plot T1 vs T2
+plot(estudiantes$nota_T1, estudiantes$nota_T2,
+     col = ifelse(estudiantes$estado == "Aprobado", "#0055a5", "#dc3545"),
+     pch = 19, cex = 1.2,
+     main = "Nota T1 vs Nota T2",
+     xlab = "Taller 1", ylab = "Taller 2")
+abline(lm(nota_T2 ~ nota_T1, data = estudiantes),
+       col = "gray40", lwd = 1.5, lty = 2)
+legend("topleft", cex=0.8,
+       legend = c("Aprobado", "Reprobado"),
+       col = c("#0055a5", "#dc3545"), pch = 19)
+
+par(mfrow = c(1, 1))
+```
+
+## 🐍 Comparación Python vs R
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Mismo dataset en Python
+np.random.seed(123)
+n = 30
+
+df = pd.DataFrame({
+    'id': range(1, n+1),
+    'nota_T1': np.round(np.random.uniform(55, 98, n), 1),
+    'nota_T2': np.round(np.random.uniform(50, 100, n), 1),
+    'ciudad': np.random.choice(['Quito','Guayaquil','Cuenca','Ambato'], n)
+})
+df['nota_final'] = ((df['nota_T1'] + df['nota_T2']) / 2).round(1)
+df['estado'] = np.where(df['nota_final'] >= 70, 'Aprobado', 'Reprobado')
+
+print(df.head())
+print("\nEstadísticas:")
+print(df['nota_final'].describe())
+
+# Análisis por ciudad (equivalente a group_by en R)
+por_ciudad = df.groupby('ciudad')['nota_final'].agg(['mean','median','std','count'])
+print("\nPor ciudad:")
+print(por_ciudad.round(2))
+```
+
+## 💻 Taller Práctico
+
+👉 **[Ir al Taller Práctico 6 →](lab.qmd)**
+
+---
+
+*Semana 6 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

@@ -1,0 +1,277 @@
+---
+title: "💻 Taller Práctico 1"
+subtitle: "Estadística Descriptiva — Datos No Agrupados"
+author: "Ing. David Minango PhD"
+---
+
+::: {.info-box}
+**Taller Guiado** `r badge("Dificultad Media", "bg-warning")`
+
+**Duración estimada:** 90 minutos
+**Herramientas:** Python (Google Colab / Jupyter) y R (RStudio)
+**Entrega:** Notebook completado con sus respuestas e interpretaciones
+:::
+
+## Contexto
+
+Una empresa tecnológica de Quito monitorea el **tiempo de carga (en segundos)** de su aplicación web durante 25 días consecutivos. Como analista de datos, debes calcular las principales medidas estadísticas para presentar un informe al equipo directivo.
+
+**Dataset — Tiempos de carga diarios (segundos):**
+```
+3.2, 2.8, 4.1, 3.5, 2.9, 4.8, 3.3, 2.7, 3.9, 4.2,
+2.5, 3.6, 3.1, 4.4, 2.6, 3.8, 3.0, 4.6, 2.4, 3.7,
+3.4, 2.9, 4.3, 3.2, 3.8
+```
+
+---
+
+## Ejercicio 1 — Análisis Manual (sin código)
+
+> Responda estas preguntas antes de ejecutar cualquier código. Use papel y calculadora si necesita.
+
+**1.1** ¿Cuántas observaciones tiene el dataset? (n = ?)
+
+**1.2** ¿Cuál es el valor mínimo y máximo? ¿Cuánto es el rango?
+
+**1.3** Ordene los datos de menor a mayor y encuentre la mediana manualmente.
+
+**1.4** ¿Cuál es el valor que más se repite en el dataset? (Moda)
+
+::: {.callout-note}
+## Para reflexionar
+¿Cree que hay mucha variabilidad en los tiempos de carga? ¿Qué le dice eso sobre el rendimiento del servidor?
+:::
+
+---
+
+## Ejercicio 2 — Implementación en Python
+
+Copie este código en su Jupyter Notebook o Google Colab y complete los espacios marcados con `# TU CÓDIGO AQUÍ`.
+
+```python
+import numpy as np
+import pandas as pd
+from scipy import stats
+
+# ─── PASO 1: Definir el dataset ───────────────────────────────
+tiempos = [3.2, 2.8, 4.1, 3.5, 2.9, 4.8, 3.3, 2.7, 3.9, 4.2,
+           2.5, 3.6, 3.1, 4.4, 2.6, 3.8, 3.0, 4.6, 2.4, 3.7,
+           3.4, 2.9, 4.3, 3.2, 3.8]
+
+n = len(tiempos)
+print(f"Total de observaciones: {n}")
+
+# ─── PASO 2: Medidas de tendencia central ─────────────────────
+media = # TU CÓDIGO AQUÍ (pista: np.mean)
+mediana = # TU CÓDIGO AQUÍ (pista: np.median)
+
+# La moda con scipy
+resultado_moda = stats.mode(tiempos, keepdims=True)
+moda = resultado_moda.mode[0]
+
+print(f"\n📊 TENDENCIA CENTRAL")
+print(f"  Media:   {media:.4f} seg")
+print(f"  Mediana: {mediana:.4f} seg")
+print(f"  Moda:    {moda:.1f} seg")
+
+# ─── PASO 3: Medidas de dispersión ────────────────────────────
+rango = # TU CÓDIGO AQUÍ (pista: max - min)
+varianza = # TU CÓDIGO AQUÍ (pista: np.var)
+desv_std = # TU CÓDIGO AQUÍ (pista: np.std)
+cv = (desv_std / media) * 100
+
+print(f"\n📏 DISPERSIÓN")
+print(f"  Rango:           {rango:.4f}")
+print(f"  Varianza:        {varianza:.4f}")
+print(f"  Desv. Estándar:  {desv_std:.4f}")
+print(f"  Coef. Variación: {cv:.2f}%")
+
+# ─── PASO 4: Tabla de frecuencias ─────────────────────────────
+serie = pd.Series(tiempos)
+conteo = serie.value_counts().sort_index()
+
+tabla = pd.DataFrame({
+    'Valor': conteo.index,
+    'fi': conteo.values,
+    'hi': (conteo.values / n).round(4),
+    'Fi': conteo.values.cumsum()
+})
+
+print("\n📋 TABLA DE FRECUENCIAS")
+print(tabla.to_string(index=False))
+
+# ─── PASO 5: Visualización ────────────────────────────────────
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+# Histograma
+axes[0].hist(tiempos, bins=8, color='#0055a5', edgecolor='white', alpha=0.8)
+axes[0].axvline(media, color='red', linestyle='--', linewidth=2, label=f'Media = {media:.2f}')
+axes[0].axvline(mediana, color='green', linestyle='--', linewidth=2, label=f'Mediana = {mediana:.2f}')
+axes[0].set_xlabel('Tiempo de carga (seg)')
+axes[0].set_ylabel('Frecuencia')
+axes[0].set_title('Distribución de Tiempos de Carga')
+axes[0].legend()
+axes[0].grid(axis='y', alpha=0.3)
+
+# Boxplot
+axes[1].boxplot(tiempos, vert=True, patch_artist=True,
+                boxprops=dict(facecolor='#e8f4fd'),
+                medianprops=dict(color='red', linewidth=2))
+axes[1].set_ylabel('Tiempo de carga (seg)')
+axes[1].set_title('Boxplot — Tiempos de Carga')
+axes[1].grid(axis='y', alpha=0.3)
+
+plt.suptitle('Análisis de Tiempos de Carga — Empresa TechEC', fontweight='bold')
+plt.tight_layout()
+plt.savefig('tiempos_carga.png', dpi=150, bbox_inches='tight')
+plt.show()
+print("✅ Gráfico guardado como 'tiempos_carga.png'")
+```
+
+**Preguntas sobre Python:**
+
+**2.1** ¿Qué función de numpy calcula la media? ¿Y la mediana?
+
+**2.2** ¿Por qué usamos `keepdims=True` en `stats.mode()`?
+
+**2.3** Describa con sus palabras qué muestra el histograma. ¿Hay algún patrón?
+
+---
+
+## Ejercicio 3 — Implementación en R
+
+Abra RStudio y ejecute el siguiente script. Complete los espacios indicados.
+
+```r
+# ─── PASO 1: Definir el dataset ──────────────────────────────
+tiempos <- c(3.2, 2.8, 4.1, 3.5, 2.9, 4.8, 3.3, 2.7, 3.9, 4.2,
+             2.5, 3.6, 3.1, 4.4, 2.6, 3.8, 3.0, 4.6, 2.4, 3.7,
+             3.4, 2.9, 4.3, 3.2, 3.8)
+
+n <- length(tiempos)
+cat("Total de observaciones:", n, "\n")
+
+# ─── PASO 2: Función para calcular la moda ───────────────────
+calcular_moda <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+# ─── PASO 3: Calcular medidas ────────────────────────────────
+media   <- # TU CÓDIGO AQUÍ
+mediana <- # TU CÓDIGO AQUÍ
+moda    <- calcular_moda(tiempos)
+
+rango    <- max(tiempos) - min(tiempos)
+
+# Varianza poblacional (dividir por n, no n-1)
+varianza <- sum((tiempos - media)^2) / n
+desv_std <- sqrt(varianza)
+cv       <- (desv_std / media) * 100
+
+cat("\n📊 TENDENCIA CENTRAL\n")
+cat(sprintf("  Media:   %.4f seg\n", media))
+cat(sprintf("  Mediana: %.4f seg\n", mediana))
+cat(sprintf("  Moda:    %.1f seg\n", moda))
+
+cat("\n📏 DISPERSIÓN\n")
+cat(sprintf("  Rango:           %.4f\n", rango))
+cat(sprintf("  Varianza:        %.4f\n", varianza))
+cat(sprintf("  Desv. Estándar:  %.4f\n", desv_std))
+cat(sprintf("  Coef. Variación: %.2f%%\n", cv))
+
+# ─── PASO 4: Tabla de frecuencias ────────────────────────────
+freq_table <- as.data.frame(table(tiempos))
+names(freq_table) <- c("Valor", "fi")
+freq_table$hi <- round(as.numeric(freq_table$fi) / n, 4)
+freq_table$Fi <- cumsum(as.numeric(freq_table$fi))
+
+cat("\n📋 TABLA DE FRECUENCIAS\n")
+print(freq_table)
+
+# ─── PASO 5: Resumen con R ───────────────────────────────────
+cat("\n📋 RESUMEN summary()\n")
+print(summary(tiempos))
+
+# ─── PASO 6: Visualización ───────────────────────────────────
+par(mfrow = c(1, 2))
+
+# Histograma con media y mediana
+hist(tiempos,
+     main = "Distribución de Tiempos de Carga",
+     xlab = "Tiempo (seg)",
+     col = "#0055a5",
+     border = "white",
+     breaks = 8)
+abline(v = media,   col = "red",   lwd = 2, lty = 2)
+abline(v = mediana, col = "green", lwd = 2, lty = 2)
+legend("topright",
+       legend = c(paste("Media =", round(media, 2)),
+                  paste("Mediana =", round(mediana, 2))),
+       col = c("red", "green"), lty = 2, lwd = 2)
+
+# Boxplot
+boxplot(tiempos,
+        main = "Boxplot — Tiempos de Carga",
+        ylab = "Tiempo (seg)",
+        col = "#e8f4fd",
+        border = "#003366")
+abline(h = media, col = "red", lwd = 2, lty = 2)
+
+par(mfrow = c(1, 1))
+```
+
+**Preguntas sobre R:**
+
+**3.1** ¿Qué diferencia hay entre `var()` de R y la fórmula de varianza que vimos en clase?
+
+**3.2** ¿Qué muestra la función `summary()` de R? ¿Qué es el Q1 y Q3?
+
+**3.3** Explique qué representa cada parte del boxplot (bigotes, caja, línea central).
+
+---
+
+## Ejercicio 4 — Análisis e Interpretación
+
+Con los resultados obtenidos responda:
+
+**4.1** ¿El tiempo promedio de carga cumple con el estándar de la industria (< 3 segundos)?
+
+**4.2** ¿La media y la mediana son similares? ¿Qué indica esto sobre la distribución de los datos?
+
+**4.3** Basándose en el coeficiente de variación, ¿los tiempos de carga son homogéneos o heterogéneos?
+
+**4.4** Si la empresa quiere garantizar que el **95%** de los días el tiempo de carga sea aceptable, ¿cuál sería el umbral usando la regla de 2 desviaciones estándar? (Pista: x̄ + 2σ)
+
+**4.5** Redacte un párrafo corto (3-4 oraciones) como si fuera el informe al equipo directivo.
+
+---
+
+## Ejercicio 5 — Desafío Extra ⭐
+
+Compare los tiempos de carga de DOS servidores distintos:
+
+```python
+servidor_A = [3.2, 2.8, 4.1, 3.5, 2.9, 4.8, 3.3, 2.7, 3.9, 4.2]
+servidor_B = [3.5, 3.4, 3.6, 3.5, 3.7, 3.4, 3.6, 3.5, 3.5, 3.4]
+```
+
+Ambos tienen la **misma media**, pero ¿cuál es más consistente? Use el coeficiente de variación para responder y explique por qué el CV es más útil que el rango en esta comparación.
+
+---
+
+::: {.callout-tip}
+## Entrega
+Envíe su notebook (`.ipynb` o `.R`) con:
+1. Todo el código ejecutado y con output visible
+2. Las respuestas a las preguntas de cada ejercicio
+3. Los gráficos generados
+
+**Guárdelo con el nombre:** `Taller1_[SuNombre]_HEstadisticas`
+:::
+
+---
+
+*Taller 1 de 7 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

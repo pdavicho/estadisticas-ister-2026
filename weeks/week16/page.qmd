@@ -1,0 +1,26 @@
+---
+title: "Semana 16 — Integración y Proyecto Final"
+subtitle: "Análisis completo Python+R — presentación de resultados finales"
+author: "Ing. David Minango PhD"
+---
+
+::: {.callout-note}
+## 🔒 Contenido en Preparación
+
+Este material estará disponible próximamente.
+
+**Tema:** Integración y Proyecto Final
+
+**Contenido previsto:**
+Análisis completo Python+R — presentación de resultados finales
+:::
+
+## Próximamente
+
+El material de esta semana será publicado antes de la fecha de clase correspondiente.
+
+Mientras tanto, puede repasar los temas anteriores o consultar la bibliografía del curso en la [sección del programa](../../syllabus.qmd).
+
+---
+
+*Semana 16 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

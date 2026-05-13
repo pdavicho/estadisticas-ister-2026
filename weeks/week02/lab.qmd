@@ -1,0 +1,303 @@
+---
+title: "💻 Taller Práctico 2 — APP 1"
+subtitle: "Datos Agrupados: Tablas de Frecuencia y Medidas de Tendencia Central"
+author: "Ing. David Minango PhD"
+---
+
+::: {.info-box}
+**Práctica Experimental APP 1** | Duración: 8 horas
+
+Esta práctica forma parte de la **primera evaluación experimental** del curso (5 puntos Parcial 1).
+Trabajará con datos reales de salarios en Ecuador para aplicar todos los conceptos de datos agrupados.
+:::
+
+## Contexto del Problema
+
+El Ministerio de Trabajo del Ecuador realizó un estudio sobre los salarios mensuales de empleados en el sector tecnológico en 2025. Se registraron los salarios (en USD) de **45 trabajadores** de diferentes empresas de Quito y Guayaquil.
+
+**Dataset — Salarios mensuales (USD):**
+```
+520, 680, 750, 890, 430, 610, 820, 970, 540, 710,
+860, 490, 640, 780, 1050, 580, 730, 880, 460, 620,
+770, 940, 510, 670, 810, 960, 480, 650, 790, 1100,
+530, 700, 840, 590, 740, 890, 470, 630, 760, 920,
+560, 690, 830, 445, 1250
+```
+
+---
+
+## Parte 1 — Análisis Exploratorio Inicial (Manual)
+
+Antes de usar código, responda estas preguntas:
+
+**1.1** Cuente manualmente cuántos datos hay (debería ser n=45).
+
+**1.2** Identifique el salario mínimo y máximo. ¿Cuánto es el rango?
+
+**1.3** Aplique la **Regla de Sturges** manualmente:
+$$k = 1 + 3.322 \times \log_{10}(45) = \text{?}$$
+
+**1.4** Calcule la **amplitud de clase** aproximada (redondeada a múltiplo de 50):
+$$c = \frac{\text{Rango}}{k} = \text{?}$$
+
+**1.5** ¿Cuántos datos espera en promedio por clase? (n/k = ?)
+
+---
+
+## Parte 2 — Tabla de Frecuencias en Python
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# ─── Dataset ────────────────────────────────────────────────
+salarios = [
+    520, 680, 750, 890, 430, 610, 820, 970, 540, 710,
+    860, 490, 640, 780, 1050, 580, 730, 880, 460, 620,
+    770, 940, 510, 670, 810, 960, 480, 650, 790, 1100,
+    530, 700, 840, 590, 740, 890, 470, 630, 760, 920,
+    560, 690, 830, 445, 1250
+]
+
+n = len(salarios)
+rango = max(salarios) - min(salarios)
+
+# ─── PASO 1: Sturges ──────────────────────────────────────
+k = int(np.ceil(1 + 3.322 * np.log10(n)))
+c = # TU CÓDIGO: amplitud (rango/k redondeado a múltiplo de 50)
+print(f"k = {k} | c = {c}")
+
+# ─── PASO 2: Definir límites de clase ─────────────────────
+inicio = 400  # límite inferior del primer intervalo
+limites = [inicio + i * c for i in range(k + 1)]
+print("Límites:", limites)
+
+# ─── PASO 3: Contar frecuencias por clase ─────────────────
+frecuencias = []
+marcas_clase = []
+clases_str = []
+
+for i in range(k):
+    li = limites[i]
+    ls = limites[i + 1]
+    mi = (li + ls) / 2
+    marcas_clase.append(mi)
+
+    if i < k - 1:
+        fi = sum(1 for x in salarios if li <= x < ls)
+        clases_str.append(f"[{int(li)} - {int(ls)})")
+    else:
+        fi = sum(1 for x in salarios if li <= x <= ls)
+        clases_str.append(f"[{int(li)} - {int(ls)}]")
+
+    frecuencias.append(fi)
+
+# ─── PASO 4: Armar la tabla ───────────────────────────────
+tabla = pd.DataFrame({
+    'Clase':  clases_str,
+    'mi':     marcas_clase,
+    'fi':     frecuencias,
+    'hi':     [round(f/n, 4) for f in frecuencias],
+    'Fi':     np.cumsum(frecuencias),
+    'Hi':     np.round(np.cumsum([f/n for f in frecuencias]), 4),
+    'fi·mi':  [f * m for f, m in zip(frecuencias, marcas_clase)]
+})
+
+print("\n📋 TABLA DE FRECUENCIAS COMPLETA")
+print(tabla[['Clase', 'mi', 'fi', 'hi', 'Fi', 'Hi']].to_string(index=False))
+print(f"\nVerificación: Σfi = {sum(frecuencias)} (debe ser {n})")
+print(f"Verificación: Σhi = {sum(tabla['hi']):.4f} (debe ser ≈ 1.0)")
+
+# ─── PASO 5: Calcular medidas ─────────────────────────────
+# Media
+media = # TU CÓDIGO: Σ(fi·mi) / n
+
+# Mediana
+n_medio = n / 2
+idx_med = tabla[tabla['Fi'] >= n_medio].index[0]
+Fi_ant  = tabla.loc[idx_med - 1, 'Fi'] if idx_med > 0 else 0
+li_med  = float(tabla.loc[idx_med, 'Clase'].split(' - ')[0].replace('[',''))
+fi_med  = tabla.loc[idx_med, 'fi']
+mediana = # TU CÓDIGO: fórmula de mediana agrupada
+
+# Moda
+idx_mo = tabla['fi'].idxmax()
+li_mo  = float(tabla.loc[idx_mo, 'Clase'].split(' - ')[0].replace('[',''))
+d1 = tabla.loc[idx_mo, 'fi'] - (tabla.loc[idx_mo-1,'fi'] if idx_mo > 0 else 0)
+d2 = tabla.loc[idx_mo, 'fi'] - (tabla.loc[idx_mo+1,'fi'] if idx_mo < k-1 else 0)
+moda = # TU CÓDIGO: fórmula de moda agrupada
+
+print(f"\n📊 RESULTADOS")
+print(f"  Media:   ${media:.2f}")
+print(f"  Mediana: ${mediana:.2f}")
+print(f"  Moda:    ${moda:.2f}")
+
+# ─── PASO 6: Histograma ───────────────────────────────────
+plt.figure(figsize=(10, 5))
+bars = plt.bar(tabla['mi'], tabla['fi'], width=c*0.9,
+               color='#0055a5', edgecolor='white', alpha=0.85)
+plt.axvline(media,   color='red',    linewidth=2, linestyle='--', label=f'Media=${media:.0f}')
+plt.axvline(mediana, color='green',  linewidth=2, linestyle='--', label=f'Mediana=${mediana:.0f}')
+plt.axvline(moda,    color='orange', linewidth=2, linestyle='--', label=f'Moda=${moda:.0f}')
+
+# Etiquetas sobre las barras
+for bar, fi in zip(bars, frecuencias):
+    plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.2,
+             str(fi), ha='center', va='bottom', fontsize=9, fontweight='bold')
+
+plt.xlabel('Salario Mensual (USD)')
+plt.ylabel('Frecuencia Absoluta (fi)')
+plt.title('Distribución de Salarios — Sector Tecnológico Ecuador 2025')
+plt.legend()
+plt.grid(axis='y', alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## Parte 3 — Análisis en R
+
+```r
+salarios <- c(
+  520, 680, 750, 890, 430, 610, 820, 970, 540, 710,
+  860, 490, 640, 780, 1050, 580, 730, 880, 460, 620,
+  770, 940, 510, 670, 810, 960, 480, 650, 790, 1100,
+  530, 700, 840, 590, 740, 890, 470, 630, 760, 920,
+  560, 690, 830, 445, 1250
+)
+
+n   <- length(salarios)
+k   <- ceiling(1 + 3.322 * log10(n))
+c   <- # TU CÓDIGO: amplitud redondeada
+ini <- 400
+lim <- seq(ini, ini + k * c, by = c)
+
+# Tabla de frecuencias
+h     <- hist(salarios, breaks = lim, plot = FALSE)
+mi    <- (h$breaks[-length(h$breaks)] + h$breaks[-1]) / 2
+fi    <- h$counts
+hi    <- round(fi / n, 4)
+Fi    <- cumsum(fi)
+Hi    <- round(cumsum(hi), 4)
+
+tabla <- data.frame(
+  Clase = paste0("[", h$breaks[-length(h$breaks)], "-", h$breaks[-1], ")"),
+  mi = mi, fi = fi, hi = hi, Fi = Fi, Hi = Hi,
+  fi_mi = fi * mi
+)
+
+cat("📋 TABLA DE FRECUENCIAS\n")
+print(tabla[, c("Clase","mi","fi","hi","Fi","Hi")])
+
+# Medidas
+media   <- sum(tabla$fi_mi) / n
+n_med   <- n / 2
+idx_med <- min(which(Fi >= n_med))
+Fi_ant  <- if (idx_med > 1) Fi[idx_med-1] else 0
+mediana <- lim[idx_med] + ((n_med - Fi_ant) / fi[idx_med]) * c
+
+idx_mo <- which.max(fi)
+d1 <- fi[idx_mo] - ifelse(idx_mo > 1, fi[idx_mo-1], 0)
+d2 <- fi[idx_mo] - ifelse(idx_mo < k, fi[idx_mo+1], 0)
+moda <- lim[idx_mo] + (d1/(d1+d2)) * c
+
+cat(sprintf("\n📊 Media:   $%.2f\n", media))
+cat(sprintf("📊 Mediana: $%.2f\n", mediana))
+cat(sprintf("📊 Moda:    $%.2f\n", moda))
+
+# Gráfico
+hist(salarios, breaks = lim,
+     col = "#0055a5", border = "white",
+     main = "Distribución de Salarios — Ecuador 2025",
+     xlab = "Salario (USD)", ylab = "Frecuencia")
+abline(v = media,   col = "red",    lwd = 2, lty = 2)
+abline(v = mediana, col = "green",  lwd = 2, lty = 2)
+abline(v = moda,    col = "orange", lwd = 2, lty = 2)
+legend("topright",
+       legend = c(paste("Media=$",round(media)),
+                  paste("Mediana=$",round(mediana)),
+                  paste("Moda=$",round(moda))),
+       col=c("red","green","orange"), lty=2, lwd=2, cex=0.8)
+```
+
+---
+
+## Parte 4 — Preguntas de Análisis e Interpretación
+
+**4.1** Complete la tabla de frecuencias a mano (use los valores obtenidos por código):
+
+| Clase | mi | fi | hi | Fi | Hi |
+|---|---|---|---|---|---|
+| [400 - __) | | | | | |
+| ... | | | | | |
+
+**4.2** ¿En qué clase se concentra la mayor cantidad de empleados?
+
+**4.3** Calcule cuántos empleados ganan **menos de $700** (use la columna Fi).
+
+**4.4** ¿Qué porcentaje de empleados gana **más de $800**? (Use Hi)
+
+**4.5** Compare la media, mediana y moda:
+- ¿Son similares o diferentes?
+- ¿Qué indica esto sobre la forma de la distribución?
+- ¿Hay datos atípicos que afecten la media?
+
+**4.6** ¿Cuál medida (media, mediana o moda) recomendaría para representar el "salario típico"? Justifique.
+
+**4.7** La empresa dice que el "salario promedio de sus empleados es $900". Con los datos calculados, ¿esta afirmación es correcta, exagerada o subestimada?
+
+---
+
+## Parte 5 — Comparación con Datos No Agrupados
+
+Calcule la media, mediana y moda directamente sobre los datos **sin agrupar** y compare:
+
+```python
+# Calcule directamente sobre los datos originales
+from scipy import stats
+
+media_no_agrupada   = np.mean(salarios)
+mediana_no_agrupada = np.median(salarios)
+moda_resultado      = stats.mode(salarios, keepdims=True)
+moda_no_agrupada    = moda_resultado.mode[0]
+
+print("Sin agrupar:")
+print(f"  Media:   ${media_no_agrupada:.2f}")
+print(f"  Mediana: ${mediana_no_agrupada:.2f}")
+print(f"  Moda:    ${moda_no_agrupada:.2f}")
+
+print("\nAgrupados:")
+print(f"  Media:   ${media:.2f}")
+print(f"  Mediana: ${mediana:.2f}")
+print(f"  Moda:    ${moda:.2f}")
+
+print("\nDiferencias (agrupado - no agrupado):")
+print(f"  ΔMedia:   ${media - media_no_agrupada:.2f}")
+print(f"  ΔMediana: ${mediana - mediana_no_agrupada:.2f}")
+```
+
+**5.1** ¿Cuánto difieren los resultados entre el método agrupado y no agrupado?
+
+**5.2** ¿Por qué existen estas diferencias? ¿Es relevante la diferencia para tomar decisiones?
+
+---
+
+::: {.callout-tip}
+## Entrega APP 1
+Envíe un informe que incluya:
+
+1. Tabla de frecuencias completa (puede ser Excel o como print del código)
+2. Código Python Y R ejecutado con output visible
+3. Gráfico de histograma con las tres medidas marcadas
+4. Respuestas completas a las preguntas de análisis (Parte 4 y 5)
+5. Conclusión: párrafo de 5-6 oraciones interpretando los resultados en contexto real
+
+**Nombre del archivo:** `APP1_[SuNombre]_HEstadisticas`
+**Entrega:** Moodle (plazo según indicaciones del docente)
+:::
+
+---
+
+*APP 1 — Semana 2 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

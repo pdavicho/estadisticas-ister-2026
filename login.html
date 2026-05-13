@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso — Herramientas Estadísticas ISTER 2026</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #001f4d 0%, #003366 50%, #0055a5 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .logo-area {
+      margin-bottom: 1.5rem;
+    }
+
+    .logo-area img {
+      max-width: 120px;
+      margin-bottom: 0.75rem;
+    }
+
+    .logo-placeholder {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #003366, #0055a5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.75rem;
+      color: white;
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      color: #003366;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .instructor {
+      color: #003366;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.8rem;
+      padding: 0.4rem 0.8rem;
+      background: #f0f7ff;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="password"]:focus {
+      border-color: #0055a5;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, #003366, #0055a5);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-login:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .error-msg {
+      display: none;
+      background: #fff0f0;
+      border: 1px solid #ffcccc;
+      color: #c00;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      color: #999;
+    }
+
+    .period-badge {
+      margin-top: 1rem;
+      display: inline-block;
+      background: #f0a500;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="logo-area">
+      <div class="logo-placeholder">IE</div>
+      <h1>Herramientas Estadísticas</h1>
+      <p class="subtitle">Sistemas y Gestión de Data</p>
+      <span class="instructor">Ing. David Minango PhD</span>
+      <br>
+      <span class="period-badge">Período 2026-1</span>
+    </div>
+
+    <div class="error-msg" id="errorMsg">
+      ⚠️ Clave de acceso incorrecta. Verifique e intente de nuevo.
+    </div>
+
+    <div class="form-group">
+      <label for="password">🔑 Clave de acceso al curso</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="Ingrese la clave del curso"
+        autocomplete="current-password"
+        autofocus
+      >
+    </div>
+
+    <button class="btn-login" onclick="checkLogin()">Ingresar al Curso →</button>
+
+    <p class="footer-note">
+      Acceso exclusivo para estudiantes matriculados.<br>
+      ISTER — Instituto Superior Tecnológico de los Ríos
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('password').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkLogin();
+    });
+
+    function checkLogin() {
+      var pwd = document.getElementById('password').value;
+      var err = document.getElementById('errorMsg');
+      if (pwd === 'HEstadisticas_Ister') {
+        sessionStorage.setItem('HE_auth_token', 'HEstadisticas_Ister_2026');
+        window.location.href = 'index.html';
+      } else {
+        err.style.display = 'block';
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+      }
+    }
+  </script>
+</body>
+</html>

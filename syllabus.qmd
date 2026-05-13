@@ -1,0 +1,113 @@
+---
+title: "📓 Programa del Curso"
+subtitle: "Plan Analítico — Herramientas Estadísticas 2026"
+author: "Ing. David Minango PhD"
+---
+
+## Información de la Asignatura
+
+| Campo | Detalle |
+|---|---|
+| **Asignatura** | Herramientas Estadísticas |
+| **Carrera** | Sistemas y Gestión de Data |
+| **Nivel** | Cuarto Nivel |
+| **Período** | 2026-1 (Grado) |
+| **Modalidad** | Presencial |
+| **Horas semanales** | 3 (Lunes 2h + Viernes 1h) |
+| **Prerequisito** | Estadística |
+
+## Distribución de Horas
+
+| Tipo | Horas |
+|---|:---:|
+| Docencia (presencial) | 48 |
+| Práctica-experimental | 16 |
+| Trabajo autónomo | 32 |
+| **Total** | **96** |
+
+## Objetivo General
+
+Comprender las técnicas de análisis estadístico más utilizadas y su aplicación mediante herramientas tecnológicas que permitan al estudiante aplicar criterios estadísticos durante su ejercicio profesional.
+
+## Resultados de Aprendizaje
+
+- Diferenciar y aplicar los distintos tipos de muestreo estadístico.
+- Aplicar estimaciones para tomar decisiones basadas en los resultados obtenidos.
+- Analizar e interpretar correctamente los resultados estadísticos con herramientas informáticas.
+
+## Contenidos por Semana
+
+### TEMA 1 — Medidas de Tendencia Central y Dispersión (Semanas 1-4)
+
+| Semana | Fecha | Contenido | Lunes (2h) | Viernes (1h) |
+|:---:|---|---|---|---|
+| 1 | | Estadística descriptiva: datos no agrupados | Media, mediana, moda | Rango, desviación estándar, CV |
+| 2 | | Datos agrupados: tablas de frecuencia | Regla de Sturges, tabla de frecuencias | Media, mediana, moda agrupadas |
+| 3 | | Medidas de dispersión para datos agrupados | Varianza, desviación estándar agrupada | CV, comparación agrupado vs no agrupado |
+| 4 | | Variables aleatorias y probabilidad | Variables discretas y continuas | Funciones de probabilidad |
+
+### TEMA 2 — Introducción a RStudio (Semanas 5-8)
+
+| Semana | Fecha | Contenido | Lunes (2h) | Viernes (1h) |
+|:---:|---|---|---|---|
+| 5 | | Entorno RStudio | Instalación, interfaz, consola | Scripts, paquetes, tipos de datos |
+| 6 | | Primeros pasos en R | Vectores, matrices, listas | Data frames, subsetting, funciones |
+| 7 | | Gestión de datos (**APP 2**) | Importar/exportar, limpieza | dplyr: filter, select, mutate |
+| 8 | | Gestión de datos (continuación) | group_by, summarise, joins | Análisis descriptivo completo |
+
+### TEMA 3 — Estadística Descriptiva con R (Semanas 9-12)
+
+| Semana | Fecha | Contenido | Lunes (2h) | Viernes (1h) |
+|:---:|---|---|---|---|
+| 9 | | Recolección de datos en R | Funciones de recolección | Lectura de formatos |
+| 10 | | Estadística con R (tendencia central) | mean(), median(), table() | Frecuencias y percentiles |
+| 11 | | Estadística con R (dispersión) | var(), sd(), range() | CV, boxplots |
+| 12 | | Repaso y práctica integradora | Análisis completo | Presentación de resultados |
+
+### TEMA 4 — Gráficos en R (Semanas 13-16)
+
+| Semana | Fecha | Contenido | Lunes (2h) | Viernes (1h) |
+|:---:|---|---|---|---|
+| 13 | | Funciones gráficas de bajo nivel | plot(), hist(), barplot() | Personalización de gráficos |
+| 14 | | Funciones gráficas de alto nivel | ggplot2: geom_histogram, geom_bar | Facets, colores, temas |
+| 15 | | Visualización con Python | matplotlib, seaborn | Pandas + visualización |
+| 16 | | Proyecto final e integración | Análisis completo Python+R | Presentaciones |
+
+## Prácticas Experimentales (APP)
+
+### APP 1 — Semana 2 (8 horas)
+**Representación de medidas de tendencia central y dispersión**
+Calcular medidas de tendencia central y dispersión a partir de un conjunto de datos usando Python y R.
+
+### APP 2 — Semana 7 (8 horas)
+**Análisis de datos reales con RStudio**
+Analizar conjuntos de datos reales con problemáticas sociales usando RStudio para obtener las principales medidas estadísticas.
+
+## Metodología
+
+1. **Pensamiento crítico** — Investigación → Análisis crítico → Debate → Aplicación práctica
+2. **Foros de discusión en línea** — trabajo autónomo colaborativo
+3. **Clases magistrales interactivas** — presentación + ejemplos + preguntas
+4. **Aprendizaje colaborativo** — trabajo en grupos durante talleres
+5. **Talleres prácticos** — aplicación guiada con Python y R
+
+## Recursos y Herramientas
+
+| Categoría | Herramientas |
+|---|---|
+| Ofimática | Microsoft Office 365, Teams, Moodle |
+| Software estadístico | Excel, RStudio, Python (Jupyter/Google Colab) |
+| Pedagógicas | Canva, Quizz, WayGround |
+| Hardware | Computadora, pizarra digital |
+
+## Bibliografía
+
+**Texto principal:**
+Bruce, P., Bruce, A. & Gedeck, P. (2022). *Practical Statistics for Data Science with R and Python* (2nd ed.). O'Reilly Media.
+
+**Texto complementario:**
+Bologna, E. (2024). *Herramientas Estadísticas para la Investigación Social con R*.
+
+**Recursos en línea:**
+- R for Data Science: [r4ds.hadley.nz](https://r4ds.hadley.nz)
+- Python for Data Analysis: documentación oficial de pandas y numpy

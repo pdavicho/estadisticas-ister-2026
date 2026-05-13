@@ -1,0 +1,142 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - login.html
+
+website:
+  title: "Herramientas Estadísticas | ISTER 2026"
+  description: "Curso de Herramientas Estadísticas — Sistemas y Gestión de Data"
+  favicon: figures/logos/ister_logo.png
+  page-navigation: true
+  back-to-top-navigation: true
+
+  navbar:
+    background: "#003366"
+    foreground: white
+    logo: figures/logos/ister_logo.png
+    logo-alt: "ISTER"
+    title: "Herramientas Estadísticas 2026"
+    right:
+      - icon: search
+        href: search.html
+        aria-label: Buscar
+
+  sidebar:
+    style: docked
+    background: light
+    collapse-level: 1
+    contents:
+      - text: "🏠 Inicio"
+        href: index.qmd
+      - text: "📓 Programa del Curso"
+        href: syllabus.qmd
+      - section: "🗓️ Semanas"
+        contents:
+          - section: "Semana 01 — Estadística Descriptiva"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week01/page.qmd
+              - text: "💻 Taller Práctico 1"
+                href: weeks/week01/lab.qmd
+          - section: "Semana 02 — Datos Agrupados"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week02/page.qmd
+              - text: "💻 Taller Práctico 2"
+                href: weeks/week02/lab.qmd
+          - section: "Semana 03 — Medidas de Dispersión"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week03/page.qmd
+              - text: "💻 Taller Práctico 3"
+                href: weeks/week03/lab.qmd
+          - section: "Semana 04 — Variables Aleatorias"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week04/page.qmd
+              - text: "💻 Taller Práctico 4"
+                href: weeks/week04/lab.qmd
+          - section: "Semana 05 — Introducción a RStudio"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week05/page.qmd
+              - text: "💻 Taller Práctico 5"
+                href: weeks/week05/lab.qmd
+          - section: "Semana 06 — Primeros Pasos en R"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week06/page.qmd
+              - text: "💻 Taller Práctico 6"
+                href: weeks/week06/lab.qmd
+          - section: "Semana 07 — Gestión de Datos en R"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week07/page.qmd
+              - text: "💻 Taller APP 7"
+                href: weeks/week07/lab.qmd
+          - section: "Semana 08 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week08/page.qmd
+          - section: "Semana 09 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week09/page.qmd
+          - section: "Semana 10 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week10/page.qmd
+          - section: "Semana 11 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week11/page.qmd
+          - section: "Semana 12 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week12/page.qmd
+          - section: "Semana 13 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week13/page.qmd
+          - section: "Semana 14 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week14/page.qmd
+          - section: "Semana 15 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week15/page.qmd
+          - section: "Semana 16 — Próximamente"
+            contents:
+              - text: "👨‍🏫 Material de Clase"
+                href: weeks/week16/page.qmd
+
+  page-footer:
+    center: "Ing. David Minango PhD — Herramientas Estadísticas 2026 — ISTER"
+    background: "#003366"
+
+  search:
+    location: navbar
+    type: overlay
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    toc-title: "En esta página"
+    number-sections: false
+    code-fold: false
+    code-tools: true
+    code-copy: true
+    highlight-style: github
+    include-in-header: auth-check.html
+    lang: es
+
+execute:
+  freeze: auto
+  echo: true
+  warning: false
+  message: false

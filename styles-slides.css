@@ -1,0 +1,55 @@
+/*-- scss:rules --*/
+/* Estilos para presentaciones Reveal.js — ISTER 2026 */
+
+.reveal {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  color: #003366;
+  font-weight: 700;
+}
+
+.reveal .slide-number {
+  font-size: 14px;
+  color: #666;
+}
+
+.reveal .footer {
+  font-size: 13px;
+  color: #888;
+}
+
+.reveal pre code {
+  font-size: 0.75em;
+  max-height: 500px;
+}
+
+.reveal table {
+  font-size: 0.82em;
+  border-collapse: collapse;
+}
+
+.reveal table th {
+  background-color: #003366;
+  color: white;
+  padding: 0.5rem 0.8rem;
+}
+
+.reveal table td {
+  padding: 0.4rem 0.8rem;
+  border-bottom: 1px solid #eee;
+}
+
+.reveal .callout {
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin: 0.5rem 0;
+}
+
+.reveal blockquote {
+  border-left: 4px solid #f0a500;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #555;
+}

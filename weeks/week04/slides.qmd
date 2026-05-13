@@ -1,0 +1,189 @@
+---
+title: "Semana 4: Variables Aleatorias y Probabilidad"
+subtitle: "Fundamentos de Probabilidad y Distribuciones"
+author: "Ing. David Minango PhD"
+institute: "ISTER — Sistemas y Gestión de Data"
+date: "2026"
+format:
+  revealjs:
+    theme: [default, ../../styles-slides.css]
+    slide-number: true
+    logo: ../../figures/logos/ister_logo.png
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
+    transition: slide
+    highlight-style: github
+    chalkboard: true
+include-in-header:
+  text: |
+    <style>
+    .reveal h1, .reveal h2 { color: #003366; }
+    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; margin: 0.5rem 0; }
+    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; }
+    </style>
+---
+
+## De la Estadística Descriptiva a la Probabilidad {background-color="#003366" color="white"}
+
+**Hasta ahora:** Describimos datos que ya tenemos (pasado)
+- Media, mediana, moda, varianza, desviación estándar
+
+**Ahora:** Modelamos **lo que puede ocurrir** (futuro)
+- ¿Cuál es la probabilidad de que un servidor falle mañana?
+- ¿Qué tan probable es que un estudiante apruebe?
+
+> La **probabilidad** es el lenguaje matemático de la incertidumbre.
+
+---
+
+## Variable Aleatoria
+
+Una **variable aleatoria** (V.A.) es una función que asigna un valor numérico a cada resultado posible de un experimento aleatorio.
+
+:::: {.columns}
+::: {.column width="50%"}
+### Discreta
+Toma valores **contables** (enteros)
+
+**Ejemplos:**
+- X = número de bugs en un código
+- X = número de llamadas por hora
+- X = resultado al lanzar un dado
+
+**Valores posibles:** {0, 1, 2, 3, ...}
+:::
+
+::: {.column width="50%"}
+### Continua
+Toma cualquier valor en un **intervalo**
+
+**Ejemplos:**
+- X = tiempo de respuesta de un servidor
+- X = temperatura del CPU
+- X = peso de un archivo (MB)
+
+**Valores posibles:** [0, ∞)
+:::
+::::
+
+---
+
+## Función de Probabilidad (Variable Discreta)
+
+Para una variable discreta X, la función $P(X = x)$ debe cumplir:
+
+::: {.formula-slide}
+$$\sum_{x} P(X = x) = 1 \quad \text{y} \quad P(X = x) \geq 0 \text{ para todo } x$$
+:::
+
+**Ejemplo:** X = número de errores en una línea de código
+
+| X | 0 | 1 | 2 | 3 | 4 |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| P(X=x) | 0.40 | 0.30 | 0.20 | 0.07 | 0.03 |
+
+Verificación: $0.40 + 0.30 + 0.20 + 0.07 + 0.03 = 1.00$ ✅
+
+---
+
+## Valor Esperado y Varianza (Discreta)
+
+::: {.formula-slide}
+$$E(X) = \mu = \sum_{x} x \cdot P(X = x)$$
+
+$$Var(X) = \sigma^2 = \sum_{x} (x - \mu)^2 \cdot P(X = x)$$
+:::
+
+**Ejemplo:** Con la tabla anterior (errores por línea)
+
+$$E(X) = 0(0.40) + 1(0.30) + 2(0.20) + 3(0.07) + 4(0.03) = 1.03 \text{ errores}$$
+
+::: {.highlight-box}
+El valor esperado es el **promedio a largo plazo** si repitiéramos el experimento muchas veces. En este caso, esperamos ~1 error por línea de código.
+:::
+
+---
+
+## Función de Densidad (Variable Continua)
+
+Para una variable continua, $P(X = x) = 0$ para cualquier valor exacto. En cambio usamos la **función de densidad** $f(x)$:
+
+::: {.formula-slide}
+$$P(a \leq X \leq b) = \int_a^b f(x) dx \quad \text{y} \quad \int_{-\infty}^{\infty} f(x) dx = 1$$
+:::
+
+La **probabilidad** es el **área bajo la curva** en un intervalo.
+
+---
+
+## La Distribución Normal
+
+La distribución más importante en estadística:
+
+::: {.formula-slide}
+$$f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$
+:::
+
+**Propiedades:**
+- Simétrica alrededor de $\mu$ (media = mediana = moda)
+- Forma de campana
+- Completamente definida por $\mu$ y $\sigma$
+
+**Regla empírica:**
+- $P(\mu - \sigma \leq X \leq \mu + \sigma) \approx 68\%$
+- $P(\mu - 2\sigma \leq X \leq \mu + 2\sigma) \approx 95\%$
+- $P(\mu - 3\sigma \leq X \leq \mu + 3\sigma) \approx 99.7\%$
+
+---
+
+## Distribución Normal Estándar (Z)
+
+Estandarización: convierte cualquier normal en la normal estándar $N(0,1)$:
+
+::: {.formula-slide}
+$$Z = \frac{X - \mu}{\sigma}$$
+:::
+
+**Ejemplo:** Los tiempos de carga de un servidor siguen $N(\mu=3, \sigma=0.5)$ seg
+
+¿Cuál es la probabilidad de que el tiempo sea menor a 3.5 segundos?
+
+$$Z = \frac{3.5 - 3}{0.5} = 1.0 \quad \Rightarrow \quad P(X < 3.5) = P(Z < 1) \approx 84.13\%$$
+
+---
+
+## Distribuciones Discretas Importantes
+
+:::: {.columns}
+::: {.column width="50%"}
+### Bernoulli
+Un experimento con dos resultados (éxito/fracaso):
+$$P(X=1) = p \quad P(X=0) = 1-p$$
+$E(X) = p \quad Var(X) = p(1-p)$
+:::
+
+::: {.column width="50%"}
+### Binomial
+n repeticiones Bernoulli independientes:
+$$P(X=k) = \binom{n}{k} p^k (1-p)^{n-k}$$
+$E(X) = np \quad Var(X) = np(1-p)$
+:::
+::::
+
+**Ejemplo Binomial:** Si el 30% de los sistemas tienen un bug, en una muestra de 10 sistemas, ¿cuántos esperamos con bugs?
+$$E(X) = 10 \times 0.30 = 3 \text{ sistemas}$$
+
+---
+
+## Resumen {background-color="#003366" color="white"}
+
+| Concepto | Descripción |
+|---|---|
+| **Variable aleatoria** | Asigna números a resultados aleatorios |
+| **Discreta** | Valores contables (enteros) |
+| **Continua** | Cualquier valor en un intervalo |
+| **E(X)** | Valor esperado (promedio teórico) |
+| **Distribución Normal** | La más usada en estadística |
+| **Estandarización Z** | Permite usar tablas/funciones estándar |
+
+### Próximo tema:
+**Semana 5** — Introducción a RStudio: el entorno que usaremos para todos los análisis estadísticos computacionales.

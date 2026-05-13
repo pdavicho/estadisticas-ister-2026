@@ -1,0 +1,90 @@
+---
+title: "Herramientas Estadísticas"
+subtitle: "Sistemas y Gestión de Data — ISTER 2026"
+author: "Ing. David Minango PhD"
+---
+
+::: {.hero-banner}
+# 📊 Herramientas Estadísticas
+
+**Sistemas y Gestión de Data | Cuarto Nivel**
+
+Ing. David Minango PhD · pablo.minango@ister.edu.ec · Período 2026-1
+:::
+
+## Bienvenida al Curso
+
+Este espacio reúne todos los materiales del curso **Herramientas Estadísticas**, diseñado para que los estudiantes de Sistemas y Gestión de Data adquieran competencias sólidas en análisis estadístico aplicado con herramientas computacionales modernas.
+
+::: {.objetivos-box}
+**Objetivo general:** Comprender las técnicas de análisis estadístico más utilizadas y su aplicación mediante herramientas tecnológicas, aplicando criterios estadísticos durante el ejercicio profesional.
+:::
+
+## Información General
+
+| | |
+|---|---|
+| **Carrera** | Sistemas y Gestión de Data (SGD-L4N-A) |
+| **Docente** | Ing. David Minango PhD |
+| **Modalidad** | Presencial (Lunes 2h + Viernes 1h) |
+| **Período** | 2026-1 |
+| **Horas totales** | 96 horas (48 presenciales + 16 prácticas + 32 autónomas) |
+| **Prerequisito** | Estadística |
+| **Herramientas** | Python · R / RStudio · Excel |
+
+## Estructura del Curso
+
+El curso se divide en **4 grandes temas** a lo largo de 16 semanas:
+
+::: {.week-card}
+#### 📐 Tema 1 — Semanas 1-4
+**Medidas de Tendencia Central y Dispersión**
+Datos agrupados y no agrupados, tablas de frecuencia, variables aleatorias, distribuciones de probabilidad.
+:::
+
+::: {.week-card}
+#### 💻 Tema 2 — Semanas 5-8
+**Introducción a RStudio**
+Entorno R, tipos de datos, vectores, matrices, data frames, primeros pasos en programación estadística.
+:::
+
+::: {.week-card}
+#### 📊 Tema 3 — Semanas 9-12
+**Estadística Descriptiva con R**
+Recolección de datos, funciones estadísticas, análisis completo de datasets reales.
+:::
+
+::: {.week-card}
+#### 🎨 Tema 4 — Semanas 13-16
+**Gráficos en R**
+Funciones gráficas de bajo y alto nivel, visualización de datos con ggplot2 y matplotlib.
+:::
+
+## Sistema de Evaluación
+
+| Componente | Parcial 1 (35 pts) | Parcial 2 (65 pts) |
+|---|:---:|:---:|
+| Actividades docentes | 10 | 10 |
+| Trabajo autónomo | 5 | 10 |
+| Práctica experimental | 5 | 10 |
+| Evaluación práctica | 10 | 30 |
+| Evaluación teórica | 5 | 5 |
+
+::: {.callout-note}
+## Aprobación
+**Puntaje ≥ 70** para aprobar · Entre 40-70 se puede rendir examen de mejoramiento (máximo 70 pts) · **< 40** reprueba.
+:::
+
+## Prácticas Experimentales (APP)
+
+1. **APP 1 (Semana 2)** — Representación de medidas de tendencia central y dispersión · 8 horas
+2. **APP 2 (Semana 7)** — Análisis de datos reales con RStudio (dataset con problemática social) · 8 horas
+
+## Bibliografía Principal
+
+- Bruce, P., Bruce, A. & Gedeck, P. (2022). *Practical Statistics for Data Science with R and Python* (2nd ed.). O'Reilly.
+- Bologna, E. (2024). *Herramientas Estadísticas para la Investigación Social con R*.
+
+---
+
+*Navegue las semanas usando el menú lateral* →

@@ -1,0 +1,239 @@
+---
+title: "Semana 6: Primeros Pasos en R"
+subtitle: "Vectores, Matrices, Data Frames y Funciones Esenciales"
+author: "Ing. David Minango PhD"
+institute: "ISTER — Sistemas y Gestión de Data"
+date: "2026"
+format:
+  revealjs:
+    theme: [default, ../../styles-slides.css]
+    slide-number: true
+    logo: ../../figures/logos/ister_logo.png
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
+    transition: slide
+    highlight-style: github
+    chalkboard: true
+include-in-header:
+  text: |
+    <style>
+    .reveal h1, .reveal h2 { color: #003366; }
+    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; }
+    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; }
+    </style>
+---
+
+## Estructuras de Datos en R {background-color="#003366" color="white"}
+
+R tiene 4 estructuras principales:
+
+| Estructura | Dimensiones | Tipos | Ejemplo |
+|---|:---:|---|---|
+| **Vector** | 1D | Un solo tipo | `c(1, 2, 3)` |
+| **Matriz** | 2D | Un solo tipo | `matrix(1:9, 3, 3)` |
+| **Data Frame** | 2D | Múltiples tipos | tabla de datos |
+| **Lista** | nD | Cualquier tipo | `list(1, "a", TRUE)` |
+
+---
+
+## Vectores
+
+La estructura más fundamental de R:
+
+```r
+# Crear vectores
+numeros  <- c(1, 2, 3, 4, 5)
+letras   <- c("a", "b", "c")
+logicos  <- c(TRUE, FALSE, TRUE)
+
+# Secuencias
+secuencia1 <- 1:10           # 1 2 3 4 5 6 7 8 9 10
+secuencia2 <- seq(0, 1, 0.2) # 0.0 0.2 0.4 0.6 0.8 1.0
+repeticion <- rep(5, times=3) # 5 5 5
+
+# Acceder a elementos (R empieza en 1!)
+numeros[1]       # 1 (primer elemento)
+numeros[3:5]     # 3 4 5
+numeros[c(1,3)]  # 1 3 (elementos 1 y 3)
+numeros[-2]      # 1 3 4 5 (todo excepto el 2do)
+```
+
+---
+
+## Operaciones con Vectores
+
+```r
+x <- c(10, 20, 30, 40, 50)
+y <- c(1, 2, 3, 4, 5)
+
+# Operaciones elemento a elemento
+x + y   # 11 22 33 44 55
+x * y   # 10 40 90 160 250
+x / y   # 10 10 10 10 10
+x^2     # 100 400 900 1600 2500
+
+# Funciones estadísticas sobre vectores
+sum(x)      # 150
+mean(x)     # 30
+median(x)   # 30
+sd(x)       # 15.81 (muestral)
+var(x)      # 250 (muestral)
+range(x)    # 10 50
+diff(range(x)) # 40 (rango estadístico)
+cumsum(x)   # 10 30 60 100 150
+```
+
+---
+
+## Filtros Lógicos (Subsetting)
+
+```r
+notas <- c(85, 45, 92, 67, 78, 55, 91, 88)
+
+# Filtros con operadores lógicos
+notas[notas >= 70]            # Solo aprobados
+notas[notas < 70]             # Solo reprobados
+notas[notas > 60 & notas < 90] # Entre 60 y 90
+
+# which() devuelve índices que cumplen condición
+which(notas >= 70)            # posiciones de aprobados
+which.max(notas)              # posición del máximo
+which.min(notas)              # posición del mínimo
+
+# Tabla de frecuencias
+table(notas >= 70)
+# FALSE  TRUE
+#     2     6
+```
+
+---
+
+## Matrices
+
+```r
+# Crear una matriz 3x3
+M <- matrix(1:9, nrow=3, ncol=3, byrow=TRUE)
+#      [,1] [,2] [,3]
+# [1,]    1    2    3
+# [2,]    4    5    6
+# [3,]    7    8    9
+
+# Acceder a elementos
+M[1, 2]    # fila 1, columna 2 → 2
+M[2, ]     # toda la fila 2
+M[, 3]     # toda la columna 3
+
+# Operaciones
+t(M)         # transpuesta
+M %*% M      # multiplicación matricial
+apply(M, 1, sum) # suma por filas
+apply(M, 2, mean) # media por columnas
+```
+
+---
+
+## Data Frames
+
+El equivalente de una **tabla de datos** (como una hoja de Excel):
+
+```r
+# Crear un data frame
+estudiantes <- data.frame(
+  nombre = c("Ana", "Carlos", "María", "Juan", "Sofía"),
+  nota   = c(92, 78, 85, 67, 91),
+  ciudad = c("Quito", "Guayaquil", "Quito", "Cuenca", "Guayaquil"),
+  aprobado = c(TRUE, TRUE, TRUE, FALSE, TRUE)
+)
+
+# Explorar el data frame
+head(estudiantes)        # primeras 6 filas
+str(estudiantes)         # estructura
+summary(estudiantes)     # resumen estadístico
+nrow(estudiantes)        # número de filas
+ncol(estudiantes)        # número de columnas
+names(estudiantes)       # nombres de columnas
+```
+
+---
+
+## Acceder a Columnas de Data Frames
+
+```r
+# Tres formas de acceder a una columna
+estudiantes$nota          # con $
+estudiantes[, "nota"]     # con nombre entre comillas
+estudiantes[, 2]          # con número de columna
+
+# Filtrar filas
+estudiantes[estudiantes$nota >= 80, ]     # aprobados con nota >= 80
+estudiantes[estudiantes$ciudad == "Quito", ]  # solo de Quito
+
+# Agregar nuevas columnas
+estudiantes$nota_letra <- ifelse(estudiantes$nota >= 90, "A",
+                          ifelse(estudiantes$nota >= 80, "B",
+                          ifelse(estudiantes$nota >= 70, "C", "F")))
+
+# Ver resultado
+print(estudiantes)
+```
+
+---
+
+## Funciones Estadísticas Clave
+
+```r
+x <- c(85, 45, 92, 67, 78, 55, 91, 88, 72, 80)
+
+# Estadísticas básicas
+mean(x)          # media
+median(x)        # mediana
+sd(x)            # desv. estándar muestral
+var(x)           # varianza muestral
+range(x)         # min y max
+quantile(x)      # cuartiles
+quantile(x, 0.9) # percentil 90
+cor(x, y)        # correlación entre dos vectores
+summary(x)       # todo en uno
+
+# Tabla de frecuencias
+table(cut(x, breaks=5))  # frecuencias en 5 clases
+```
+
+---
+
+## apply, sapply, lapply
+
+```r
+# Datos de notas por materia
+materias <- list(
+  Python = c(88, 75, 92, 68, 85),
+  R      = c(90, 82, 88, 75, 93),
+  BD     = c(78, 85, 70, 88, 82)
+)
+
+# sapply aplica una función a cada elemento de la lista
+# y devuelve un vector o matriz
+sapply(materias, mean)   # media de cada materia
+sapply(materias, sd)     # desv. std de cada materia
+sapply(materias, function(x) max(x) - min(x))  # rango
+```
+
+**Output:**
+```
+     Python    R       BD
+mean 81.6     85.6    80.6
+sd   9.23...  7.40... 7.09...
+```
+
+---
+
+## Próxima Semana {background-color="#003366" color="white"}
+
+::: {.highlight-box}
+### Semana 7 — Gestión de Datos en R (APP 2)
+- Importar datos desde CSV y Excel
+- Limpieza y transformación con **dplyr**
+- `filter()`, `select()`, `mutate()`, `group_by()`, `summarise()`
+- Análisis estadístico descriptivo completo de un **dataset real**
+:::
+
+Esta es la semana de la **práctica experimental APP 2** (8 horas). Prepárese para un análisis intensivo con datos reales de problemas sociales.

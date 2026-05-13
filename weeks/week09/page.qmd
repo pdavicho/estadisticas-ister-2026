@@ -1,0 +1,26 @@
+---
+title: "Semana 09 — Recolección de Datos en R"
+subtitle: "Funciones para importar datos de múltiples fuentes, APIs y bases de datos"
+author: "Ing. David Minango PhD"
+---
+
+::: {.callout-note}
+## 🔒 Contenido en Preparación
+
+Este material estará disponible próximamente.
+
+**Tema:** Recolección de Datos en R
+
+**Contenido previsto:**
+Funciones para importar datos de múltiples fuentes, APIs y bases de datos
+:::
+
+## Próximamente
+
+El material de esta semana será publicado antes de la fecha de clase correspondiente.
+
+Mientras tanto, puede repasar los temas anteriores o consultar la bibliografía del curso en la [sección del programa](../../syllabus.qmd).
+
+---
+
+*Semana 09 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

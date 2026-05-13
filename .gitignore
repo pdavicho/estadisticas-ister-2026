@@ -1,0 +1,16 @@
+# Quarto build output — se genera con quarto render
+_site/
+.quarto/
+
+# Archivos temporales
+*.tmp
+*.bak
+Thumbs.db
+.DS_Store
+
+# Archivos del curso originales (no subir al repo público)
+*.pptx
+*.pdf
+
+# Claude Code settings locales
+.claude/

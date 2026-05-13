@@ -1,0 +1,250 @@
+---
+title: "Semana 2 — Datos Agrupados"
+subtitle: "Tablas de Frecuencia y Medidas de Tendencia Central para Datos Agrupados"
+author: "Ing. David Minango PhD"
+---
+
+Esta semana damos el salto de los **datos no agrupados** a los **datos agrupados**. Cuando trabajamos con datasets grandes (n ≥ 30) o con datos continuos, agrupar la información en intervalos nos permite identificar patrones y calcular estadísticas de manera más eficiente.
+
+::: {.objetivos-box}
+**Objetivos de la semana:**
+
+- Distinguir cuándo usar datos agrupados vs no agrupados
+- Aplicar la regla de Sturges para determinar el número de clases
+- Construir una tabla de frecuencias completa para datos agrupados
+- Calcular media, mediana y moda para datos agrupados (Python y R)
+:::
+
+## 👨‍🏫 Presentación de Clase
+
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
+
+> **Tip:** Presiona `F` para pantalla completa · `S` para notas · `Esc` para salir
+
+## 🐍 Ejemplo Práctico en Python
+
+Análisis completo de salarios de 40 empleados usando datos agrupados.
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dataset: Salarios mensuales de 40 empleados (USD)
+salarios = [
+    450, 580, 620, 710, 780, 540, 660, 820, 490, 730,
+    850, 590, 680, 760, 510, 900, 640, 470, 720, 810,
+    550, 690, 770, 530, 650, 740, 880, 600, 750, 920,
+    480, 570, 630, 790, 560, 700, 840, 520, 670, 1150
+]
+
+n = len(salarios)
+print(f"n = {n} datos")
+print(f"Mín = {min(salarios)}, Máx = {max(salarios)}, Rango = {max(salarios)-min(salarios)}")
+
+# ── PASO 1: Número de clases (Sturges) ──────────────────
+k = int(np.ceil(1 + 3.322 * np.log10(n)))
+print(f"\n📐 Regla de Sturges: k = 1 + 3.322 × log₁₀({n}) = {k} clases")
+
+# ── PASO 2: Amplitud de clase ────────────────────────────
+rango = max(salarios) - min(salarios)
+c = np.ceil(rango / k / 10) * 10  # redondeamos al múltiplo de 10 más cercano
+print(f"📏 Amplitud: c = {rango}/{k} ≈ {c}")
+
+# ── PASO 3: Crear intervalos ─────────────────────────────
+inicio = 400  # límite inferior del primer intervalo
+limites = [inicio + i * c for i in range(k + 1)]
+
+# ── PASO 4: Tabla de frecuencias ─────────────────────────
+frecuencias = []
+marcas = []
+for i in range(k):
+    li = limites[i]
+    ls = limites[i + 1]
+    mi = (li + ls) / 2
+    marcas.append(mi)
+    if i < k - 1:
+        fi = sum(1 for x in salarios if li <= x < ls)
+    else:
+        fi = sum(1 for x in salarios if li <= x <= ls)  # último intervalo cerrado
+    frecuencias.append(fi)
+
+tabla = pd.DataFrame({
+    'Clase': [f"[{int(limites[i])} - {int(limites[i+1])})" if i < k-1
+              else f"[{int(limites[i])} - {int(limites[i+1])}]"
+              for i in range(k)],
+    'mi': marcas,
+    'fi': frecuencias,
+    'hi': [round(f/n, 4) for f in frecuencias],
+    'fi·mi': [f * m for f, m in zip(frecuencias, marcas)]
+})
+
+tabla['Fi'] = tabla['fi'].cumsum()
+tabla['Hi'] = tabla['hi'].cumsum().round(4)
+
+print("\n📋 TABLA DE FRECUENCIAS")
+print(tabla[['Clase', 'mi', 'fi', 'hi', 'Fi', 'Hi']].to_string(index=False))
+
+# ── PASO 5: Medidas para datos agrupados ─────────────────
+# Media
+media = tabla['fi·mi'].sum() / n
+print(f"\n📊 MEDIA (agrupada):   ${media:.2f}")
+
+# Mediana: clase donde Fi ≥ n/2
+n_medio = n / 2
+clase_mediana = tabla[tabla['Fi'] >= n_medio].iloc[0]
+idx_mediana = tabla[tabla['Fi'] >= n_medio].index[0]
+Fi_anterior = tabla.loc[idx_mediana - 1, 'Fi'] if idx_mediana > 0 else 0
+li_mediana = float(clase_mediana['Clase'].split(' - ')[0].replace('[', ''))
+
+mediana = li_mediana + ((n_medio - Fi_anterior) / clase_mediana['fi']) * c
+print(f"📊 MEDIANA (agrupada): ${mediana:.2f}")
+
+# Moda: clase con mayor frecuencia
+idx_moda = tabla['fi'].idxmax()
+clase_moda = tabla.loc[idx_moda]
+li_moda = float(clase_moda['Clase'].split(' - ')[0].replace('[', ''))
+d1 = clase_moda['fi'] - (tabla.loc[idx_moda - 1, 'fi'] if idx_moda > 0 else 0)
+d2 = clase_moda['fi'] - (tabla.loc[idx_moda + 1, 'fi'] if idx_moda < k - 1 else 0)
+moda = li_moda + (d1 / (d1 + d2)) * c
+print(f"📊 MODA (agrupada):    ${moda:.2f}")
+
+# ── PASO 6: Visualización ────────────────────────────────
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+# Histograma
+axes[0].bar(tabla['mi'], tabla['fi'], width=c*0.9,
+            color='#0055a5', edgecolor='white', alpha=0.85)
+axes[0].axvline(media, color='red', linewidth=2, linestyle='--', label=f'Media=${media:.0f}')
+axes[0].axvline(mediana, color='green', linewidth=2, linestyle='--', label=f'Mediana=${mediana:.0f}')
+axes[0].axvline(moda, color='orange', linewidth=2, linestyle='--', label=f'Moda=${moda:.0f}')
+axes[0].set_xlabel('Salario (USD)')
+axes[0].set_ylabel('Frecuencia')
+axes[0].set_title('Distribución de Salarios — Datos Agrupados')
+axes[0].legend()
+axes[0].grid(axis='y', alpha=0.3)
+
+# Ojiva (frecuencias acumuladas)
+axes[1].plot(tabla['mi'], tabla['Hi'], 'o-', color='#003366', linewidth=2, markersize=6)
+axes[1].fill_between(tabla['mi'], tabla['Hi'], alpha=0.15, color='#0055a5')
+axes[1].axhline(0.5, color='green', linestyle='--', alpha=0.7, label='50% (Mediana)')
+axes[1].set_xlabel('Salario (USD)')
+axes[1].set_ylabel('Frecuencia Relativa Acumulada (Hi)')
+axes[1].set_title('Ojiva — Distribución Acumulada')
+axes[1].legend()
+axes[1].grid(alpha=0.3)
+
+plt.suptitle('Análisis de Salarios — Empresa 2026', fontweight='bold')
+plt.tight_layout()
+plt.show()
+```
+
+## 📊 Ejemplo Práctico en R
+
+```r
+# Dataset: Salarios mensuales (USD)
+salarios <- c(
+  450, 580, 620, 710, 780, 540, 660, 820, 490, 730,
+  850, 590, 680, 760, 510, 900, 640, 470, 720, 810,
+  550, 690, 770, 530, 650, 740, 880, 600, 750, 920,
+  480, 570, 630, 790, 560, 700, 840, 520, 670, 1150
+)
+
+n <- length(salarios)
+rango <- max(salarios) - min(salarios)
+
+# ── PASO 1-2: Número de clases y amplitud ────────────────
+k <- ceiling(1 + 3.322 * log10(n))
+c <- ceiling(rango / k / 10) * 10
+inicio <- 400
+
+cat(sprintf("k = %d clases | c = %d\n", k, c))
+
+# ── PASO 3: Crear tabla de frecuencias con hist() ────────
+limites <- seq(inicio, inicio + k * c, by = c)
+h <- hist(salarios, breaks = limites, plot = FALSE)
+
+marcas    <- (h$breaks[-length(h$breaks)] + h$breaks[-1]) / 2
+fi        <- h$counts
+hi        <- round(fi / n, 4)
+Fi        <- cumsum(fi)
+Hi        <- round(cumsum(hi), 4)
+fi_mi     <- fi * marcas
+
+tabla <- data.frame(
+  Clase = paste0("[", h$breaks[-length(h$breaks)], " - ", h$breaks[-1], ")"),
+  mi    = marcas,
+  fi    = fi,
+  hi    = hi,
+  Fi    = Fi,
+  Hi    = Hi,
+  fi_mi = fi_mi
+)
+
+cat("\n📋 TABLA DE FRECUENCIAS\n")
+print(tabla[, c("Clase", "mi", "fi", "hi", "Fi", "Hi")])
+
+# ── PASO 4: Media agrupada ────────────────────────────────
+media <- sum(fi_mi) / n
+cat(sprintf("\n📊 MEDIA (agrupada):   $%.2f\n", media))
+
+# ── PASO 5: Mediana agrupada ──────────────────────────────
+n_medio <- n / 2
+idx_med <- which(Fi >= n_medio)[1]
+Fi_ant  <- if (idx_med > 1) Fi[idx_med - 1] else 0
+li_med  <- h$breaks[idx_med]
+
+mediana <- li_med + ((n_medio - Fi_ant) / fi[idx_med]) * c
+cat(sprintf("📊 MEDIANA (agrupada): $%.2f\n", mediana))
+
+# ── PASO 6: Moda agrupada ─────────────────────────────────
+idx_mo <- which.max(fi)
+li_mo  <- h$breaks[idx_mo]
+d1 <- fi[idx_mo] - ifelse(idx_mo > 1, fi[idx_mo - 1], 0)
+d2 <- fi[idx_mo] - ifelse(idx_mo < k, fi[idx_mo + 1], 0)
+moda <- li_mo + (d1 / (d1 + d2)) * c
+cat(sprintf("📊 MODA (agrupada):    $%.2f\n", moda))
+
+# ── PASO 7: Visualización ────────────────────────────────
+par(mfrow = c(1, 2))
+
+# Histograma
+hist(salarios, breaks = limites,
+     main = "Distribución de Salarios",
+     xlab = "Salario (USD)", col = "#0055a5",
+     border = "white")
+abline(v = media,   col = "red",    lwd = 2, lty = 2)
+abline(v = mediana, col = "green",  lwd = 2, lty = 2)
+abline(v = moda,    col = "orange", lwd = 2, lty = 2)
+legend("topright",
+       legend = c(paste("Media =$", round(media)),
+                  paste("Mediana =$", round(mediana)),
+                  paste("Moda =$", round(moda))),
+       col = c("red","green","orange"), lty = 2, lwd = 2, cex = 0.75)
+
+# Ojiva
+plot(marcas, Hi, type = "o", col = "#003366", lwd = 2, pch = 16,
+     main = "Ojiva (Frecuencias Acumuladas)",
+     xlab = "Salario (USD)", ylab = "Hi")
+abline(h = 0.5, col = "green", lty = 2)
+grid()
+
+par(mfrow = c(1, 1))
+```
+
+::: {.callout-note}
+## ¿Por qué difieren los resultados de agrupados vs no agrupados?
+Porque al usar la **marca de clase** ($m_i$) asumimos que todos los datos dentro del intervalo están en el punto medio. Esto introduce una pequeña aproximación.
+:::
+
+## 💻 Taller Práctico (APP 1)
+
+Esta semana incluye la **primera práctica experimental** del curso (8 horas).
+
+👉 **[Ir al Taller Práctico 2 — APP 1 →](lab.qmd)**
+
+---
+
+*Semana 2 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

@@ -1,0 +1,189 @@
+---
+title: "Semana 3 — Medidas de Dispersión para Datos Agrupados"
+subtitle: "Varianza, Desviación Estándar y Coeficiente de Variación"
+author: "Ing. David Minango PhD"
+---
+
+Con las medidas de tendencia central aprendidas en la semana anterior, ahora completamos el análisis descriptivo con las **medidas de dispersión**: ¿qué tan dispersos o concentrados están los datos alrededor de la media?
+
+::: {.objetivos-box}
+**Objetivos:**
+
+- Calcular varianza y desviación estándar para datos agrupados
+- Interpretar el coeficiente de variación para comparar grupos
+- Usar Python y R para automatizar el cálculo completo de estadísticos
+:::
+
+## 👨‍🏫 Presentación de Clase
+
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
+
+## 🐍 Ejemplo Práctico en Python
+
+Análisis completo incluyendo medidas de dispersión para datos agrupados.
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Dataset: Temperaturas máximas diarias (°C) en Quito durante 50 días
+temperaturas = [
+    18.2, 21.5, 23.8, 19.4, 22.1, 24.5, 20.3, 17.8, 23.2, 25.1,
+    19.8, 22.7, 21.1, 24.8, 18.9, 23.5, 20.8, 17.2, 22.4, 25.8,
+    19.1, 21.8, 23.1, 18.5, 22.9, 24.2, 20.5, 18.1, 23.8, 26.2,
+    19.5, 22.3, 21.4, 24.9, 18.7, 23.6, 20.1, 17.5, 22.7, 25.4,
+    19.2, 21.9, 23.4, 18.8, 23.0, 24.6, 20.7, 17.9, 23.1, 25.9
+]
+
+n = len(temperaturas)
+k = int(np.ceil(1 + 3.322 * np.log10(n)))
+rango = max(temperaturas) - min(temperaturas)
+c = np.ceil(rango / k * 10) / 10  # redondear a 1 decimal
+inicio = 17.0
+
+print(f"n={n}, k={k}, c={c:.1f}, rango={rango:.1f}")
+
+# Tabla de frecuencias
+limites = [round(inicio + i * c, 1) for i in range(k + 1)]
+frecuencias, marcas = [], []
+
+for i in range(k):
+    li, ls = limites[i], limites[i + 1]
+    mi = round((li + ls) / 2, 2)
+    marcas.append(mi)
+    fi = sum(1 for x in temperaturas if (li <= x < ls) if i < k-1 else (li <= x <= ls))
+    frecuencias.append(fi)
+
+# Recalcular último intervalo correctamente
+frecuencias[-1] = sum(1 for x in temperaturas if limites[-2] <= x <= limites[-1])
+
+tabla = pd.DataFrame({'mi': marcas, 'fi': frecuencias})
+tabla['hi']   = tabla['fi'] / n
+tabla['Fi']   = tabla['fi'].cumsum()
+tabla['fi_mi'] = tabla['fi'] * tabla['mi']
+
+media = tabla['fi_mi'].sum() / n
+
+# ── DISPERSIÓN AGRUPADA ──────────────────────────────────
+tabla['mi_x_cuad'] = tabla['fi'] * (tabla['mi'] - media) ** 2
+varianza  = tabla['mi_x_cuad'].sum() / n
+desv_std  = np.sqrt(varianza)
+cv        = (desv_std / media) * 100
+
+print(f"\n📊 MEDIDAS DESCRIPTIVAS (agrupadas)")
+print(f"  Media:           {media:.4f} °C")
+print(f"  Varianza (s²):   {varianza:.4f}")
+print(f"  Desv. Estándar:  {desv_std:.4f} °C")
+print(f"  Coef. Variación: {cv:.2f}%")
+print(f"\n  Intervalo x̄ ± s: [{media-desv_std:.2f}, {media+desv_std:.2f}] °C")
+
+# ── Comparar con estadística directa ────────────────────
+media_real  = np.mean(temperaturas)
+desv_real   = np.std(temperaturas)
+cv_real     = (desv_real / media_real) * 100
+print(f"\n📊 DATOS NO AGRUPADOS (referencia):")
+print(f"  Media:           {media_real:.4f} °C")
+print(f"  Desv. Estándar:  {desv_real:.4f} °C")
+print(f"  Diferencia media: {abs(media - media_real):.4f} °C")
+
+# ── Visualización ────────────────────────────────────────
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+# Histograma con bandas de desviación
+ancho = c * 0.9
+axes[0].bar([m for m in marcas], tabla['fi'], width=ancho,
+            color='#0055a5', edgecolor='white', alpha=0.8)
+axes[0].axvline(media, color='red', lw=2, ls='--', label=f'Media={media:.1f}°C')
+axes[0].axvspan(media - desv_std, media + desv_std, alpha=0.15, color='red',
+                label=f'x̄ ± s')
+axes[0].axvspan(media - 2*desv_std, media + 2*desv_std, alpha=0.08, color='orange',
+                label=f'x̄ ± 2s')
+axes[0].set_xlabel('Temperatura (°C)')
+axes[0].set_ylabel('Frecuencia')
+axes[0].set_title('Distribución de Temperaturas con Dispersión')
+axes[0].legend(fontsize=8)
+axes[0].grid(axis='y', alpha=0.3)
+
+# Boxplot
+axes[1].boxplot(temperaturas, vert=True, patch_artist=True,
+                boxprops=dict(facecolor='#e8f4fd', color='#003366'),
+                medianprops=dict(color='red', linewidth=2),
+                whiskerprops=dict(color='#003366'),
+                capprops=dict(color='#003366'))
+axes[1].set_ylabel('Temperatura (°C)')
+axes[1].set_title(f'Boxplot\nCV = {cv:.1f}%')
+axes[1].grid(axis='y', alpha=0.3)
+
+plt.suptitle('Análisis de Dispersión — Temperaturas Quito 2025', fontweight='bold')
+plt.tight_layout()
+plt.show()
+```
+
+## 📊 Ejemplo Práctico en R
+
+```r
+temperaturas <- c(
+  18.2, 21.5, 23.8, 19.4, 22.1, 24.5, 20.3, 17.8, 23.2, 25.1,
+  19.8, 22.7, 21.1, 24.8, 18.9, 23.5, 20.8, 17.2, 22.4, 25.8,
+  19.1, 21.8, 23.1, 18.5, 22.9, 24.2, 20.5, 18.1, 23.8, 26.2,
+  19.5, 22.3, 21.4, 24.9, 18.7, 23.6, 20.1, 17.5, 22.7, 25.4,
+  19.2, 21.9, 23.4, 18.8, 23.0, 24.6, 20.7, 17.9, 23.1, 25.9
+)
+
+n   <- length(temperaturas)
+k   <- ceiling(1 + 3.322 * log10(n))
+c   <- 1.5  # amplitud ajustada
+ini <- 17.0
+lim <- seq(ini, ini + k * c, by = c)
+
+h  <- hist(temperaturas, breaks = lim, plot = FALSE)
+mi <- (h$breaks[-length(h$breaks)] + h$breaks[-1]) / 2
+fi <- h$counts
+hi <- fi / n
+
+media    <- sum(fi * mi) / n
+varianza <- sum(fi * (mi - media)^2) / n
+desv_std <- sqrt(varianza)
+cv       <- (desv_std / media) * 100
+
+cat("📊 MEDIDAS DESCRIPTIVAS (agrupadas)\n")
+cat(sprintf("  Media:           %.4f °C\n", media))
+cat(sprintf("  Varianza (s²):   %.4f\n",   varianza))
+cat(sprintf("  Desv. Estándar:  %.4f °C\n", desv_std))
+cat(sprintf("  Coef. Variación: %.2f%%\n",  cv))
+cat(sprintf("\n  Intervalo x̄±s: [%.2f, %.2f] °C\n",
+            media - desv_std, media + desv_std))
+
+cat("\n📊 DATOS NO AGRUPADOS (referencia):\n")
+cat(sprintf("  Media real:  %.4f °C\n",   mean(temperaturas)))
+cat(sprintf("  SD real:     %.4f °C\n",   sd(temperaturas) * sqrt((n-1)/n)))
+
+# Visualización
+par(mfrow = c(1, 2))
+
+hist(temperaturas, breaks = lim, col = "#0055a5", border = "white",
+     main = "Distribución de Temperaturas", xlab = "°C")
+abline(v = media, col = "red", lwd = 2, lty = 2)
+abline(v = c(media - desv_std, media + desv_std), col = "orange", lwd = 1.5, lty = 3)
+legend("topright",
+       legend = c(paste("Media=", round(media,1)),
+                  paste("±s =", round(desv_std,2))),
+       col = c("red","orange"), lty = c(2,3), lwd = 2, cex = 0.8)
+
+boxplot(temperaturas, col = "#e8f4fd", border = "#003366",
+        main = paste0("Boxplot\nCV = ", round(cv,1), "%"),
+        ylab = "°C")
+
+par(mfrow = c(1, 1))
+```
+
+## 💻 Taller Práctico
+
+👉 **[Ir al Taller Práctico 3 →](lab.qmd)**
+
+---
+
+*Semana 3 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

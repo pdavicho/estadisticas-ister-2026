@@ -1,0 +1,272 @@
+---
+title: "Semana 5: Introducción a RStudio"
+subtitle: "Entorno, Instalación y Primeros Comandos en R"
+author: "Ing. David Minango PhD"
+institute: "ISTER — Sistemas y Gestión de Data"
+date: "2026"
+format:
+  revealjs:
+    theme: [default, ../../styles-slides.css]
+    slide-number: true
+    logo: ../../figures/logos/ister_logo.png
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
+    transition: slide
+    highlight-style: github
+    chalkboard: true
+include-in-header:
+  text: |
+    <style>
+    .reveal h1, .reveal h2 { color: #003366; }
+    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; margin: 0.5rem 0; }
+    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; }
+    .code-demo { font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 6px; font-size: 0.9em; }
+    </style>
+---
+
+## ¿Por qué aprender R? {background-color="#003366" color="white"}
+
+:::: {.columns}
+::: {.column width="60%"}
+- **Gratuito y open source**
+- Diseñado específicamente para **estadística y análisis de datos**
+- Enorme comunidad y repositorio de paquetes (**CRAN**: 20,000+ paquetes)
+- Estándar en academia, investigación y ciencia de datos
+- Excelente para visualizaciones (ggplot2)
+- Integración con Python, SQL, y más
+:::
+
+::: {.column width="40%"}
+```
+R es el lenguaje de los
+estadísticos. Si quieres
+hablar el idioma de los
+datos, necesitas R.
+```
+
+🏆 Empresas que usan R:
+- Google
+- Facebook/Meta
+- Airbnb
+- New York Times
+:::
+::::
+
+---
+
+## R vs Python para Estadística
+
+| Característica | R | Python |
+|---|:---:|:---:|
+| Estadística nativa | ⭐⭐⭐ | ⭐⭐ |
+| Visualización | ⭐⭐⭐ | ⭐⭐⭐ |
+| Machine Learning | ⭐⭐ | ⭐⭐⭐ |
+| Curva de aprendizaje | Media | Media |
+| Comunidad estadística | ⭐⭐⭐ | ⭐⭐ |
+| Datos tabulares | ⭐⭐⭐ | ⭐⭐⭐ |
+
+::: {.highlight-box}
+**En este curso:** Usamos **ambos**. R para análisis estadístico formal, Python para automatización y machine learning. ¡Son complementarios!
+:::
+
+---
+
+## Instalación
+
+**Paso 1:** Instalar R base
+- Descargar de: **cran.r-project.org**
+- Seleccionar: Windows / macOS / Linux
+- Instalar con opciones por defecto
+
+**Paso 2:** Instalar RStudio
+- Descargar de: **posit.co/download/rstudio-desktop/**
+- Instalar la versión Desktop gratuita
+
+::: {.callout-note}
+RStudio es un **IDE** (entorno de desarrollo integrado) que hace que trabajar con R sea mucho más cómodo. No es R en sí, sino la interfaz para usarlo.
+:::
+
+---
+
+## La Interfaz de RStudio
+
+La pantalla de RStudio tiene **4 paneles**:
+
+```
+┌─────────────────────┬─────────────────────┐
+│                     │                     │
+│    Editor de        │   Environment /     │
+│    Scripts          │   History           │
+│    (arriba izq.)    │   (arriba der.)     │
+│                     │                     │
+├─────────────────────┼─────────────────────┤
+│                     │                     │
+│    Consola          │   Files / Plots /   │
+│    (abajo izq.)     │   Packages / Help   │
+│                     │   (abajo der.)      │
+│                     │                     │
+└─────────────────────┴─────────────────────┘
+```
+
+---
+
+## Los 4 Paneles de RStudio
+
+:::: {.columns}
+::: {.column width="50%"}
+### Panel 1: Editor (Scripts)
+- Aquí escribe su código
+- Se guarda como archivo `.R`
+- **Ctrl+Enter** para ejecutar línea
+- **Ctrl+Shift+Enter** para ejecutar todo
+:::
+
+::: {.column width="50%"}
+### Panel 2: Environment
+- Muestra todas las variables creadas
+- Listas, vectores, data frames visibles
+- History: historial de comandos
+:::
+::::
+
+:::: {.columns}
+::: {.column width="50%"}
+### Panel 3: Consola
+- Ejecuta R en tiempo real
+- Resultados aparecen aquí
+- También puede escribir directamente
+:::
+
+::: {.column width="50%"}
+### Panel 4: Files/Plots/Help
+- **Files**: navegador de archivos
+- **Plots**: gráficos generados
+- **Packages**: paquetes instalados
+- **Help**: documentación
+:::
+::::
+
+---
+
+## Primeros Comandos en R
+
+```r
+# Esto es un comentario (R ignora las líneas que empiezan con #)
+
+# Operaciones básicas
+2 + 3        # 5
+10 - 4       # 6
+3 * 7        # 21
+15 / 4       # 3.75
+2^8          # 256
+sqrt(16)     # 4
+abs(-7)      # 7
+log(100)     # 4.60517 (logaritmo natural)
+log10(100)   # 2 (logaritmo base 10)
+```
+
+::: {.highlight-box}
+En R, el operador de asignación es `<-` (aunque `=` también funciona):
+```r
+x <- 10
+y <- 5
+x + y  # 15
+```
+:::
+
+---
+
+## Tipos de Datos en R
+
+```r
+# Numeric (numérico)
+edad    <- 25L         # entero (integer)
+salario <- 1500.50     # decimal (double)
+
+# Character (texto)
+nombre  <- "David"
+ciudad  <- 'Quito'
+
+# Logical (lógico)
+activo  <- TRUE
+inactivo <- FALSE
+
+# Verificar tipos
+class(edad)     # "integer"
+class(salario)  # "numeric"
+class(nombre)   # "character"
+class(activo)   # "logical"
+
+# Convertir tipos
+as.numeric("3.14")   # 3.14
+as.character(42)     # "42"
+as.logical(1)        # TRUE
+```
+
+---
+
+## Paquetes en R
+
+Los **paquetes** extienden las capacidades de R base:
+
+```r
+# Instalar un paquete (solo una vez)
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("readxl")
+
+# Cargar el paquete para usarlo
+library(dplyr)
+library(ggplot2)
+
+# Ver todos los paquetes instalados
+installed.packages()[, "Package"]
+
+# Obtener ayuda sobre un paquete o función
+?dplyr
+help("mean")
+?ggplot2
+```
+
+::: {.callout-tip}
+Los paquetes más importantes para este curso:
+- **`dplyr`** — manipulación de datos
+- **`ggplot2`** — visualización
+- **`readxl`** — importar Excel
+- **`tidyr`** — limpieza de datos
+:::
+
+---
+
+## R Comparado con lo que ya conoce
+
+Si ya sabe Python, R le resultará familiar:
+
+| Concepto | Python | R |
+|---|---|---|
+| Lista/Vector | `[1, 2, 3]` | `c(1, 2, 3)` |
+| Comentario | `# texto` | `# texto` |
+| Asignación | `x = 5` | `x <- 5` |
+| Imprimir | `print(x)` | `print(x)` o `cat(x)` |
+| Longitud | `len(x)` | `length(x)` |
+| Suma | `sum(x)` | `sum(x)` |
+| Media | `np.mean(x)` | `mean(x)` |
+| Para loop | `for i in x:` | `for (i in x) {}` |
+
+---
+
+## Próxima Clase {background-color="#003366" color="white"}
+
+::: {.highlight-box}
+### Semana 6 — Primeros Pasos en R
+- **Vectores**: la estructura de datos fundamental en R
+- **Matrices** y operaciones matriciales
+- **Data Frames**: el equivalente de una tabla en R
+- **Funciones de estadística descriptiva** con R
+:::
+
+**Prepare su computadora:**
+1. Instale R desde cran.r-project.org
+2. Instale RStudio desde posit.co
+3. Abra RStudio y ejecute: `print("Hola R!")`
+
+¡En la próxima clase empezamos a programar! 💻

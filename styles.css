@@ -1,0 +1,215 @@
+/* ============================================
+   Herramientas Estadísticas ISTER 2026
+   Estilos personalizados
+   ============================================ */
+
+:root {
+  --ister-blue: #003366;
+  --ister-light-blue: #0055a5;
+  --ister-gold: #f0a500;
+  --ister-gray: #f8f9fa;
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--ister-blue) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.navbar-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+/* Sidebar */
+#quarto-sidebar {
+  border-right: 2px solid #e0e0e0;
+}
+
+.sidebar-item-text {
+  font-size: 0.88rem;
+}
+
+/* Títulos principales */
+h1.title {
+  color: var(--ister-blue);
+  border-bottom: 3px solid var(--ister-gold);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  color: var(--ister-light-blue);
+  margin-top: 2rem;
+}
+
+/* Slides iframe */
+.slides-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin: 1.5rem 0;
+}
+
+.slides-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Alternativa para altura fija */
+.slides-fixed {
+  width: 100%;
+  height: 600px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin: 1.5rem 0;
+}
+
+/* Cajas de información */
+.info-box {
+  background: linear-gradient(135deg, #e8f4fd, #f0f8ff);
+  border-left: 4px solid var(--ister-light-blue);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+
+.formula-box {
+  background: #fff9e6;
+  border: 2px solid var(--ister-gold);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 1.2rem 0;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.objetivos-box {
+  background: #f0f7ee;
+  border-left: 4px solid #28a745;
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+
+/* Badge de dificultad */
+.badge-difficulty {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+.badge-medio {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+/* Código */
+pre.sourceCode {
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+/* Panel tabset mejorado */
+.panel-tabset .nav-tabs .nav-link.active {
+  color: var(--ister-blue);
+  font-weight: 600;
+  border-bottom: 3px solid var(--ister-gold);
+}
+
+/* Footer */
+.nav-footer {
+  background-color: var(--ister-blue) !important;
+  color: white;
+  padding: 1rem;
+}
+
+.nav-footer a {
+  color: var(--ister-gold);
+}
+
+/* Callout personalizado */
+.callout-note {
+  border-left-color: var(--ister-light-blue);
+}
+
+.callout-tip {
+  border-left-color: #28a745;
+}
+
+/* Tabla de contenidos */
+#TOC {
+  border-left: 3px solid var(--ister-gold);
+  padding-left: 1rem;
+}
+
+#toc-title {
+  color: var(--ister-blue);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Hero en index */
+.hero-banner {
+  background: linear-gradient(135deg, var(--ister-blue), var(--ister-light-blue));
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.hero-banner h1 {
+  color: white !important;
+  border-bottom: none !important;
+  font-size: 2rem;
+}
+
+.hero-banner p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Tarjetas de semana */
+.week-card {
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s, transform 0.2s;
+  background: white;
+}
+
+.week-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
+.week-card h4 {
+  color: var(--ister-blue);
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slides-fixed {
+    height: 320px;
+  }
+  .hero-banner h1 {
+    font-size: 1.4rem;
+  }
+}

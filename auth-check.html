@@ -1,0 +1,21 @@
+<script>
+(function() {
+  var currentPage = window.location.pathname;
+  // No proteger la página de login ni recursos estáticos
+  if (currentPage.endsWith('login.html') ||
+      currentPage.endsWith('.css') ||
+      currentPage.endsWith('.js') ||
+      currentPage.endsWith('.png') ||
+      currentPage.endsWith('.jpg')) {
+    return;
+  }
+  var token = sessionStorage.getItem('HE_auth_token');
+  if (!token || token !== 'HEstadisticas_Ister_2026') {
+    // Calcular la ruta relativa a login.html
+    var depth = (currentPage.match(/\//g) || []).length;
+    var prefix = '';
+    for (var i = 0; i < depth - 1; i++) { prefix += '../'; }
+    window.location.replace(prefix + 'login.html');
+  }
+})();
+</script>

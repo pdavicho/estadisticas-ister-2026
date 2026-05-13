@@ -1,0 +1,26 @@
+---
+title: "Semana 12 — Análisis Estadístico Integral con R"
+subtitle: "Análisis completo con dataset real — repaso y práctica integradora"
+author: "Ing. David Minango PhD"
+---
+
+::: {.callout-note}
+## 🔒 Contenido en Preparación
+
+Este material estará disponible próximamente.
+
+**Tema:** Análisis Estadístico Integral con R
+
+**Contenido previsto:**
+Análisis completo con dataset real — repaso y práctica integradora
+:::
+
+## Próximamente
+
+El material de esta semana será publicado antes de la fecha de clase correspondiente.
+
+Mientras tanto, puede repasar los temas anteriores o consultar la bibliografía del curso en la [sección del programa](../../syllabus.qmd).
+
+---
+
+*Semana 12 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

@@ -1,0 +1,153 @@
+---
+title: "Semana 5 — Introducción a RStudio"
+subtitle: "Entorno, Instalación, Tipos de Datos y Primeros Comandos"
+author: "Ing. David Minango PhD"
+---
+
+Comenzamos el **Tema 2** del curso. A partir de esta semana, trabajaremos intensivamente con **R y RStudio** como herramienta principal de análisis estadístico. Esta semana es de configuración y familiarización con el entorno.
+
+::: {.objetivos-box}
+**Objetivos:**
+
+- Instalar correctamente R y RStudio
+- Familiarizarse con los 4 paneles de RStudio
+- Conocer los tipos de datos básicos en R
+- Ejecutar los primeros comandos estadísticos
+- Instalar y cargar paquetes esenciales
+:::
+
+## 👨‍🏫 Presentación de Clase
+
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
+
+## 📥 Guía de Instalación
+
+### Instalar R
+
+1. Ir a [cran.r-project.org](https://cran.r-project.org)
+2. Seleccionar **Download R for Windows** (o su sistema operativo)
+3. Clic en **base** → **Download R x.x.x for Windows**
+4. Ejecutar el instalador con opciones por defecto
+
+### Instalar RStudio
+
+1. Ir a [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/)
+2. Descargar **RStudio Desktop** (versión gratuita)
+3. Instalar después de haber instalado R
+
+::: {.callout-note}
+## Alternativa: Google Colab con R
+Si no puede instalar localmente, use Google Colab seleccionando el runtime "R" en configuración de cuaderno.
+:::
+
+## 📊 Ejemplo Práctico en R
+
+Copie y ejecute este script en RStudio para verificar que todo funciona.
+
+```r
+# ══════════════════════════════════════════════
+# VERIFICACIÓN DE INSTALACIÓN — Semana 5
+# Herramientas Estadísticas | ISTER 2026
+# ══════════════════════════════════════════════
+
+# ── 1. Operaciones básicas ──────────────────────
+cat("=== OPERACIONES BÁSICAS ===\n")
+cat("2 + 3 =", 2 + 3, "\n")
+cat("15 / 4 =", 15 / 4, "\n")
+cat("2^10 =", 2^10, "\n")
+cat("sqrt(144) =", sqrt(144), "\n")
+cat("log10(1000) =", log10(1000), "\n")
+
+# ── 2. Variables ─────────────────────────────────
+cat("\n=== VARIABLES ===\n")
+nombre   <- "Herramientas Estadísticas"
+periodo  <- 2026
+aprobado <- TRUE
+
+cat("Curso:", nombre, "\n")
+cat("Año:", periodo, "\n")
+cat("Aprobado:", aprobado, "\n")
+
+# ── 3. Tipos de datos ────────────────────────────
+cat("\n=== TIPOS DE DATOS ===\n")
+cat("class(3.14):", class(3.14), "\n")
+cat("class('texto'):", class("hola"), "\n")
+cat("class(TRUE):", class(TRUE), "\n")
+cat("class(5L):", class(5L), "\n")
+
+# ── 4. Vector básico ─────────────────────────────
+cat("\n=== VECTOR ===\n")
+calificaciones <- c(85, 92, 78, 96, 70, 88, 74, 90)
+cat("Calificaciones:", calificaciones, "\n")
+cat("n:", length(calificaciones), "\n")
+cat("Media:", mean(calificaciones), "\n")
+cat("Mediana:", median(calificaciones), "\n")
+cat("Mín:", min(calificaciones), "| Máx:", max(calificaciones), "\n")
+cat("Desv. Estándar:", round(sd(calificaciones), 4), "\n")
+
+# ── 5. Instalar paquetes ─────────────────────────
+cat("\n=== PAQUETES ESENCIALES ===\n")
+paquetes <- c("dplyr", "ggplot2", "readxl", "tidyr", "lubridate")
+for (pkg in paquetes) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    cat("Instalando:", pkg, "...\n")
+    install.packages(pkg, quiet = TRUE)
+  } else {
+    cat("✅", pkg, "ya está instalado\n")
+  }
+}
+
+cat("\n✅ ¡Instalación verificada! R está listo para usar.\n")
+
+# ── 6. Gráfico básico de verificación ────────────
+barplot(calificaciones,
+        names.arg = paste("Est.", 1:length(calificaciones)),
+        col = "#0055a5",
+        border = "white",
+        main = "Calificaciones de Prueba — Verificación R",
+        ylab = "Nota",
+        ylim = c(0, 100))
+abline(h = mean(calificaciones), col = "red", lwd = 2, lty = 2)
+legend("topright",
+       legend = paste("Media =", round(mean(calificaciones), 1)),
+       col = "red", lty = 2, lwd = 2)
+```
+
+## 🐍 R vs Python — Comparación Lado a Lado
+
+```python
+# Python: cálculos estadísticos básicos
+import numpy as np
+
+calificaciones = [85, 92, 78, 96, 70, 88, 74, 90]
+print("Python:")
+print(f"  Media:   {np.mean(calificaciones):.4f}")
+print(f"  Mediana: {np.median(calificaciones):.4f}")
+print(f"  Mín/Máx: {min(calificaciones)} / {max(calificaciones)}")
+print(f"  Desv. Std: {np.std(calificaciones):.4f}")
+```
+
+```r
+# R: equivalente
+calificaciones <- c(85, 92, 78, 96, 70, 88, 74, 90)
+cat("R:\n")
+cat("  Media:   ", mean(calificaciones), "\n")
+cat("  Mediana: ", median(calificaciones), "\n")
+cat("  Mín/Máx: ", min(calificaciones), "/", max(calificaciones), "\n")
+cat("  Desv. Std:", sd(calificaciones) * sqrt((length(calificaciones)-1)/length(calificaciones)), "\n")
+```
+
+::: {.callout-tip}
+## Nota importante
+`sd()` en R calcula la desviación estándar **muestral** (divide por n-1). Para varianza poblacional, use `sd(x) * sqrt((n-1)/n)`.
+:::
+
+## 💻 Taller Práctico
+
+👉 **[Ir al Taller Práctico 5 →](lab.qmd)**
+
+---
+
+*Semana 5 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

@@ -1,0 +1,194 @@
+---
+title: "💻 Taller Práctico 4"
+subtitle: "Variables Aleatorias y Distribuciones de Probabilidad"
+author: "Ing. David Minango PhD"
+---
+
+::: {.info-box}
+**Duración estimada:** 90 minutos | **Dificultad:** Media
+**Herramientas:** Python y R
+:::
+
+## Contexto
+
+Un equipo de desarrollo de software registró los tipos de errores que aparecen durante el testing de sus aplicaciones. Utilizará distribuciones de probabilidad para modelar y predecir el comportamiento del sistema.
+
+---
+
+## Ejercicio 1 — Variable Aleatoria Discreta
+
+El equipo de QA (Quality Assurance) encontró que la distribución del número de bugs críticos por sprint sigue esta tabla:
+
+| X (bugs críticos) | 0 | 1 | 2 | 3 | 4 | 5 |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| P(X=x) | 0.25 | 0.35 | 0.22 | 0.10 | 0.05 | ? |
+
+**1.1** ¿Cuánto vale P(X=5)? (La suma de todas las probabilidades debe ser 1)
+
+**1.2** En Python y R, calcule:
+- El valor esperado E(X)
+- La varianza Var(X) y la desviación estándar σ(X)
+
+```python
+valores = [0, 1, 2, 3, 4, 5]
+probs   = [0.25, 0.35, 0.22, 0.10, 0.05, # TU CÓDIGO: P(X=5)]
+
+# Verificar suma
+print(f"Σ P = {sum(probs)}")
+
+# Calcular E(X)
+E_X = # TU CÓDIGO
+
+# Calcular Var(X)
+Var_X = # TU CÓDIGO
+SD_X  = # TU CÓDIGO
+
+print(f"E(X) = {E_X:.4f}")
+print(f"Var(X) = {Var_X:.4f} | σ = {SD_X:.4f}")
+```
+
+**1.3** ¿Cuál es la probabilidad de que en un sprint haya **más de 2 bugs críticos**?
+$$P(X > 2) = P(X=3) + P(X=4) + P(X=5) = \text{?}$$
+
+**1.4** Grafique la función de probabilidad (diagrama de barras).
+
+---
+
+## Ejercicio 2 — Distribución Binomial
+
+La empresa tiene un servidor web que procesa solicitudes. Históricamente, el **20%** de las solicitudes tardan más de 5 segundos (se considera un "timeout"). Si en una muestra se reciben **15 solicitudes**:
+
+```python
+from scipy import stats
+
+n, p = 15, 0.20
+binom = stats.binom(n=n, p=p)
+
+# TU CÓDIGO: Calcule las siguientes probabilidades
+print("P(X = 3) =", binom.pmf(3))      # Exactamente 3 timeouts
+print("P(X ≤ 4) =", binom.cdf(4))      # A lo más 4 timeouts
+print("P(X ≥ 5) =", 1 - binom.cdf(4)) # Al menos 5 timeouts
+print("P(2 ≤ X ≤ 5) =", binom.cdf(5) - binom.cdf(1))  # Entre 2 y 5
+
+print(f"\nE(X) = np = {n*p}")
+print(f"Var(X) = np(1-p) = {n*p*(1-p):.4f}")
+```
+
+**2.1** Responda en R:
+```r
+n <- 15; p <- 0.20
+# P(exactamente 3 timeouts)
+cat(dbinom(3, n, p))
+# P(a lo más 4)
+cat(pbinom(4, n, p))
+# Valor esperado y desviación estándar
+cat(n*p, sqrt(n*p*(1-p)))
+```
+
+**2.2** Grafique la distribución binomial para n=15, p=0.20
+
+**2.3** ¿Es preocupante que en 15 solicitudes haya una probabilidad del 20% de tener 5+ timeouts? Explique desde el punto de vista del negocio.
+
+---
+
+## Ejercicio 3 — Distribución Normal
+
+Los tiempos de respuesta de una API (en milisegundos) siguen una distribución normal con **μ = 250 ms** y **σ = 40 ms**.
+
+```python
+from scipy import stats
+import numpy as np
+import matplotlib.pyplot as plt
+
+mu, sigma = 250, 40
+normal = stats.norm(loc=mu, scale=sigma)
+
+# Calcule las siguientes probabilidades
+print("P(X < 200 ms) =", normal.cdf(200))         # Muy rápido
+print("P(X > 300 ms) =", 1 - normal.cdf(300))     # Lento
+print("P(200 < X < 300) =", # TU CÓDIGO)          # Rango aceptable
+
+# Estandarización
+x_test = 320
+z = (x_test - mu) / sigma
+print(f"\nPara X = {x_test} ms:")
+print(f"Z = ({x_test} - {mu}) / {sigma} = {z:.2f}")
+print(f"P(X < {x_test}) = {normal.cdf(x_test):.4f}")
+
+# ¿Por debajo de qué valor cae el 5% más lento?
+percentil_95 = normal.ppf(0.95)
+print(f"\nPercentil 95: {percentil_95:.1f} ms")
+print(f"Solo el 5% de solicitudes tarda más de {percentil_95:.0f} ms")
+
+# Gráfico
+x = np.linspace(mu - 4*sigma, mu + 4*sigma, 300)
+plt.figure(figsize=(10, 5))
+plt.plot(x, normal.pdf(x), color='#003366', lw=2.5, label='N(250, 40)')
+
+# Zona lenta (>300ms)
+x_slow = np.linspace(300, mu + 4*sigma, 200)
+plt.fill_between(x_slow, normal.pdf(x_slow), alpha=0.4, color='red',
+                 label=f'P(X>300)={1-normal.cdf(300):.3f}')
+
+# Zona rápida (<200ms)
+x_fast = np.linspace(mu - 4*sigma, 200, 200)
+plt.fill_between(x_fast, normal.pdf(x_fast), alpha=0.4, color='green',
+                 label=f'P(X<200)={normal.cdf(200):.3f}')
+
+plt.axvline(mu, color='red', lw=2, ls='--', label=f'μ={mu}ms')
+plt.xlabel('Tiempo de respuesta (ms)')
+plt.ylabel('Densidad de probabilidad')
+plt.title('Distribución de Tiempos de Respuesta de API')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.show()
+```
+
+**3.1** ¿Qué porcentaje de solicitudes tarda entre 200 y 300 ms?
+
+**3.2** Si el SLA (Service Level Agreement) exige que el 95% de las solicitudes respondan en menos de cierto tiempo, ¿cuál es ese límite?
+
+**3.3** Si un cliente se queja porque su solicitud tardó 400 ms, ¿qué tan inusual es eso? Calcule el valor z y explique.
+
+---
+
+## Ejercicio 4 — Comparación de Distribuciones en R
+
+```r
+# Simule 1000 muestras de dos distribuciones
+set.seed(42)
+muestra_normal <- rnorm(1000, mean=250, sd=40)
+muestra_uniforme <- runif(1000, min=150, max=350)
+
+par(mfrow=c(1,2))
+hist(muestra_normal, breaks=30, col="#0055a5", border="white",
+     main="Normal(μ=250, σ=40)", xlab="Tiempo (ms)")
+abline(v=mean(muestra_normal), col="red", lwd=2)
+
+hist(muestra_uniforme, breaks=20, col="#28a745", border="white",
+     main="Uniforme(150, 350)", xlab="Tiempo (ms)")
+abline(v=mean(muestra_uniforme), col="red", lwd=2)
+par(mfrow=c(1,1))
+
+# Compare las estadísticas
+cat("Normal:   media=", round(mean(muestra_normal),1),
+    "sd=", round(sd(muestra_normal),1), "\n")
+cat("Uniforme: media=", round(mean(muestra_uniforme),1),
+    "sd=", round(sd(muestra_uniforme),1), "\n")
+```
+
+**4.1** ¿Por qué los tiempos de respuesta de servidores suelen seguir distribuciones con cola larga (asimétricas) en lugar de normales perfectas?
+
+**4.2** ¿Qué diferencia se observa entre las formas del histograma normal y el uniforme?
+
+---
+
+::: {.callout-tip}
+## Entrega
+**Nombre:** `Taller4_[SuNombre]_HEstadisticas`
+Incluya código Python Y R, gráficos y respuestas a todas las preguntas de análisis.
+:::
+
+---
+
+*Taller 4 de 7 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

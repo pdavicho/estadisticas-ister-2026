@@ -1,0 +1,26 @@
+---
+title: "Semana 10 — Estadística Descriptiva con R — Tendencia Central"
+subtitle: "mean(), median(), table(), percentiles y frecuencias con R"
+author: "Ing. David Minango PhD"
+---
+
+::: {.callout-note}
+## 🔒 Contenido en Preparación
+
+Este material estará disponible próximamente.
+
+**Tema:** Estadística Descriptiva con R — Tendencia Central
+
+**Contenido previsto:**
+mean(), median(), table(), percentiles y frecuencias con R
+:::
+
+## Próximamente
+
+El material de esta semana será publicado antes de la fecha de clase correspondiente.
+
+Mientras tanto, puede repasar los temas anteriores o consultar la bibliografía del curso en la [sección del programa](../../syllabus.qmd).
+
+---
+
+*Semana 10 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*

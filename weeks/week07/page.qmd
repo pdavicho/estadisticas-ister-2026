@@ -1,0 +1,198 @@
+---
+title: "Semana 7 — Gestión de Datos en R"
+subtitle: "Importar, Limpiar y Transformar Datos con dplyr (APP 2)"
+author: "Ing. David Minango PhD"
+---
+
+Esta semana integramos todo lo aprendido sobre R en un flujo de trabajo completo de análisis de datos. Aprenderemos a importar datos reales, limpiarlos y analizarlos con `dplyr`. Esta semana incluye la **Práctica Experimental APP 2** (8 horas).
+
+::: {.objetivos-box}
+**Objetivos:**
+
+- Importar datos desde archivos CSV y Excel
+- Diagnosticar y tratar valores faltantes y duplicados
+- Dominar el paquete `dplyr`: filter, select, mutate, group_by, summarise
+- Realizar un análisis estadístico descriptivo completo de un dataset real
+- Interpretar los resultados en contexto social/económico
+:::
+
+## 👨‍🏫 Presentación de Clase
+
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
+
+## 📥 Dataset de la Semana
+
+Para las actividades de esta semana usamos datos de desigualdad salarial. Puede generarlos directamente en R o descargarlos de Moodle.
+
+```r
+# Generar el dataset simulado (si no tiene acceso al CSV)
+set.seed(2026)
+n <- 200
+
+dataset_salarios <- data.frame(
+  id        = 1:n,
+  region    = sample(c("Costa","Sierra","Oriente","Insular"), n,
+                     replace=TRUE, prob=c(0.45, 0.45, 0.08, 0.02)),
+  sector    = sample(c("Público","Privado","Informal"), n,
+                     replace=TRUE, prob=c(0.30, 0.50, 0.20)),
+  genero    = sample(c("Hombre","Mujer"), n, replace=TRUE, prob=c(0.52, 0.48)),
+  nivel_edu = sample(c("Primaria","Secundaria","Superior","Postgrado"), n,
+                     replace=TRUE, prob=c(0.15, 0.35, 0.40, 0.10)),
+  edad      = sample(18:65, n, replace=TRUE),
+  anios_exp = sample(0:40, n, replace=TRUE),
+  salario   = round(pmax(400,
+    rnorm(n,
+          mean = ifelse(sample(c("Hombre","Mujer"), n, TRUE, c(.52,.48)) == "Hombre", 900, 750),
+          sd   = 350)))
+)
+
+# Introducir algunos NAs para práctica de limpieza
+dataset_salarios$salario[sample(1:n, 10)] <- NA
+dataset_salarios$nivel_edu[sample(1:n, 5)] <- NA
+
+write.csv(dataset_salarios, "datos_salarios_ecuador.csv", row.names=FALSE)
+cat("✅ Dataset creado: datos_salarios_ecuador.csv\n")
+cat("Dimensiones:", dim(dataset_salarios), "\n")
+```
+
+## 📊 Ejemplo Práctico en R — Flujo Completo
+
+```r
+library(dplyr)
+library(readxl)
+
+# ── PASO 1: Importar ──────────────────────────────────
+datos <- read.csv("datos_salarios_ecuador.csv", stringsAsFactors=FALSE)
+cat("Datos importados:", nrow(datos), "filas x", ncol(datos), "columnas\n")
+
+# ── PASO 2: Exploración inicial ───────────────────────
+cat("\n=== ESTRUCTURA DEL DATASET ===\n")
+str(datos)
+
+cat("\n=== VALORES FALTANTES ===\n")
+print(colSums(is.na(datos)))
+cat("Total NAs:", sum(is.na(datos)), "\n")
+
+# ── PASO 3: Limpieza ──────────────────────────────────
+# Reemplazar NAs de salario con la mediana
+mediana_salario <- median(datos$salario, na.rm=TRUE)
+datos$salario[is.na(datos$salario)] <- mediana_salario
+cat(sprintf("\nNAs de salario reemplazados con mediana = $%.0f\n", mediana_salario))
+
+# Eliminar filas con NAs restantes
+datos <- na.omit(datos)
+cat("Filas después de limpieza:", nrow(datos), "\n")
+
+# Detectar outliers con IQR
+Q1  <- quantile(datos$salario, 0.25)
+Q3  <- quantile(datos$salario, 0.75)
+IQR <- Q3 - Q1
+outliers <- sum(datos$salario < Q1 - 1.5*IQR | datos$salario > Q3 + 1.5*IQR)
+cat(sprintf("Outliers detectados: %d (%.1f%%)\n", outliers, 100*outliers/nrow(datos)))
+
+# ── PASO 4: Análisis descriptivo global ───────────────
+cat("\n=== ESTADÍSTICAS GLOBALES ===\n")
+cat(sprintf("n = %d | Media = $%.0f | Mediana = $%.0f\n",
+            nrow(datos), mean(datos$salario), median(datos$salario)))
+cat(sprintf("Desv. Std = $%.0f | CV = %.1f%%\n",
+            sd(datos$salario), sd(datos$salario)/mean(datos$salario)*100))
+
+# ── PASO 5: Análisis por grupos con dplyr ─────────────
+cat("\n=== SALARIO POR REGIÓN ===\n")
+por_region <- datos %>%
+  group_by(region) %>%
+  summarise(
+    n        = n(),
+    media    = round(mean(salario)),
+    mediana  = median(salario),
+    cv       = round(sd(salario)/mean(salario)*100, 1)
+  ) %>%
+  arrange(desc(media))
+print(as.data.frame(por_region))
+
+cat("\n=== BRECHA SALARIAL DE GÉNERO ===\n")
+por_genero <- datos %>%
+  group_by(genero) %>%
+  summarise(media = round(mean(salario)), mediana = median(salario), n = n())
+print(as.data.frame(por_genero))
+
+brecha <- with(por_genero,
+  (media[genero=="Hombre"] - media[genero=="Mujer"]) /
+   media[genero=="Hombre"] * 100)
+cat(sprintf("Brecha salarial de género: %.1f%%\n", brecha))
+
+cat("\n=== SALARIO POR NIVEL EDUCATIVO ===\n")
+por_edu <- datos %>%
+  group_by(nivel_edu) %>%
+  summarise(media = round(mean(salario)), n = n()) %>%
+  arrange(desc(media))
+print(as.data.frame(por_edu))
+
+# ── PASO 6: Visualizaciones ───────────────────────────
+par(mfrow=c(2,2))
+
+# Distribución global
+hist(datos$salario, breaks=15, col="#0055a5", border="white",
+     main="Distribución Salarial Ecuador", xlab="Salario (USD)")
+abline(v=mean(datos$salario), col="red", lwd=2, lty=2)
+abline(v=median(datos$salario), col="green", lwd=2, lty=3)
+legend("topright", cex=0.75,
+       legend=c(paste("Media=$",round(mean(datos$salario))),
+                paste("Mediana=$",round(median(datos$salario)))),
+       col=c("red","green"), lty=c(2,3), lwd=2)
+
+# Por región
+boxplot(salario ~ region, data=datos, las=2,
+        col="#e8f4fd", border="#003366",
+        main="Salario por Región", xlab="", ylab="USD")
+
+# Por género
+boxplot(salario ~ genero, data=datos,
+        col=c("#0055a5","#ff6b9d"), border="#333",
+        main=paste0("Salario por Género\n(Brecha: ",round(brecha,1),"%)"),
+        ylab="Salario (USD)")
+
+# Por nivel educativo
+medias_edu <- tapply(datos$salario, datos$nivel_edu, mean)
+barplot(sort(medias_edu), col="#28a745", border="white",
+        main="Salario Medio por Nivel Educativo",
+        ylab="Salario (USD)", las=2)
+
+par(mfrow=c(1,1))
+```
+
+## 🐍 Equivalente en Python
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Importar
+df = pd.read_csv("datos_salarios_ecuador.csv")
+
+# Limpieza
+df['salario'].fillna(df['salario'].median(), inplace=True)
+df.dropna(inplace=True)
+
+# Análisis por grupos
+por_region = df.groupby('region')['salario'].agg(['mean','median','std']).round(2)
+print("Por región:\n", por_region)
+
+brecha = (df.groupby('genero')['salario'].mean()['Hombre'] -
+          df.groupby('genero')['salario'].mean()['Mujer']) / \
+         df.groupby('genero')['salario'].mean()['Hombre'] * 100
+print(f"\nBrecha de género: {brecha:.1f}%")
+```
+
+## 💻 Taller APP 2
+
+Esta semana el taller corresponde a la **Práctica Experimental APP 2** (8 horas).
+
+👉 **[Ir al Taller APP 2 →](lab.qmd)**
+
+---
+
+*Semana 7 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*
