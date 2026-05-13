@@ -22,8 +22,12 @@ include-in-header:
   text: |
     <style>
     .reveal h1, .reveal h2 { color: #003366; }
-    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; }
-    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; }
+    .reveal section.has-dark-background h1,
+    .reveal section.has-dark-background h2 { color: #ffffff !important; }
+    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; color: #1a1a2e !important; }
+    .formula-slide * { color: #1a1a2e !important; }
+    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; color: #1a1a2e !important; }
+    .highlight-box * { color: #1a1a2e !important; }
     </style>
 ---
 
