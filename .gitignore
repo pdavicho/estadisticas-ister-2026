@@ -14,5 +14,8 @@ Thumbs.db
 # Claude Code settings locales
 .claude/
 
+# Guiones docente — material solo para el profesor, NUNCA se publica
+docencia-privada/
+
 /.quarto/
 **/*.quarto_ipynb

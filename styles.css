@@ -114,6 +114,41 @@ h2 {
   margin: 1rem 0;
 }
 
+/* Ejercicios en clase para estudiantes */
+.ejercicio-box {
+  background: #fff4e6;
+  border-left: 4px solid #fd7e14;
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+}
+
+.ejercicio-box p:first-child,
+.ejercicio-box strong:first-child {
+  color: #d9530f;
+}
+
+/* Bloques de tiempo del guion docente */
+.bloque-tiempo {
+  display: inline-block;
+  background: var(--ister-blue);
+  color: white;
+  border-radius: 20px;
+  padding: 0.2rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.nota-docente {
+  background: #f3f0fb;
+  border-left: 4px solid #6f42c1;
+  border-radius: 6px;
+  padding: 0.8rem 1.1rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+
 /* Badge de dificultad */
 .badge-difficulty {
   display: inline-block;

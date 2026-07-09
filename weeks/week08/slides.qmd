@@ -1,0 +1,165 @@
+---
+title: "Semana 8: Gestión de Datos en R (Continuación)"
+subtitle: "group_by avanzado, joins y tidyr"
+author: "Ing. David Minango PhD"
+institute: "ISTER — Sistemas y Gestión de Data"
+date: "2026"
+format:
+  revealjs:
+    theme: [default, ../../styles-slides.css]
+    slide-number: true
+    logo: ../../figures/logos/ister_logo.png
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
+    transition: slide
+    highlight-style: github
+    chalkboard: true
+    width: 1280
+    height: 720
+    margin: 0.04
+    min-scale: 0.1
+    max-scale: 2.0
+include-in-header:
+  text: |
+    <style>
+    .reveal h1, .reveal h2 { color: #003366; }
+    .reveal section.has-dark-background h1,
+    .reveal section.has-dark-background h2 { color: #ffffff !important; }
+    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; color: #1a1a2e !important; }
+    .formula-slide * { color: #1a1a2e !important; }
+    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; color: #1a1a2e !important; }
+    .highlight-box * { color: #1a1a2e !important; }
+    </style>
+---
+
+## De la Semana 7 a la Semana 8 {background-color="#003366" color="white"}
+
+```
+Semana 7                          Semana 8
+─────────                         ─────────
+Importar (read.csv)               group_by AVANZADO (multi-variable)
+Limpiar (na.omit, mutate)    →     joins (left_join, inner_join)
+dplyr básico (filter/select)      tidyr (pivot_longer/pivot_wider)
+                                   Análisis descriptivo COMPLETO
+```
+
+Hoy conectamos varias tablas y cambiamos la forma de los datos.
+
+---
+
+## group_by con Múltiples Variables
+
+```r
+datos %>%
+  group_by(region, genero) %>%
+  summarise(
+    n     = n(),
+    media = round(mean(salario), 2),
+    .groups = "drop"
+  )
+```
+
+::: {.highlight-box}
+`.groups = "drop"` evita que el resultado quede agrupado después de resumir.
+:::
+
+---
+
+## across() y n_distinct()
+
+```r
+# Misma función a varias columnas
+datos %>%
+  group_by(sector) %>%
+  summarise(across(c(salario, edad, anios_exp),
+                    ~ round(mean(.x, na.rm = TRUE), 1)))
+
+# Contar valores únicos por grupo
+datos %>%
+  group_by(region) %>%
+  summarise(provincias_distintas = n_distinct(provincia))
+```
+
+---
+
+## Joins — Uniendo Tablas Relacionadas
+
+```r
+info_regional <- data.frame(
+  region = c("Costa","Sierra","Oriente","Insular"),
+  pib_per_capita = c(6100, 6800, 5200, 9400)
+)
+
+# Conserva TODAS las filas de "datos"
+datos %>% left_join(info_regional, by = "region")
+
+# Solo filas que coinciden en ambas tablas
+datos %>% inner_join(info_regional, by = "region")
+
+# Filas de "datos" SIN coincidencia (control de calidad)
+datos %>% anti_join(info_regional, by = "region")
+```
+
+::: {.highlight-box}
+Piense en un `left_join` como un VLOOKUP de Excel que nunca pierde filas.
+:::
+
+---
+
+## Tipos de Join {background-color="#003366" color="white"}
+
+```
+left_join   →  todas las filas de la IZQUIERDA + coincidencias
+inner_join  →  solo filas que coinciden en AMBAS tablas
+full_join   →  todas las filas de AMBAS tablas
+anti_join   →  filas SIN coincidencia (detectar errores)
+```
+
+---
+
+## tidyr — Cambiar la Forma de los Datos
+
+```r
+library(tidyr)
+
+# ANCHO → LARGO
+notas_long <- notas_wide %>%
+  pivot_longer(cols = starts_with("parcial"),
+               names_to = "parcial", values_to = "nota")
+
+# LARGO → ANCHO
+notas_long %>%
+  pivot_wider(names_from = parcial, values_from = nota)
+```
+
+::: {.highlight-box}
+**Regla mnemotécnica:** *longer* = más filas, menos columnas. *wider* = más columnas, menos filas.
+:::
+
+---
+
+## Pipeline Completo — Análisis Descriptivo
+
+```r
+datos %>%
+  left_join(info_regional, by = "region") %>%
+  group_by(region, genero) %>%
+  summarise(n = n(), media = round(mean(salario), 2),
+            mediana = median(salario),
+            cv = round(sd(salario)/mean(salario)*100, 1),
+            .groups = "drop") %>%
+  pivot_wider(names_from = genero, values_from = media)
+```
+
+Importar → Limpiar → **Unir** → Agrupar (multi) → Resumir → **Reorganizar**
+
+---
+
+## Hoy en Clase {background-color="#003366" color="white"}
+
+::: {.highlight-box}
+**Lunes (2h):** group_by avanzado + joins + tidyr, con un ejercicio corto después de cada tema.
+
+**Viernes (1h):** Pipeline integrador de análisis descriptivo completo + mini-taller en parejas.
+:::
+
+**¡Cada tabla nueva que aprenden a unir es un dataset real más que pueden analizar!** 🌍

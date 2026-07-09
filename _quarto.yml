@@ -3,6 +3,10 @@ project:
   output-dir: docs
   resources:
     - login.html
+  render:
+    - "*.qmd"
+    - "**/*.qmd"
+    - "!docencia-privada/"
 
 website:
   title: "Herramientas Estadísticas | ISTER 2026"
@@ -75,7 +79,7 @@ website:
                 href: weeks/week07/page.qmd
               - text: "💻 Taller APP 7"
                 href: weeks/week07/lab.qmd
-          - section: "Semana 08 — Próximamente"
+          - section: "Semana 08 — Gestión de Datos en R (Continuación)"
             contents:
               - text: "👨‍🏫 Material de Clase"
                 href: weeks/week08/page.qmd

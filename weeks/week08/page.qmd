@@ -1,26 +1,299 @@
 ---
-title: "Semana 08 — Gestión de Datos en R (Continuación)"
-subtitle: "group_by avanzado, joins, tidyr, análisis descriptivo completo"
+title: "Semana 8 — Gestión de Datos en R (Continuación)"
+subtitle: "group_by avanzado, joins, tidyr y Análisis Descriptivo Completo"
 author: "Ing. David Minango PhD"
 ---
 
-::: {.callout-note}
-## 🔒 Contenido en Preparación
+Esta semana cerramos el bloque de **Gestión de Datos en R**. Partimos del dataset de desigualdad salarial que ya conocen desde la Semana 7 y lo llevamos un paso más allá: agrupaciones con varias variables a la vez, **combinar tablas relacionadas con joins**, y **reorganizar la forma de los datos con `tidyr`**. Cerramos con un pipeline integrador de análisis descriptivo completo.
 
-Este material estará disponible próximamente.
+::: {.objetivos-box}
+**Objetivos:**
 
-**Tema:** Gestión de Datos en R (Continuación)
-
-**Contenido previsto:**
-group_by avanzado, joins, tidyr, análisis descriptivo completo
+- Agrupar y resumir datos usando múltiples variables simultáneamente (`group_by` avanzado, `across()`, `n_distinct()`)
+- Combinar dos o más tablas relacionadas con `left_join`, `inner_join` y `anti_join`
+- Reorganizar datos entre formato ancho y largo con `pivot_longer` y `pivot_wider`
+- Construir un pipeline completo de análisis descriptivo: importar → limpiar → unir → agrupar → resumir → presentar
+- Reconocer los errores más comunes al combinar y agrupar datos
 :::
 
-## Próximamente
+## 👨‍🏫 Presentación de Clase
 
-El material de esta semana será publicado antes de la fecha de clase correspondiente.
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
 
-Mientras tanto, puede repasar los temas anteriores o consultar la bibliografía del curso en la [sección del programa](../../syllabus.qmd).
+## 🔁 Repaso: Semana 7
+
+Recuperamos el dataset limpio de la Práctica APP 2 antes de avanzar a contenido nuevo.
+
+```r
+library(dplyr)
+
+datos <- read.csv("datos_salarios_ecuador_app2.csv", stringsAsFactors = FALSE)
+
+# Limpieza (igual que la Semana 7)
+datos$salario[is.na(datos$salario)] <- median(datos$salario, na.rm = TRUE)
+datos <- na.omit(datos)
+
+# Repaso: filter + group_by + summarise + arrange
+datos %>%
+  filter(sector == "Privado Formal") %>%
+  group_by(provincia) %>%
+  summarise(n = n(), media = round(mean(salario), 2)) %>%
+  arrange(desc(media))
+```
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 1**
+
+Usando `datos`, calcule con `dplyr` el salario **promedio** y la **mediana** por `sector`, pero únicamente para las filas donde `genero == "Mujer"`.
+:::
 
 ---
 
-*Semana 08 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*
+## 📊 group_by con Múltiples Variables
+
+Hasta ahora agrupamos por **una sola variable**. En la práctica casi siempre necesitamos cruzar dos o más dimensiones a la vez (por ejemplo: región **y** género).
+
+```r
+# Agrupar por MÚLTIPLES variables a la vez
+datos %>%
+  group_by(region, genero) %>%
+  summarise(
+    n     = n(),
+    media = round(mean(salario), 2),
+    .groups = "drop"   # evita el mensaje de "regroupment" de dplyr
+  )
+```
+
+::: {.highlight-box}
+`.groups = "drop"` le dice a `dplyr` que, después de resumir, no deje el resultado agrupado. Si no lo especifica, R muestra un mensaje informativo (no es un error) recordándole que el resultado sigue agrupado.
+:::
+
+```r
+# n_distinct(): cuántos valores ÚNICOS hay por grupo
+datos %>%
+  group_by(region) %>%
+  summarise(provincias_distintas = n_distinct(provincia))
+
+# across(): aplicar la MISMA función a varias columnas
+datos %>%
+  group_by(sector) %>%
+  summarise(across(c(salario, edad, anios_exp),
+                    ~ round(mean(.x, na.rm = TRUE), 1)))
+```
+
+`across()` evita repetir `mean(salario)`, `mean(edad)`, `mean(anios_exp)` tres veces. La sintaxis `~ round(mean(.x, na.rm=TRUE), 1)` significa *"aplica esta función a cada columna, donde `.x` representa la columna actual"*.
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 2**
+
+Agrupe por `region` **y** `nivel_edu` simultáneamente. Calcule `n()`, la media y la desviación estándar del salario. ¿Qué combinación región + nivel educativo tiene el salario promedio más alto? ¿Y la muestra más pequeña (n)?
+:::
+
+---
+
+## 🔗 Combinar Tablas con Joins
+
+En la vida real, los datos casi nunca vienen en **una sola tabla**. Vamos a crear una segunda tabla pequeña con información a nivel de región y **unirla** a nuestro dataset de personas.
+
+```r
+# Tabla secundaria: información socioeconómica por región
+info_regional <- data.frame(
+  region             = c("Costa", "Sierra", "Oriente", "Insular"),
+  capital_region     = c("Guayaquil", "Quito", "Puyo", "Pto. Baquerizo Moreno"),
+  poblacion_millones = c(7.5, 8.2, 0.85, 0.03),
+  pib_per_capita     = c(6100, 6800, 5200, 9400)
+)
+info_regional
+```
+
+```r
+# ── left_join(): conserva TODAS las filas de "datos" ──
+# y agrega columnas de info_regional donde haya coincidencia
+datos_completo <- datos %>%
+  left_join(info_regional, by = "region")
+
+head(datos_completo[, c("id","region","salario","pib_per_capita")])
+
+# ── inner_join(): solo filas que coinciden en AMBAS tablas ─
+datos %>% inner_join(info_regional, by = "region") %>% nrow()
+
+# ── anti_join(): filas de "datos" que NO tienen coincidencia ─
+# (útil para control de calidad: encontrar valores mal escritos)
+datos %>% anti_join(info_regional, by = "region") %>% nrow()
+```
+
+::: {.highlight-box}
+Piense en dos hojas de Excel — una con datos de personas, otra con datos de regiones — y la columna `region` como la "llave" que las conecta. `left_join` es como un VLOOKUP que **nunca pierde filas** de la tabla izquierda, aunque no encuentre coincidencia (deja `NA`).
+:::
+
+```r
+# ¿El salario se relaciona con el PIB per cápita de la región?
+datos_completo %>%
+  group_by(region, pib_per_capita) %>%
+  summarise(salario_medio = round(mean(salario), 2), .groups = "drop") %>%
+  arrange(desc(pib_per_capita))
+```
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 3**
+
+Cree una tabla `info_sector` con dos columnas: `sector` (Público, Privado Formal, Informal) y `formalidad` ("Formal" o "Informal"). Únala a `datos` con `left_join` y calcule el salario promedio por `formalidad`.
+:::
+
+---
+
+## 🔄 tidyr: Cambiar la Forma de los Datos
+
+`tidyr` resuelve un problema distinto al de `dplyr`: no cambia *qué* datos tenemos, sino **la forma** en la que están organizados (ancho ↔ largo).
+
+```r
+library(tidyr)
+
+# Datos en formato ANCHO: una columna por parcial
+notas_wide <- data.frame(
+  estudiante = c("Ana", "Luis", "Marco"),
+  parcial1   = c(8.5, 7.0, 9.2),
+  parcial2   = c(9.0, 6.5, 8.8),
+  parcial3   = c(7.8, 8.0, 9.5)
+)
+notas_wide
+```
+
+```r
+# ── pivot_longer(): de ANCHO a LARGO ──────────────────
+notas_long <- notas_wide %>%
+  pivot_longer(cols = starts_with("parcial"),
+               names_to = "parcial", values_to = "nota")
+notas_long
+
+# Con formato largo, ahora SÍ se puede usar group_by/summarise
+notas_long %>%
+  group_by(estudiante) %>%
+  summarise(promedio = round(mean(nota), 2))
+
+# ── pivot_wider(): el camino inverso ──────────────────
+notas_long %>%
+  pivot_wider(names_from = parcial, values_from = nota)
+```
+
+::: {.highlight-box}
+**Regla mnemotécnica:** *"longer = más filas, menos columnas"*; *"wider = más columnas, menos filas"*. `group_by`/`summarise` de `dplyr` funcionan mejor en formato **largo** — por eso casi siempre se usa `pivot_longer` antes de resumir.
+:::
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 4**
+
+Tome el resumen de salario medio por región (de la sección anterior de group_by) y conviértalo a formato ancho, con una columna por región, usando `pivot_wider`.
+:::
+
+---
+
+## 📈 Análisis Descriptivo Completo (Pipeline Integrador)
+
+Cerramos uniendo **todo lo visto en las Semanas 7 y 8** en un solo flujo de trabajo: importar, limpiar, unir tablas, agrupar por varias variables y presentar un resumen final.
+
+```r
+library(dplyr)
+library(tidyr)
+
+# PASO 1 — Importar
+datos <- read.csv("datos_salarios_ecuador_app2.csv", stringsAsFactors = FALSE)
+
+# PASO 2 — Limpiar
+datos$salario[is.na(datos$salario)] <- median(datos$salario, na.rm = TRUE)
+datos <- na.omit(datos)
+
+# PASO 3 — Unir con información regional
+datos <- datos %>% left_join(info_regional, by = "region")
+
+# PASO 4 — Agrupar por múltiples variables y resumir
+resumen_final <- datos %>%
+  group_by(region, genero) %>%
+  summarise(
+    n       = n(),
+    media   = round(mean(salario), 2),
+    mediana = median(salario),
+    cv      = round(sd(salario) / mean(salario) * 100, 1),
+    .groups = "drop"
+  ) %>%
+  arrange(region, genero)
+
+print(as.data.frame(resumen_final))
+
+# PASO 5 — Presentar en formato ancho (una columna por género)
+resumen_final %>%
+  select(region, genero, media) %>%
+  pivot_wider(names_from = genero, values_from = media) %>%
+  mutate(brecha_pct = round((Hombre - Mujer) / Hombre * 100, 1))
+```
+
+::: {.ejercicio-box}
+**🧩 Ejercicio final (mini-taller)**
+
+Con el pipeline anterior como plantilla, construya su propia versión que:
+
+1. Agrupe por `sector` y `nivel_edu` (en vez de `region` y `genero`)
+2. Calcule `n`, media, mediana y CV
+3. Presente el resultado en formato ancho (una columna por `nivel_edu`)
+4. Identifique **un hallazgo** en una sola frase
+:::
+
+---
+
+## 🐍 Equivalentes en Python
+
+```python
+import pandas as pd
+
+df = pd.read_csv("datos_salarios_ecuador_app2.csv")
+df['salario'] = df['salario'].fillna(df['salario'].median())
+df = df.dropna()
+
+info_regional = pd.DataFrame({
+    'region': ['Costa','Sierra','Oriente','Insular'],
+    'pib_per_capita': [6100, 6800, 5200, 9400]
+})
+
+# join (merge) — equivalente a left_join
+df = df.merge(info_regional, on='region', how='left')
+
+# group_by múltiple + summarise (agg)
+resumen = df.groupby(['region','genero'])['salario'].agg(
+    n='count', media='mean', mediana='median'
+).round(2).reset_index()
+print(resumen)
+
+# pivot_wider (equivalente: pivot_table / pivot)
+tabla_ancha = resumen.pivot(index='region', columns='genero', values='media')
+print(tabla_ancha)
+
+# pivot_longer (equivalente: melt)
+tabla_larga = tabla_ancha.reset_index().melt(
+    id_vars='region', var_name='genero', value_name='media')
+print(tabla_larga)
+```
+
+---
+
+## 📎 Resumen de Funciones — Semanas 7 y 8
+
+| Función | Paquete | Qué hace |
+|---|---|---|
+| `filter()` | dplyr | Filtra filas según una condición |
+| `select()` | dplyr | Selecciona columnas |
+| `mutate()` | dplyr | Crea o modifica columnas |
+| `group_by()` | dplyr | Agrupa filas por una o varias variables |
+| `summarise()` | dplyr | Resume cada grupo (media, n, etc.) |
+| `across()` | dplyr | Aplica una función a varias columnas a la vez |
+| `n_distinct()` | dplyr | Cuenta valores únicos dentro de un grupo |
+| `left_join()` | dplyr | Une tablas conservando todas las filas de la izquierda |
+| `inner_join()` | dplyr | Une tablas conservando solo coincidencias |
+| `anti_join()` | dplyr | Filas sin coincidencia (control de calidad) |
+| `pivot_longer()` | tidyr | Pasa de formato ancho a largo |
+| `pivot_wider()` | tidyr | Pasa de formato largo a ancho |
+
+---
+
+*Semana 8 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*
