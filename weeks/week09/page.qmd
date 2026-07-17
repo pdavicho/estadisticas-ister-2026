@@ -4,22 +4,281 @@ subtitle: "Funciones para importar datos de múltiples fuentes, APIs y bases de 
 author: "Ing. David Minango PhD"
 ---
 
-::: {.callout-note}
-## 🔒 Contenido en Preparación
+Hasta la Semana 8 trabajamos siempre con un CSV local. En la práctica, los datos rara vez viven en un solo archivo ordenado: llegan en hojas de Excel, en formato JSON desde una API, o almacenados en una base de datos. Esta semana abrimos el abanico de **fuentes de datos** que R puede leer directamente.
 
-Este material estará disponible próximamente.
+::: {.objetivos-box}
+**Objetivos:**
 
-**Tema:** Recolección de Datos en R
-
-**Contenido previsto:**
-Funciones para importar datos de múltiples fuentes, APIs y bases de datos
+- Importar datos desde archivos planos (CSV, TXT) controlando separador, decimal y codificación
+- Importar datos desde archivos Excel con múltiples hojas usando `readxl`
+- Leer datos en formato JSON y consumir una API REST con `jsonlite` y `httr`
+- Conectarse a una base de datos SQLite con `DBI`/`RSQLite` y ejecutar consultas SQL
+- Reconocer y corregir los errores más comunes al importar datos (encoding, rutas, separadores)
 :::
 
-## Próximamente
+## 👨‍🏫 Presentación de Clase
 
-El material de esta semana será publicado antes de la fecha de clase correspondiente.
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
 
-Mientras tanto, puede repasar los temas anteriores o consultar la bibliografía del curso en la [sección del programa](../../syllabus.qmd).
+## 🔁 Repaso: Semanas 7-8
+
+Hasta ahora todo nuestro flujo empezaba igual:
+
+```r
+library(dplyr)
+
+datos <- read.csv("datos_salarios_ecuador_app2.csv", stringsAsFactors = FALSE)
+datos$salario[is.na(datos$salario)] <- median(datos$salario, na.rm = TRUE)
+datos <- na.omit(datos)
+```
+
+Hoy vamos a diversificar el **PASO 1 — Importar**, que es la base de cualquier análisis: si los datos entran mal, todo lo que sigue está mal.
+
+---
+
+## 📄 Archivos Planos: CSV y TXT
+
+`read.csv()` es solo un caso particular de una familia de funciones para leer texto delimitado.
+
+```r
+# CSV estándar (separador coma, decimal punto)
+datos <- read.csv("archivo.csv", stringsAsFactors = FALSE)
+
+# CSV "a la europea/ecuatoriana": separador punto y coma, decimal coma
+datos <- read.csv2("archivo.csv", stringsAsFactors = FALSE)
+
+# Delimitador personalizado (ej. tabulaciones)
+datos <- read.delim("archivo.txt", sep = "\t")
+
+# Control fino con read.table()
+datos <- read.table("archivo.txt",
+                     header = TRUE,
+                     sep = ";",
+                     dec = ",",
+                     fileEncoding = "UTF-8",
+                     na.strings = c("NA", "", "s/d"))
+```
+
+::: {.highlight-box}
+**`fileEncoding`** es la causa más común de "letras raras" (tildes/ñ rotas) al importar un CSV exportado desde Excel en Windows. Si ve símbolos extraños, pruebe `fileEncoding = "UTF-8"` o `fileEncoding = "Latin1"`.
+:::
+
+```r
+# Con el paquete readr (tidyverse) — más rápido y detecta tipos automáticamente
+library(readr)
+datos <- read_csv("archivo.csv")   # devuelve un tibble, no data.frame
+```
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 1**
+
+Cree un archivo `prueba.csv` con `write.csv(mtcars, "prueba.csv")`. Ábralo con `read.csv()` normal y luego con `read_csv()` de `readr`. Compare con `class()` y `str()` qué tipo de objeto devuelve cada uno.
+:::
+
+---
+
+## 📊 Archivos Excel con readxl
+
+Los archivos `.xlsx` no son texto plano — necesitan un paquete especializado.
+
+```r
+library(readxl)
+
+# Ver qué hojas tiene el archivo ANTES de importar
+excel_sheets("reporte.xlsx")
+
+# Importar la primera hoja
+datos <- read_excel("reporte.xlsx")
+
+# Importar una hoja específica por nombre o número
+datos_2024 <- read_excel("reporte.xlsx", sheet = "2024")
+datos_2025 <- read_excel("reporte.xlsx", sheet = 2)
+
+# Importar solo un rango de celdas (como en Excel)
+resumen <- read_excel("reporte.xlsx", sheet = "Resumen", range = "B2:F20")
+```
+
+::: {.highlight-box}
+`readxl` **no necesita** tener Excel instalado ni Java configurado (a diferencia de paquetes más antiguos como `xlsx`). Por eso es la opción recomendada hoy en día.
+:::
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 2**
+
+Exporte `datos` (el dataset de salarios) a Excel con `writexl::write_xlsx(datos, "salarios.xlsx")`. Luego vuelva a importarlo con `read_excel()` y verifique con `nrow()` y `ncol()` que coincide con el original.
+:::
+
+---
+
+## 🌐 JSON y APIs REST
+
+Muchos servicios web (APIs) entregan datos en formato **JSON**, no en tablas. R los puede leer directamente.
+
+```r
+library(jsonlite)
+
+# Leer un JSON local
+datos_json <- fromJSON("datos.json")
+
+# Leer un JSON directamente desde una URL (API pública de prueba)
+usuarios <- fromJSON("https://jsonplaceholder.typicode.com/users")
+
+# Si el JSON tiene estructura anidada, "aplanarla" a tabla:
+usuarios_flat <- fromJSON("https://jsonplaceholder.typicode.com/users", flatten = TRUE)
+```
+
+Para APIs que requieren más control (parámetros, headers, autenticación) se usa `httr`:
+
+```r
+library(httr)
+library(jsonlite)
+
+respuesta <- GET("https://jsonplaceholder.typicode.com/posts",
+                  query = list(userId = 1))
+
+status_code(respuesta)                 # 200 = éxito
+datos <- fromJSON(content(respuesta, "text"))
+head(datos)
+```
+
+::: {.highlight-box}
+Un JSON es básicamente **listas anidadas** (como una lista de listas en R). `fromJSON()` intenta convertirlo a `data.frame` automáticamente; cuando la estructura es muy anidada (listas dentro de listas), use `flatten = TRUE` o explore el resultado con `str()` antes de asumir que ya es una tabla.
+:::
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 3**
+
+Consuma `https://jsonplaceholder.typicode.com/todos` con `fromJSON()`. ¿Cuántas tareas hay en total? ¿Cuántas están marcadas como `completed == TRUE`? (Pista: es un `data.frame`, use `dplyr` como siempre.)
+:::
+
+---
+
+## 🗄️ Bases de Datos con DBI + RSQLite
+
+Cuando los datos viven en una base de datos, R se conecta, consulta y trae solo lo que necesita — sin exportar manualmente a CSV.
+
+```r
+library(DBI)
+library(RSQLite)
+
+# Conectar a una base de datos SQLite (archivo local, sin servidor)
+con <- dbConnect(RSQLite::SQLite(), "curso.db")
+
+# Ver qué tablas existen
+dbListTables(con)
+
+# Traer una tabla completa
+datos <- dbReadTable(con, "salarios")
+
+# Ejecutar una consulta SQL directamente
+resumen <- dbGetQuery(con, "
+  SELECT region, AVG(salario) AS media
+  FROM salarios
+  GROUP BY region
+  ORDER BY media DESC
+")
+
+# SIEMPRE cerrar la conexión al terminar
+dbDisconnect(con)
+```
+
+::: {.highlight-box}
+`dbGetQuery()` con SQL y `dplyr` con `group_by()`/`summarise()` resuelven el **mismo problema** de dos formas distintas: SQL le pide a la base de datos que resuma antes de traer los datos a R (más eficiente con bases grandes); `dplyr` trae los datos y resume en R (más cómodo para explorar).
+:::
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 4**
+
+Cree una base SQLite de prueba con:
+```r
+con <- dbConnect(RSQLite::SQLite(), "prueba.db")
+dbWriteTable(con, "salarios", datos, overwrite = TRUE)
+```
+Luego escriba una consulta `dbGetQuery()` que calcule el salario promedio por `sector`, y compare el resultado con el que obtendría usando `dplyr::group_by(sector) %>% summarise(...)`.
+:::
+
+---
+
+## 🔗 Pipeline Integrador: Combinando Fuentes
+
+En un proyecto real es normal combinar información de **más de una fuente**: un CSV local con datos de personas, y una tabla de referencia que viene de una API o base de datos.
+
+```r
+library(dplyr)
+
+# Fuente 1: CSV local
+datos <- read.csv("datos_salarios_ecuador_app2.csv", stringsAsFactors = FALSE)
+datos$salario[is.na(datos$salario)] <- median(datos$salario, na.rm = TRUE)
+datos <- na.omit(datos)
+
+# Fuente 2: tabla de referencia desde base de datos
+con <- dbConnect(RSQLite::SQLite(), "curso.db")
+info_regional <- dbReadTable(con, "info_regional")
+dbDisconnect(con)
+
+# Combinar ambas fuentes (join, igual que en la Semana 8)
+datos_completo <- datos %>%
+  left_join(info_regional, by = "region")
+
+datos_completo %>%
+  group_by(region) %>%
+  summarise(n = n(), salario_medio = round(mean(salario), 2))
+```
+
+::: {.ejercicio-box}
+**🧩 Ejercicio final (mini-taller)**
+
+Arme un pipeline que combine **dos fuentes distintas** (por ejemplo: su CSV de salarios + la API de `jsonplaceholder`, o su CSV + una tabla SQLite). El pipeline debe:
+
+1. Importar ambas fuentes con la función apropiada para cada una
+2. Unirlas o combinarlas de alguna forma
+3. Producir un resumen final con `group_by`/`summarise`
+4. Anotar en un comentario qué formato de origen usó y por qué eligió esa función de importación
+:::
+
+---
+
+## 🐍 Equivalentes en Python
+
+```python
+import pandas as pd
+import requests
+import sqlite3
+
+# CSV
+datos = pd.read_csv("archivo.csv", encoding="utf-8")
+
+# Excel (requiere openpyxl instalado)
+datos_excel = pd.read_excel("reporte.xlsx", sheet_name="2024")
+
+# JSON desde una API
+respuesta = requests.get("https://jsonplaceholder.typicode.com/users")
+usuarios = pd.json_normalize(respuesta.json())
+
+# Base de datos SQLite
+con = sqlite3.connect("curso.db")
+resumen = pd.read_sql("SELECT region, AVG(salario) AS media FROM salarios GROUP BY region", con)
+con.close()
+```
+
+---
+
+## 📎 Resumen de Funciones — Semana 9
+
+| Función | Paquete | Qué hace |
+|---|---|---|
+| `read.csv()` / `read.csv2()` | base | Importa CSV (formato US / europeo) |
+| `read.delim()` / `read.table()` | base | Importa texto delimitado con control fino |
+| `read_csv()` | readr | Importa CSV rápido, devuelve tibble |
+| `read_excel()` | readxl | Importa hojas de Excel `.xlsx` |
+| `excel_sheets()` | readxl | Lista las hojas disponibles en un Excel |
+| `fromJSON()` | jsonlite | Lee JSON local o desde una URL/API |
+| `GET()` / `content()` | httr | Hace peticiones HTTP a una API con más control |
+| `dbConnect()` | DBI | Abre una conexión a una base de datos |
+| `dbReadTable()` / `dbGetQuery()` | DBI | Trae una tabla completa / ejecuta SQL |
+| `dbDisconnect()` | DBI | Cierra la conexión a la base de datos |
 
 ---
 

@@ -83,7 +83,7 @@ website:
             contents:
               - text: "👨‍🏫 Material de Clase"
                 href: weeks/week08/page.qmd
-          - section: "Semana 09 — Próximamente"
+          - section: "Semana 09 — Recolección de Datos en R"
             contents:
               - text: "👨‍🏫 Material de Clase"
                 href: weeks/week09/page.qmd

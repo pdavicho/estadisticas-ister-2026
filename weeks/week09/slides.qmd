@@ -1,0 +1,200 @@
+---
+title: "Semana 9: Recolección de Datos en R"
+subtitle: "Archivos, Excel, JSON/APIs y bases de datos"
+author: "Ing. David Minango PhD"
+institute: "ISTER — Sistemas y Gestión de Data"
+date: "2026"
+format:
+  revealjs:
+    theme: [default, ../../styles-slides.css]
+    slide-number: true
+    logo: ../../figures/logos/ister_logo.png
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
+    transition: slide
+    highlight-style: github
+    chalkboard: true
+    width: 1280
+    height: 720
+    margin: 0.04
+    min-scale: 0.1
+    max-scale: 2.0
+include-in-header:
+  text: |
+    <style>
+    .reveal h1, .reveal h2 { color: #003366; }
+    .reveal section.has-dark-background h1,
+    .reveal section.has-dark-background h2 { color: #ffffff !important; }
+    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; color: #1a1a2e !important; }
+    .formula-slide * { color: #1a1a2e !important; }
+    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; color: #1a1a2e !important; }
+    .highlight-box * { color: #1a1a2e !important; }
+    </style>
+---
+
+## De la Semana 8 a la Semana 9 {background-color="#003366" color="white"}
+
+```
+Semana 8                          Semana 9
+─────────                         ─────────
+Un solo CSV local             →   Múltiples fuentes de datos
+group_by, joins, tidyr            CSV, Excel, JSON/API, bases de datos
+Transformar datos                 Importar datos (antes de transformar)
+```
+
+Antes de limpiar y analizar, hay que saber **traer** los datos desde donde estén.
+
+---
+
+## Archivos Planos: CSV y TXT
+
+```r
+# CSV estándar
+datos <- read.csv("archivo.csv", stringsAsFactors = FALSE)
+
+# CSV "a la ecuatoriana" (separador ; , decimal ,)
+datos <- read.csv2("archivo.csv")
+
+# Control fino
+datos <- read.table("archivo.txt",
+                     sep = ";", dec = ",",
+                     fileEncoding = "UTF-8")
+```
+
+::: {.highlight-box}
+`fileEncoding = "UTF-8"` resuelve la mayoría de los problemas de tildes/ñ rotas al importar CSV desde Excel.
+:::
+
+---
+
+## readr — La Versión Moderna
+
+```r
+library(readr)
+
+datos <- read_csv("archivo.csv")   # tibble, detecta tipos solo
+```
+
+::: {.highlight-box}
+Más rápido que `read.csv()` y más explícito sobre qué tipo de dato detectó en cada columna.
+:::
+
+---
+
+## Excel con readxl
+
+```r
+library(readxl)
+
+excel_sheets("reporte.xlsx")             # ver hojas disponibles
+
+datos <- read_excel("reporte.xlsx",
+                     sheet = "2025",
+                     range = "B2:F20")
+```
+
+::: {.highlight-box}
+No necesita tener Excel instalado — lee el archivo directamente.
+:::
+
+---
+
+## JSON con jsonlite
+
+```r
+library(jsonlite)
+
+# JSON local
+datos <- fromJSON("datos.json")
+
+# JSON desde una API (URL directa)
+usuarios <- fromJSON("https://jsonplaceholder.typicode.com/users",
+                      flatten = TRUE)
+```
+
+::: {.highlight-box}
+Un JSON = listas anidadas. `flatten = TRUE` ayuda a convertirlo en tabla cuando hay estructura anidada.
+:::
+
+---
+
+## Consumiendo una API con httr
+
+```r
+library(httr)
+library(jsonlite)
+
+respuesta <- GET("https://jsonplaceholder.typicode.com/posts",
+                  query = list(userId = 1))
+
+status_code(respuesta)          # 200 = éxito
+datos <- fromJSON(content(respuesta, "text"))
+```
+
+---
+
+## Bases de Datos: DBI + RSQLite
+
+```r
+library(DBI)
+library(RSQLite)
+
+con <- dbConnect(RSQLite::SQLite(), "curso.db")
+
+dbListTables(con)
+datos <- dbReadTable(con, "salarios")
+
+resumen <- dbGetQuery(con, "
+  SELECT region, AVG(salario) AS media
+  FROM salarios GROUP BY region")
+
+dbDisconnect(con)
+```
+
+::: {.highlight-box}
+SQL resume **antes** de traer los datos a R (eficiente con bases grandes). `dplyr` trae los datos y resume en R.
+:::
+
+---
+
+## Un Mismo Objetivo, Cuatro Caminos {background-color="#003366" color="white"}
+
+```
+CSV/TXT   →  read.csv() / read_csv()
+Excel     →  read_excel()
+JSON/API  →  fromJSON() / GET() + content()
+Base de datos → dbConnect() + dbGetQuery()
+```
+
+Todos terminan en el mismo lugar: un `data.frame` listo para `dplyr`.
+
+---
+
+## Pipeline Integrador
+
+```r
+datos <- read.csv("datos_salarios_ecuador_app2.csv") %>%
+  na.omit()
+
+con <- dbConnect(RSQLite::SQLite(), "curso.db")
+info_regional <- dbReadTable(con, "info_regional")
+dbDisconnect(con)
+
+datos %>%
+  left_join(info_regional, by = "region") %>%
+  group_by(region) %>%
+  summarise(salario_medio = round(mean(salario), 2))
+```
+
+Importar (múltiples fuentes) → **Unir** → Agrupar → Resumir
+
+---
+
+## Hoy en Clase {background-color="#003366" color="white"}
+
+::: {.highlight-box}
+**Lunes (2h):** Funciones de recolección — CSV/TXT, Excel y JSON/API, con un ejercicio corto después de cada tema.
+
+**Viernes (1h):** Lectura de formatos — bases de datos con DBI/RSQLite + pipeline integrador combinando dos fuentes.
+:::
+
+**Cada fuente nueva que aprenden a leer es un dataset real más al que pueden acceder.** 🌐
