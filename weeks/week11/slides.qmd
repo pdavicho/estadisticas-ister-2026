@@ -126,6 +126,26 @@ El equivalente numérico del boxplot comparativo.
 
 ---
 
+## Dataset real: Titanic (Kaggle)
+
+```r
+titanic <- read.csv(
+  "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv")
+
+boxplot(Fare ~ Pclass, data = titanic,
+        main = "Tarifa por Clase — Titanic")
+
+titanic %>%
+  group_by(Pclass) %>%
+  summarise(cv = round((sd(Fare)/mean(Fare))*100, 1))
+```
+
+::: {.highlight-box}
+`read.csv()` lee directo desde una URL pública — sin cuenta de Kaggle ni descarga manual. Mismo truco que `fromJSON("https://...")` en la Semana 9.
+:::
+
+---
+
 ## Progresión de Hoy {background-color="#003366" color="white"}
 
 ```
@@ -142,7 +162,7 @@ Misma pregunta (¿cuánto varían los datos?), cada vez con más detalle y más 
 ::: {.highlight-box}
 **Lunes (2h):** `range()`, `var()`, `sd()` y coeficiente de variación (CV), con un ejercicio corto tras cada función.
 
-**Viernes (1h):** `boxplot()` simple y comparativo entre grupos + dispersión por grupo con `dplyr`, cerrando con el mini-taller integrador.
+**Viernes (1h):** `boxplot()` simple y comparativo entre grupos + dispersión por grupo con `dplyr`, cerrando con el dataset real de Kaggle (Titanic) leído directo desde una URL.
 :::
 
 **La misma pregunta — ¿qué tan dispersos están los datos? — respondida con más detalle cada vez.** 📦

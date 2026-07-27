@@ -285,6 +285,21 @@ Un solo grupo                     Comparar entre grupos</code></pre>
 <span id="cb7-5"><a></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cv))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>El equivalente numérico del boxplot comparativo.</p>
 </section>
+<section id="dataset-real-titanic-kaggle" class="slide level2">
+<h2>Dataset real: Titanic (Kaggle)</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>titanic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb8-2"><a></a>  <span class="st">"https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"</span>)</span>
+<span id="cb8-3"><a></a></span>
+<span id="cb8-4"><a></a><span class="fu">boxplot</span>(Fare <span class="sc">~</span> Pclass, <span class="at">data =</span> titanic,</span>
+<span id="cb8-5"><a></a>        <span class="at">main =</span> <span class="st">"Tarifa por Clase — Titanic"</span>)</span>
+<span id="cb8-6"><a></a></span>
+<span id="cb8-7"><a></a>titanic <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a></a>  <span class="fu">group_by</span>(Pclass) <span class="sc">%&gt;%</span></span>
+<span id="cb8-9"><a></a>  <span class="fu">summarise</span>(<span class="at">cv =</span> <span class="fu">round</span>((<span class="fu">sd</span>(Fare)<span class="sc">/</span><span class="fu">mean</span>(Fare))<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="highlight-box">
+<p><code>read.csv()</code> lee directo desde una URL pública — sin cuenta de Kaggle ni descarga manual. Mismo truco que <code>fromJSON("https://...")</code> en la Semana 9.</p>
+</div>
+</section>
 <section id="progresión-de-hoy" class="slide level2" data-background-color="#003366" color="white">
 <h2>Progresión de Hoy</h2>
 <pre><code>range()  →  var() / sd()  →  CV  →  boxplot()  →  boxplot(y~grupo)  →  group_by()+summarise()
@@ -295,7 +310,7 @@ Un solo grupo                     Comparar entre grupos</code></pre>
 <h2>Hoy en Clase</h2>
 <div class="highlight-box">
 <p><strong>Lunes (2h):</strong> <code>range()</code>, <code>var()</code>, <code>sd()</code> y coeficiente de variación (CV), con un ejercicio corto tras cada función.</p>
-<p><strong>Viernes (1h):</strong> <code>boxplot()</code> simple y comparativo entre grupos + dispersión por grupo con <code>dplyr</code>, cerrando con el mini-taller integrador.</p>
+<p><strong>Viernes (1h):</strong> <code>boxplot()</code> simple y comparativo entre grupos + dispersión por grupo con <code>dplyr</code>, cerrando con el dataset real de Kaggle (Titanic) leído directo desde una URL.</p>
 </div>
 <p><strong>La misma pregunta — ¿qué tan dispersos están los datos? — respondida con más detalle cada vez.</strong> 📦</p>
 

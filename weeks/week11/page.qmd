@@ -14,6 +14,7 @@ En la Semana 3 calculamos varianza, desviación estándar y coeficiente de varia
 - Calcular e interpretar el coeficiente de variación (CV) para comparar variables de distinta escala o unidad
 - Visualizar dispersión con `boxplot()`, incluyendo comparaciones entre grupos
 - Calcular dispersión por grupo con `dplyr::group_by()` + `summarise()`
+- Aplicar todo lo anterior sobre un dataset real descargado directamente de una URL en línea (Kaggle)
 :::
 
 ## 👨‍🏫 Presentación de Clase
@@ -172,6 +173,61 @@ Repita el `group_by()` + `summarise()` anterior, pero agrupando por `region` en 
 
 ---
 
+## 🌐 Aplicando esto a un dataset real: Titanic (Kaggle)
+
+Todo lo anterior lo hicimos sobre un dataset simulado. Ahora lo aplicamos a un dataset **real** — el clásico *Titanic* de Kaggle — sin necesidad de descargarlo a mano ni crear cuenta: muchos datasets populares de Kaggle tienen una copia pública en una URL estable, y `read.csv()` puede leer directamente desde esa URL, igual que hicimos con las APIs en la Semana 9.
+
+```r
+titanic <- read.csv(
+  "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv",
+  stringsAsFactors = FALSE
+)
+
+str(titanic)
+```
+
+::: {.highlight-box}
+`read.csv()` no distingue entre una ruta local y una URL — si el enlace apunta a un archivo `.csv` público, lo descarga y lo carga directo en memoria. Es la misma idea que `fromJSON("https://...")` en la Semana 9, aplicada a CSV.
+:::
+
+Analicemos la dispersión de `Fare` (tarifa pagada) según la clase del pasajero (`Pclass`: 1ª, 2ª o 3ª):
+
+```r
+# Dispersión general de Fare
+range(titanic$Fare)
+sd(titanic$Fare)
+(sd(titanic$Fare) / mean(titanic$Fare)) * 100    # CV
+
+# Boxplot comparativo por clase
+boxplot(Fare ~ Pclass, data = titanic,
+        col = c("#e8f4fd", "#fff9e6", "#ffe8e8"),
+        border = "#003366",
+        main = "Tarifa (Fare) por Clase — Titanic",
+        xlab = "Clase (Pclass)", ylab = "Fare ($)")
+
+# Dispersión por grupo con dplyr
+library(dplyr)
+titanic %>%
+  group_by(Pclass) %>%
+  summarise(n = n(),
+            media = round(mean(Fare), 2),
+            sd = round(sd(Fare), 2),
+            cv = round((sd(Fare) / mean(Fare)) * 100, 1)) %>%
+  arrange(desc(cv))
+```
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 6 (bonus — dataset real)**
+
+Sobre `titanic`:
+
+1. Repita el análisis anterior pero con la columna `Age` en vez de `Fare` (cuidado: `Age` tiene valores `NA` — use `na.rm = TRUE` en `mean()`/`sd()`, o filtre con `na.omit()` primero).
+2. Genere el boxplot de `Age ~ Pclass`. ¿Los pasajeros de 1ª clase eran, en promedio, mayores o menores que los de 3ª?
+3. Busque en Kaggle (o en la documentación del dataset) qué otra columna categórica podría usar para comparar dispersión de `Fare` además de `Pclass` (pista: `Embarked` o `Sex`), y repita el `group_by()` + `summarise()` con esa columna.
+:::
+
+---
+
 ## 🐍 Equivalentes en Python
 
 ```python
@@ -195,6 +251,18 @@ df.groupby('sector')['salario'].agg(['mean', 'std']) \
 # Boxplot comparativo
 df.boxplot(column='salario', by='sector')
 plt.title("Salario por Sector")
+plt.suptitle("")
+plt.show()
+
+# Mismo dataset real de Kaggle, leído directo desde la URL
+titanic = pd.read_csv("https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv")
+
+titanic.groupby('Pclass')['Fare'].agg(['mean', 'std']) \
+  .assign(cv=lambda d: (d['std'] / d['mean']) * 100) \
+  .sort_values('cv', ascending=False)
+
+titanic.boxplot(column='Fare', by='Pclass')
+plt.title("Tarifa (Fare) por Clase — Titanic")
 plt.suptitle("")
 plt.show()
 ```

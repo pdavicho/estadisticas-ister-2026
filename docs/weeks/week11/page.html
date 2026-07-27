@@ -552,6 +552,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#boxplot-visualizando-la-dispersión" id="toc-boxplot-visualizando-la-dispersión" class="nav-link" data-scroll-target="#boxplot-visualizando-la-dispersión">📦 <code>boxplot()</code> — visualizando la dispersión</a></li>
   <li><a href="#boxplot-comparativo-entre-grupos" id="toc-boxplot-comparativo-entre-grupos" class="nav-link" data-scroll-target="#boxplot-comparativo-entre-grupos">📦 Boxplot comparativo entre grupos</a></li>
   <li><a href="#dispersión-por-grupo-con-dplyr" id="toc-dispersión-por-grupo-con-dplyr" class="nav-link" data-scroll-target="#dispersión-por-grupo-con-dplyr">🔢 Dispersión por grupo con <code>dplyr</code></a></li>
+  <li><a href="#aplicando-esto-a-un-dataset-real-titanic-kaggle" id="toc-aplicando-esto-a-un-dataset-real-titanic-kaggle" class="nav-link" data-scroll-target="#aplicando-esto-a-un-dataset-real-titanic-kaggle">🌐 Aplicando esto a un dataset real: Titanic (Kaggle)</a></li>
   <li><a href="#equivalentes-en-python" id="toc-equivalentes-en-python" class="nav-link" data-scroll-target="#equivalentes-en-python">🐍 Equivalentes en Python</a></li>
   <li><a href="#resumen-de-funciones-semana-11" id="toc-resumen-de-funciones-semana-11" class="nav-link" data-scroll-target="#resumen-de-funciones-semana-11">📎 Resumen de Funciones — Semana 11</a></li>
   </ul>
@@ -595,6 +596,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Calcular e interpretar el coeficiente de variación (CV) para comparar variables de distinta escala o unidad</li>
 <li>Visualizar dispersión con <code>boxplot()</code>, incluyendo comparaciones entre grupos</li>
 <li>Calcular dispersión por grupo con <code>dplyr::group_by()</code> + <code>summarise()</code></li>
+<li>Aplicar todo lo anterior sobre un dataset real descargado directamente de una URL en línea (Kaggle)</li>
 </ul>
 </div>
 <section id="presentación-de-clase" class="level2">
@@ -711,30 +713,87 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <hr>
 </section>
+<section id="aplicando-esto-a-un-dataset-real-titanic-kaggle" class="level2">
+<h2 class="anchored" data-anchor-id="aplicando-esto-a-un-dataset-real-titanic-kaggle">🌐 Aplicando esto a un dataset real: Titanic (Kaggle)</h2>
+<p>Todo lo anterior lo hicimos sobre un dataset simulado. Ahora lo aplicamos a un dataset <strong>real</strong> — el clásico <em>Titanic</em> de Kaggle — sin necesidad de descargarlo a mano ni crear cuenta: muchos datasets populares de Kaggle tienen una copia pública en una URL estable, y <code>read.csv()</code> puede leer directamente desde esa URL, igual que hicimos con las APIs en la Semana 9.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>titanic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(titanic)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="highlight-box">
+<p><code>read.csv()</code> no distingue entre una ruta local y una URL — si el enlace apunta a un archivo <code>.csv</code> público, lo descarga y lo carga directo en memoria. Es la misma idea que <code>fromJSON("https://...")</code> en la Semana 9, aplicada a CSV.</p>
+</div>
+<p>Analicemos la dispersión de <code>Fare</code> (tarifa pagada) según la clase del pasajero (<code>Pclass</code>: 1ª, 2ª o 3ª):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión general de Fare</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(titanic<span class="sc">$</span>Fare)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(titanic<span class="sc">$</span>Fare)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>(<span class="fu">sd</span>(titanic<span class="sc">$</span>Fare) <span class="sc">/</span> <span class="fu">mean</span>(titanic<span class="sc">$</span>Fare)) <span class="sc">*</span> <span class="dv">100</span>    <span class="co"># CV</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot comparativo por clase</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(Fare <span class="sc">~</span> Pclass, <span class="at">data =</span> titanic,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#e8f4fd"</span>, <span class="st">"#fff9e6"</span>, <span class="st">"#ffe8e8"</span>),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"#003366"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Tarifa (Fare) por Clase — Titanic"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Clase (Pclass)"</span>, <span class="at">ylab =</span> <span class="st">"Fare ($)"</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión por grupo con dplyr</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>titanic <span class="sc">%&gt;%</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Pclass) <span class="sc">%&gt;%</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">media =</span> <span class="fu">round</span>(<span class="fu">mean</span>(Fare), <span class="dv">2</span>),</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">round</span>(<span class="fu">sd</span>(Fare), <span class="dv">2</span>),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">cv =</span> <span class="fu">round</span>((<span class="fu">sd</span>(Fare) <span class="sc">/</span> <span class="fu">mean</span>(Fare)) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cv))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="ejercicio-box">
+<p><strong>🧩 Ejercicio 6 (bonus — dataset real)</strong></p>
+<p>Sobre <code>titanic</code>:</p>
+<ol type="1">
+<li>Repita el análisis anterior pero con la columna <code>Age</code> en vez de <code>Fare</code> (cuidado: <code>Age</code> tiene valores <code>NA</code> — use <code>na.rm = TRUE</code> en <code>mean()</code>/<code>sd()</code>, o filtre con <code>na.omit()</code> primero).</li>
+<li>Genere el boxplot de <code>Age ~ Pclass</code>. ¿Los pasajeros de 1ª clase eran, en promedio, mayores o menores que los de 3ª?</li>
+<li>Busque en Kaggle (o en la documentación del dataset) qué otra columna categórica podría usar para comparar dispersión de <code>Fare</code> además de <code>Pclass</code> (pista: <code>Embarked</code> o <code>Sex</code>), y repita el <code>group_by()</code> + <code>summarise()</code> con esa columna.</li>
+</ol>
+</div>
+<hr>
+</section>
 <section id="equivalentes-en-python" class="level2">
 <h2 class="anchored" data-anchor-id="equivalentes-en-python">🐍 Equivalentes en Python</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"datos_salarios_ecuador_app2.csv"</span>).dropna()</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># range, var, sd (ddof=1 = muestral, igual que R)</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>rango <span class="op">=</span> df[<span class="st">'salario'</span>].<span class="bu">max</span>() <span class="op">-</span> df[<span class="st">'salario'</span>].<span class="bu">min</span>()</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>varianza <span class="op">=</span> df[<span class="st">'salario'</span>].var(ddof<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>desviacion <span class="op">=</span> df[<span class="st">'salario'</span>].std(ddof<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> (desviacion <span class="op">/</span> df[<span class="st">'salario'</span>].mean()) <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión por grupo</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'sector'</span>)[<span class="st">'salario'</span>].agg([<span class="st">'mean'</span>, <span class="st">'std'</span>]) <span class="op">\</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  .assign(cv<span class="op">=</span><span class="kw">lambda</span> d: (d[<span class="st">'std'</span>] <span class="op">/</span> d[<span class="st">'mean'</span>]) <span class="op">*</span> <span class="dv">100</span>) <span class="op">\</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  .sort_values(<span class="st">'cv'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot comparativo</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>df.boxplot(column<span class="op">=</span><span class="st">'salario'</span>, by<span class="op">=</span><span class="st">'sector'</span>)</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Salario por Sector"</span>)</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">""</span>)</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"datos_salarios_ecuador_app2.csv"</span>).dropna()</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># range, var, sd (ddof=1 = muestral, igual que R)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>rango <span class="op">=</span> df[<span class="st">'salario'</span>].<span class="bu">max</span>() <span class="op">-</span> df[<span class="st">'salario'</span>].<span class="bu">min</span>()</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>varianza <span class="op">=</span> df[<span class="st">'salario'</span>].var(ddof<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>desviacion <span class="op">=</span> df[<span class="st">'salario'</span>].std(ddof<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> (desviacion <span class="op">/</span> df[<span class="st">'salario'</span>].mean()) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión por grupo</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'sector'</span>)[<span class="st">'salario'</span>].agg([<span class="st">'mean'</span>, <span class="st">'std'</span>]) <span class="op">\</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  .assign(cv<span class="op">=</span><span class="kw">lambda</span> d: (d[<span class="st">'std'</span>] <span class="op">/</span> d[<span class="st">'mean'</span>]) <span class="op">*</span> <span class="dv">100</span>) <span class="op">\</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  .sort_values(<span class="st">'cv'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot comparativo</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>df.boxplot(column<span class="op">=</span><span class="st">'salario'</span>, by<span class="op">=</span><span class="st">'sector'</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Salario por Sector"</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">""</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Mismo dataset real de Kaggle, leído directo desde la URL</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>titanic <span class="op">=</span> pd.read_csv(<span class="st">"https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>titanic.groupby(<span class="st">'Pclass'</span>)[<span class="st">'Fare'</span>].agg([<span class="st">'mean'</span>, <span class="st">'std'</span>]) <span class="op">\</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  .assign(cv<span class="op">=</span><span class="kw">lambda</span> d: (d[<span class="st">'std'</span>] <span class="op">/</span> d[<span class="st">'mean'</span>]) <span class="op">*</span> <span class="dv">100</span>) <span class="op">\</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  .sort_values(<span class="st">'cv'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>titanic.boxplot(column<span class="op">=</span><span class="st">'Fare'</span>, by<span class="op">=</span><span class="st">'Pclass'</span>)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Tarifa (Fare) por Clase — Titanic"</span>)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">""</span>)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="highlight-box">
 <p><code>pandas</code>/<code>numpy</code> también usan <code>ddof=1</code> (muestral) por defecto en <code>.std()</code>, igual que R — a diferencia de <code>numpy.std()</code> “a secas”, que por defecto usa <code>ddof=0</code> (poblacional). Otra fuente común de confusión entre paquetes.</p>
 </div>
@@ -1270,229 +1329,297 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Semana 11 — Estadística con R (Dispersión)"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "var(), sd(), range(), coeficiente de variación y boxplots"</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Ing. David Minango PhD"</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>En la Semana 3 calculamos varianza, desviación estándar y coeficiente de variación **a mano**, sobre datos agrupados en tablas de frecuencia. Ahora que en R tenemos datos reales listos para trabajar (Semanas 7-9), retomamos esas mismas medidas usando las funciones nativas de R sobre datos **sin agrupar** — y las llevamos un paso más allá: comparando la dispersión entre grupos con <span class="in">`dplyr`</span> y <span class="in">`boxplot()`</span>.</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>::: {.objetivos-box}</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>**Objetivos:**</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Calcular dispersión con las funciones nativas de R: <span class="in">`range()`</span>, <span class="in">`var()`</span>, <span class="in">`sd()`</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Entender la diferencia entre la desviación estándar **muestral** (R, denominador n-1) y la **poblacional** (Semana 3, denominador n)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Calcular e interpretar el coeficiente de variación (CV) para comparar variables de distinta escala o unidad</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Visualizar dispersión con <span class="in">`boxplot()`</span>, incluyendo comparaciones entre grupos</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Calcular dispersión por grupo con <span class="in">`dplyr::group_by()`</span> + <span class="in">`summarise()`</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## 👨‍🏫 Presentación de Clase</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"slides-container"</span><span class="dt">&gt;</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> src</span><span class="op">=</span><span class="st">"slides.html"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"width:100%; height:600px; border:none; border-radius:8px;"</span><span class="dt">&gt;&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔁 Repaso: Semana 3</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Semana 3 — fórmula poblacional sobre datos AGRUPADOS (tabla de frecuencias)</span></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>varianza <span class="ot">&lt;-</span> <span class="fu">sum</span>(fi <span class="sc">*</span> (mi <span class="sc">-</span> media)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> n        <span class="co"># denominador: n</span></span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>desv_std <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(varianza)</span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>cv       <span class="ot">&lt;-</span> (desv_std <span class="sc">/</span> media) <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>Hoy trabajamos sobre el **vector de datos crudo** (sin agrupar), con las funciones que R ya trae incorporadas.</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📏 Lo más fácil: `range()`</span></span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"datos_salarios_ecuador_app2.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(datos)</span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(datos<span class="sc">$</span>salario)                    <span class="co"># c(mínimo, máximo)</span></span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span>(<span class="fu">range</span>(datos<span class="sc">$</span>salario))               <span class="co"># el rango como un solo número</span></span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="in">`range()`</span> no dice nada sobre la forma de la distribución — solo los dos extremos. Es la medida de dispersión más simple y también la más sensible a valores atípicos.</span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 1**</span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>Calcule el rango de la columna <span class="in">`edad`</span> y de la columna <span class="in">`anios_exp`</span>. ¿Cuál de las dos variables tiene un rango más amplio?</span>
-<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📐 `var()` y `sd()`</span></span>
-<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>varianza <span class="ot">&lt;-</span> <span class="fu">var</span>(datos<span class="sc">$</span>salario)</span>
-<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>desviacion <span class="ot">&lt;-</span> <span class="fu">sd</span>(datos<span class="sc">$</span>salario)</span>
-<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>varianza</span>
-<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>desviacion</span>
-<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
-<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>**Atención — muestral vs. poblacional:** `var()` y `sd()` en R dividen entre **n − 1** (varianza/desviación **muestral**), mientras que en la Semana 3 dividimos entre **n** (fórmula **poblacional**, la que se enseña para datos agrupados). Con muestras grandes la diferencia es mínima, pero **no son la misma fórmula** — si compara un cálculo manual con el de R, esta es la razón más común del desfase.</span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Para replicar la fórmula poblacional de la Semana 3 sobre un vector:</span></span>
-<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(datos<span class="sc">$</span>salario)</span>
-<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(datos<span class="sc">$</span>salario) <span class="sc">*</span> <span class="fu">sqrt</span>((n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> n)</span>
-<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
-<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 2**</span>
-<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>Calcule <span class="in">`var()`</span> y <span class="in">`sd()`</span> de <span class="in">`anios_exp`</span>. Verifique con <span class="in">`sqrt(var(...))`</span> que efectivamente equivale a <span class="in">`sd(...)`</span>.</span>
-<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📊 Coeficiente de Variación (CV)</span></span>
-<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a><span class="in">`sd()`</span> sola no permite comparar variables en **distinta escala o unidad** (ej. salario en dólares vs. edad en años) — para eso normalizamos con el CV:</span>
-<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>cv_salario <span class="ot">&lt;-</span> (<span class="fu">sd</span>(datos<span class="sc">$</span>salario) <span class="sc">/</span> <span class="fu">mean</span>(datos<span class="sc">$</span>salario)) <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>cv_edad    <span class="ot">&lt;-</span> (<span class="fu">sd</span>(datos<span class="sc">$</span>edad)    <span class="sc">/</span> <span class="fu">mean</span>(datos<span class="sc">$</span>edad))    <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"CV salario: %.1f%%</span><span class="sc">\n</span><span class="st">"</span>, cv_salario))</span>
-<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"CV edad:    %.1f%%</span><span class="sc">\n</span><span class="st">"</span>, cv_edad))</span>
-<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
-<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>El CV es un porcentaje: cuanto **más alto**, más dispersos (relativamente) están los datos respecto a su propia media. Por eso sirve para comparar salario (dólares) contra edad (años) — algo que <span class="in">`sd()`</span> sola no permite, porque están en unidades distintas.</span>
-<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
-<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 3**</span>
-<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a>Calcule el CV de <span class="in">`salario`</span> y de <span class="in">`anios_exp`</span>. ¿Cuál de las dos variables es relativamente más dispersa según el CV, aunque sus <span class="in">`sd()`</span> no sean directamente comparables?</span>
-<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📦 `boxplot()` — visualizando la dispersión</span></span>
-<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(datos<span class="sc">$</span>salario,</span>
-<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"#e8f4fd"</span>, <span class="at">border =</span> <span class="st">"#003366"</span>,</span>
-<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Distribución del Salario"</span>,</span>
-<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Salario ($)"</span>)</span>
-<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a>Un boxplot resume de un vistazo lo que <span class="in">`range()`</span>, cuartiles y outliers muestran por separado: la caja son Q1-Q3 (el 50% central de los datos), la línea es la mediana, los bigotes llegan hasta 1.5×IQR, y los puntos sueltos son valores atípicos.</span>
-<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-121"><a href="#cb10-121" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-122"><a href="#cb10-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-123"><a href="#cb10-123" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📦 Boxplot comparativo entre grupos</span></span>
-<span id="cb10-124"><a href="#cb10-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a>Lo más complejo del día: comparar la dispersión de <span class="in">`salario`</span> **entre categorías** con la interfaz de fórmula (<span class="in">`variable ~ grupo`</span>):</span>
-<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(salario <span class="sc">~</span> sector, <span class="at">data =</span> datos,</span>
-<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#e8f4fd"</span>, <span class="st">"#fff9e6"</span>, <span class="st">"#ffe8e8"</span>),</span>
-<span id="cb10-130"><a href="#cb10-130" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"#003366"</span>,</span>
-<span id="cb10-131"><a href="#cb10-131" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Salario por Sector"</span>,</span>
-<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Sector"</span>, <span class="at">ylab =</span> <span class="st">"Salario ($)"</span>)</span>
-<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-135"><a href="#cb10-135" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
-<span id="cb10-136"><a href="#cb10-136" aria-hidden="true" tabindex="-1"></a>Comparar boxplots lado a lado responde preguntas que un solo número no puede: ¿qué sector tiene salarios más dispersos (caja y bigotes más anchos)? ¿cuál tiene más outliers? ¿cuál tiene la mediana más alta, aunque no sea el de mayor dispersión?</span>
-<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
-<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 4**</span>
-<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a>Genere un boxplot comparativo de <span class="in">`salario ~ region`</span>. ¿Qué región muestra mayor dispersión visualmente? ¿Coincide con la región de mayor CV (Ejercicio 5)?</span>
-<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-145"><a href="#cb10-145" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-146"><a href="#cb10-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔢 Dispersión por grupo con `dplyr`</span></span>
-<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a>El equivalente numérico del boxplot comparativo: calcular varias medidas de dispersión **por grupo** a la vez.</span>
-<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
-<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sector) <span class="sc">%&gt;%</span></span>
-<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a>            <span class="at">media =</span> <span class="fu">round</span>(<span class="fu">mean</span>(salario), <span class="dv">2</span>),</span>
-<span id="cb10-158"><a href="#cb10-158" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">round</span>(<span class="fu">sd</span>(salario), <span class="dv">2</span>),</span>
-<span id="cb10-159"><a href="#cb10-159" aria-hidden="true" tabindex="-1"></a>            <span class="at">cv =</span> <span class="fu">round</span>((<span class="fu">sd</span>(salario) <span class="sc">/</span> <span class="fu">mean</span>(salario)) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb10-160"><a href="#cb10-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cv))</span>
-<span id="cb10-161"><a href="#cb10-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
-<span id="cb10-164"><a href="#cb10-164" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 5 (mini-taller final)**</span>
-<span id="cb10-165"><a href="#cb10-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-166"><a href="#cb10-166" aria-hidden="true" tabindex="-1"></a>Repita el <span class="in">`group_by()`</span> + <span class="in">`summarise()`</span> anterior, pero agrupando por <span class="in">`region`</span> en vez de <span class="in">`sector`</span>. Con el resultado:</span>
-<span id="cb10-167"><a href="#cb10-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-168"><a href="#cb10-168" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>¿Qué región tiene el CV más alto (mayor dispersión relativa de salario)?</span>
-<span id="cb10-169"><a href="#cb10-169" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>¿Esa misma región es la de mayor <span class="in">`sd()`</span> en términos absolutos? ¿Por qué podría no serlo?</span>
-<span id="cb10-170"><a href="#cb10-170" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Genere el boxplot <span class="in">`salario ~ region`</span> y confirme visualmente su respuesta al punto 1.</span>
-<span id="cb10-171"><a href="#cb10-171" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-172"><a href="#cb10-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-173"><a href="#cb10-173" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-174"><a href="#cb10-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-175"><a href="#cb10-175" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🐍 Equivalentes en Python</span></span>
-<span id="cb10-176"><a href="#cb10-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-177"><a href="#cb10-177" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb10-178"><a href="#cb10-178" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb10-179"><a href="#cb10-179" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb10-180"><a href="#cb10-180" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb10-181"><a href="#cb10-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-182"><a href="#cb10-182" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"datos_salarios_ecuador_app2.csv"</span>).dropna()</span>
-<span id="cb10-183"><a href="#cb10-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-184"><a href="#cb10-184" aria-hidden="true" tabindex="-1"></a><span class="co"># range, var, sd (ddof=1 = muestral, igual que R)</span></span>
-<span id="cb10-185"><a href="#cb10-185" aria-hidden="true" tabindex="-1"></a>rango <span class="op">=</span> df[<span class="st">'salario'</span>].<span class="bu">max</span>() <span class="op">-</span> df[<span class="st">'salario'</span>].<span class="bu">min</span>()</span>
-<span id="cb10-186"><a href="#cb10-186" aria-hidden="true" tabindex="-1"></a>varianza <span class="op">=</span> df[<span class="st">'salario'</span>].var(ddof<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb10-187"><a href="#cb10-187" aria-hidden="true" tabindex="-1"></a>desviacion <span class="op">=</span> df[<span class="st">'salario'</span>].std(ddof<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb10-188"><a href="#cb10-188" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> (desviacion <span class="op">/</span> df[<span class="st">'salario'</span>].mean()) <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb10-189"><a href="#cb10-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-190"><a href="#cb10-190" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión por grupo</span></span>
-<span id="cb10-191"><a href="#cb10-191" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'sector'</span>)[<span class="st">'salario'</span>].agg([<span class="st">'mean'</span>, <span class="st">'std'</span>]) <span class="op">\</span></span>
-<span id="cb10-192"><a href="#cb10-192" aria-hidden="true" tabindex="-1"></a>  .assign(cv<span class="op">=</span><span class="kw">lambda</span> d: (d[<span class="st">'std'</span>] <span class="op">/</span> d[<span class="st">'mean'</span>]) <span class="op">*</span> <span class="dv">100</span>) <span class="op">\</span></span>
-<span id="cb10-193"><a href="#cb10-193" aria-hidden="true" tabindex="-1"></a>  .sort_values(<span class="st">'cv'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb10-194"><a href="#cb10-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-195"><a href="#cb10-195" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot comparativo</span></span>
-<span id="cb10-196"><a href="#cb10-196" aria-hidden="true" tabindex="-1"></a>df.boxplot(column<span class="op">=</span><span class="st">'salario'</span>, by<span class="op">=</span><span class="st">'sector'</span>)</span>
-<span id="cb10-197"><a href="#cb10-197" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Salario por Sector"</span>)</span>
-<span id="cb10-198"><a href="#cb10-198" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">""</span>)</span>
-<span id="cb10-199"><a href="#cb10-199" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb10-200"><a href="#cb10-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb10-201"><a href="#cb10-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-202"><a href="#cb10-202" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
-<span id="cb10-203"><a href="#cb10-203" aria-hidden="true" tabindex="-1"></a><span class="in">`pandas`</span>/<span class="in">`numpy`</span> también usan <span class="in">`ddof=1`</span> (muestral) por defecto en <span class="in">`.std()`</span>, igual que R — a diferencia de <span class="in">`numpy.std()`</span> "a secas", que por defecto usa <span class="in">`ddof=0`</span> (poblacional). Otra fuente común de confusión entre paquetes.</span>
-<span id="cb10-204"><a href="#cb10-204" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb10-205"><a href="#cb10-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-206"><a href="#cb10-206" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-207"><a href="#cb10-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-208"><a href="#cb10-208" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📎 Resumen de Funciones — Semana 11</span></span>
-<span id="cb10-209"><a href="#cb10-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-210"><a href="#cb10-210" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Función <span class="pp">|</span> Qué hace <span class="pp">|</span> Nivel <span class="pp">|</span></span>
-<span id="cb10-211"><a href="#cb10-211" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
-<span id="cb10-212"><a href="#cb10-212" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`range()`</span> <span class="pp">|</span> Mínimo y máximo <span class="pp">|</span> Fácil <span class="pp">|</span></span>
-<span id="cb10-213"><a href="#cb10-213" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`diff(range(x))`</span> <span class="pp">|</span> Rango como un solo número <span class="pp">|</span> Fácil <span class="pp">|</span></span>
-<span id="cb10-214"><a href="#cb10-214" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`var()`</span> <span class="pp">|</span> Varianza muestral (n-1) <span class="pp">|</span> Intermedio <span class="pp">|</span></span>
-<span id="cb10-215"><a href="#cb10-215" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`sd()`</span> <span class="pp">|</span> Desviación estándar muestral (n-1) <span class="pp">|</span> Intermedio <span class="pp">|</span></span>
-<span id="cb10-216"><a href="#cb10-216" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`(sd(x)/mean(x))*100`</span> <span class="pp">|</span> Coeficiente de variación <span class="pp">|</span> Intermedio <span class="pp">|</span></span>
-<span id="cb10-217"><a href="#cb10-217" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`boxplot(x)`</span> <span class="pp">|</span> Visualiza dispersión de una variable <span class="pp">|</span> Avanzado <span class="pp">|</span></span>
-<span id="cb10-218"><a href="#cb10-218" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`boxplot(y ~ grupo, data=...)`</span> <span class="pp">|</span> Compara dispersión entre grupos <span class="pp">|</span> Avanzado <span class="pp">|</span></span>
-<span id="cb10-219"><a href="#cb10-219" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`group_by() + summarise()`</span> <span class="pp">|</span> Dispersión numérica por grupo <span class="pp">|</span> Avanzado <span class="pp">|</span></span>
-<span id="cb10-220"><a href="#cb10-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-221"><a href="#cb10-221" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb10-222"><a href="#cb10-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-223"><a href="#cb10-223" aria-hidden="true" tabindex="-1"></a>*Semana 11 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Semana 11 — Estadística con R (Dispersión)"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "var(), sd(), range(), coeficiente de variación y boxplots"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Ing. David Minango PhD"</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>En la Semana 3 calculamos varianza, desviación estándar y coeficiente de variación **a mano**, sobre datos agrupados en tablas de frecuencia. Ahora que en R tenemos datos reales listos para trabajar (Semanas 7-9), retomamos esas mismas medidas usando las funciones nativas de R sobre datos **sin agrupar** — y las llevamos un paso más allá: comparando la dispersión entre grupos con <span class="in">`dplyr`</span> y <span class="in">`boxplot()`</span>.</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>::: {.objetivos-box}</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>**Objetivos:**</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Calcular dispersión con las funciones nativas de R: <span class="in">`range()`</span>, <span class="in">`var()`</span>, <span class="in">`sd()`</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Entender la diferencia entre la desviación estándar **muestral** (R, denominador n-1) y la **poblacional** (Semana 3, denominador n)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Calcular e interpretar el coeficiente de variación (CV) para comparar variables de distinta escala o unidad</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Visualizar dispersión con <span class="in">`boxplot()`</span>, incluyendo comparaciones entre grupos</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Calcular dispersión por grupo con <span class="in">`dplyr::group_by()`</span> + <span class="in">`summarise()`</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Aplicar todo lo anterior sobre un dataset real descargado directamente de una URL en línea (Kaggle)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## 👨‍🏫 Presentación de Clase</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"slides-container"</span><span class="dt">&gt;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> src</span><span class="op">=</span><span class="st">"slides.html"</span><span class="ot"> style</span><span class="op">=</span><span class="st">"width:100%; height:600px; border:none; border-radius:8px;"</span><span class="dt">&gt;&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔁 Repaso: Semana 3</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Semana 3 — fórmula poblacional sobre datos AGRUPADOS (tabla de frecuencias)</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>varianza <span class="ot">&lt;-</span> <span class="fu">sum</span>(fi <span class="sc">*</span> (mi <span class="sc">-</span> media)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> n        <span class="co"># denominador: n</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>desv_std <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(varianza)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>cv       <span class="ot">&lt;-</span> (desv_std <span class="sc">/</span> media) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>Hoy trabajamos sobre el **vector de datos crudo** (sin agrupar), con las funciones que R ya trae incorporadas.</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📏 Lo más fácil: `range()`</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"datos_salarios_ecuador_app2.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(datos)</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(datos<span class="sc">$</span>salario)                    <span class="co"># c(mínimo, máximo)</span></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span>(<span class="fu">range</span>(datos<span class="sc">$</span>salario))               <span class="co"># el rango como un solo número</span></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="in">`range()`</span> no dice nada sobre la forma de la distribución — solo los dos extremos. Es la medida de dispersión más simple y también la más sensible a valores atípicos.</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 1**</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>Calcule el rango de la columna <span class="in">`edad`</span> y de la columna <span class="in">`anios_exp`</span>. ¿Cuál de las dos variables tiene un rango más amplio?</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📐 `var()` y `sd()`</span></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>varianza <span class="ot">&lt;-</span> <span class="fu">var</span>(datos<span class="sc">$</span>salario)</span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>desviacion <span class="ot">&lt;-</span> <span class="fu">sd</span>(datos<span class="sc">$</span>salario)</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>varianza</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>desviacion</span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a>**Atención — muestral vs. poblacional:** `var()` y `sd()` en R dividen entre **n − 1** (varianza/desviación **muestral**), mientras que en la Semana 3 dividimos entre **n** (fórmula **poblacional**, la que se enseña para datos agrupados). Con muestras grandes la diferencia es mínima, pero **no son la misma fórmula** — si compara un cálculo manual con el de R, esta es la razón más común del desfase.</span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Para replicar la fórmula poblacional de la Semana 3 sobre un vector:</span></span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(datos<span class="sc">$</span>salario)</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(datos<span class="sc">$</span>salario) <span class="sc">*</span> <span class="fu">sqrt</span>((n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> n)</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 2**</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>Calcule <span class="in">`var()`</span> y <span class="in">`sd()`</span> de <span class="in">`anios_exp`</span>. Verifique con <span class="in">`sqrt(var(...))`</span> que efectivamente equivale a <span class="in">`sd(...)`</span>.</span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📊 Coeficiente de Variación (CV)</span></span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a><span class="in">`sd()`</span> sola no permite comparar variables en **distinta escala o unidad** (ej. salario en dólares vs. edad en años) — para eso normalizamos con el CV:</span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>cv_salario <span class="ot">&lt;-</span> (<span class="fu">sd</span>(datos<span class="sc">$</span>salario) <span class="sc">/</span> <span class="fu">mean</span>(datos<span class="sc">$</span>salario)) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>cv_edad    <span class="ot">&lt;-</span> (<span class="fu">sd</span>(datos<span class="sc">$</span>edad)    <span class="sc">/</span> <span class="fu">mean</span>(datos<span class="sc">$</span>edad))    <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"CV salario: %.1f%%</span><span class="sc">\n</span><span class="st">"</span>, cv_salario))</span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"CV edad:    %.1f%%</span><span class="sc">\n</span><span class="st">"</span>, cv_edad))</span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>El CV es un porcentaje: cuanto **más alto**, más dispersos (relativamente) están los datos respecto a su propia media. Por eso sirve para comparar salario (dólares) contra edad (años) — algo que <span class="in">`sd()`</span> sola no permite, porque están en unidades distintas.</span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 3**</span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a>Calcule el CV de <span class="in">`salario`</span> y de <span class="in">`anios_exp`</span>. ¿Cuál de las dos variables es relativamente más dispersa según el CV, aunque sus <span class="in">`sd()`</span> no sean directamente comparables?</span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📦 `boxplot()` — visualizando la dispersión</span></span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(datos<span class="sc">$</span>salario,</span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"#e8f4fd"</span>, <span class="at">border =</span> <span class="st">"#003366"</span>,</span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Distribución del Salario"</span>,</span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Salario ($)"</span>)</span>
+<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>Un boxplot resume de un vistazo lo que <span class="in">`range()`</span>, cuartiles y outliers muestran por separado: la caja son Q1-Q3 (el 50% central de los datos), la línea es la mediana, los bigotes llegan hasta 1.5×IQR, y los puntos sueltos son valores atípicos.</span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📦 Boxplot comparativo entre grupos</span></span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a>Lo más complejo del día: comparar la dispersión de <span class="in">`salario`</span> **entre categorías** con la interfaz de fórmula (<span class="in">`variable ~ grupo`</span>):</span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(salario <span class="sc">~</span> sector, <span class="at">data =</span> datos,</span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#e8f4fd"</span>, <span class="st">"#fff9e6"</span>, <span class="st">"#ffe8e8"</span>),</span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"#003366"</span>,</span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Salario por Sector"</span>,</span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Sector"</span>, <span class="at">ylab =</span> <span class="st">"Salario ($)"</span>)</span>
+<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-136"><a href="#cb12-136" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
+<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a>Comparar boxplots lado a lado responde preguntas que un solo número no puede: ¿qué sector tiene salarios más dispersos (caja y bigotes más anchos)? ¿cuál tiene más outliers? ¿cuál tiene la mediana más alta, aunque no sea el de mayor dispersión?</span>
+<span id="cb12-138"><a href="#cb12-138" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-140"><a href="#cb12-140" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
+<span id="cb12-141"><a href="#cb12-141" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 4**</span>
+<span id="cb12-142"><a href="#cb12-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a>Genere un boxplot comparativo de <span class="in">`salario ~ region`</span>. ¿Qué región muestra mayor dispersión visualmente? ¿Coincide con la región de mayor CV (Ejercicio 5)?</span>
+<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-145"><a href="#cb12-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-146"><a href="#cb12-146" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-147"><a href="#cb12-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-148"><a href="#cb12-148" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔢 Dispersión por grupo con `dplyr`</span></span>
+<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a>El equivalente numérico del boxplot comparativo: calcular varias medidas de dispersión **por grupo** a la vez.</span>
+<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-155"><a href="#cb12-155" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span></span>
+<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sector) <span class="sc">%&gt;%</span></span>
+<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a>            <span class="at">media =</span> <span class="fu">round</span>(<span class="fu">mean</span>(salario), <span class="dv">2</span>),</span>
+<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">round</span>(<span class="fu">sd</span>(salario), <span class="dv">2</span>),</span>
+<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a>            <span class="at">cv =</span> <span class="fu">round</span>((<span class="fu">sd</span>(salario) <span class="sc">/</span> <span class="fu">mean</span>(salario)) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cv))</span>
+<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
+<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 5 (mini-taller final)**</span>
+<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a>Repita el <span class="in">`group_by()`</span> + <span class="in">`summarise()`</span> anterior, pero agrupando por <span class="in">`region`</span> en vez de <span class="in">`sector`</span>. Con el resultado:</span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>¿Qué región tiene el CV más alto (mayor dispersión relativa de salario)?</span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>¿Esa misma región es la de mayor <span class="in">`sd()`</span> en términos absolutos? ¿Por qué podría no serlo?</span>
+<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Genere el boxplot <span class="in">`salario ~ region`</span> y confirme visualmente su respuesta al punto 1.</span>
+<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-174"><a href="#cb12-174" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-175"><a href="#cb12-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🌐 Aplicando esto a un dataset real: Titanic (Kaggle)</span></span>
+<span id="cb12-177"><a href="#cb12-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a>Todo lo anterior lo hicimos sobre un dataset simulado. Ahora lo aplicamos a un dataset **real** — el clásico *Titanic* de Kaggle — sin necesidad de descargarlo a mano ni crear cuenta: muchos datasets populares de Kaggle tienen una copia pública en una URL estable, y <span class="in">`read.csv()`</span> puede leer directamente desde esa URL, igual que hicimos con las APIs en la Semana 9.</span>
+<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>titanic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"</span>,</span>
+<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(titanic)</span>
+<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
+<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a><span class="in">`read.csv()`</span> no distingue entre una ruta local y una URL — si el enlace apunta a un archivo <span class="in">`.csv`</span> público, lo descarga y lo carga directo en memoria. Es la misma idea que <span class="in">`fromJSON("https://...")`</span> en la Semana 9, aplicada a CSV.</span>
+<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a>Analicemos la dispersión de <span class="in">`Fare`</span> (tarifa pagada) según la clase del pasajero (<span class="in">`Pclass`</span>: 1ª, 2ª o 3ª):</span>
+<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión general de Fare</span></span>
+<span id="cb12-197"><a href="#cb12-197" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(titanic<span class="sc">$</span>Fare)</span>
+<span id="cb12-198"><a href="#cb12-198" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(titanic<span class="sc">$</span>Fare)</span>
+<span id="cb12-199"><a href="#cb12-199" aria-hidden="true" tabindex="-1"></a>(<span class="fu">sd</span>(titanic<span class="sc">$</span>Fare) <span class="sc">/</span> <span class="fu">mean</span>(titanic<span class="sc">$</span>Fare)) <span class="sc">*</span> <span class="dv">100</span>    <span class="co"># CV</span></span>
+<span id="cb12-200"><a href="#cb12-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-201"><a href="#cb12-201" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot comparativo por clase</span></span>
+<span id="cb12-202"><a href="#cb12-202" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(Fare <span class="sc">~</span> Pclass, <span class="at">data =</span> titanic,</span>
+<span id="cb12-203"><a href="#cb12-203" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#e8f4fd"</span>, <span class="st">"#fff9e6"</span>, <span class="st">"#ffe8e8"</span>),</span>
+<span id="cb12-204"><a href="#cb12-204" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="st">"#003366"</span>,</span>
+<span id="cb12-205"><a href="#cb12-205" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Tarifa (Fare) por Clase — Titanic"</span>,</span>
+<span id="cb12-206"><a href="#cb12-206" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Clase (Pclass)"</span>, <span class="at">ylab =</span> <span class="st">"Fare ($)"</span>)</span>
+<span id="cb12-207"><a href="#cb12-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-208"><a href="#cb12-208" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión por grupo con dplyr</span></span>
+<span id="cb12-209"><a href="#cb12-209" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb12-210"><a href="#cb12-210" aria-hidden="true" tabindex="-1"></a>titanic <span class="sc">%&gt;%</span></span>
+<span id="cb12-211"><a href="#cb12-211" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Pclass) <span class="sc">%&gt;%</span></span>
+<span id="cb12-212"><a href="#cb12-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb12-213"><a href="#cb12-213" aria-hidden="true" tabindex="-1"></a>            <span class="at">media =</span> <span class="fu">round</span>(<span class="fu">mean</span>(Fare), <span class="dv">2</span>),</span>
+<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">round</span>(<span class="fu">sd</span>(Fare), <span class="dv">2</span>),</span>
+<span id="cb12-215"><a href="#cb12-215" aria-hidden="true" tabindex="-1"></a>            <span class="at">cv =</span> <span class="fu">round</span>((<span class="fu">sd</span>(Fare) <span class="sc">/</span> <span class="fu">mean</span>(Fare)) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-216"><a href="#cb12-216" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cv))</span>
+<span id="cb12-217"><a href="#cb12-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-218"><a href="#cb12-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-219"><a href="#cb12-219" aria-hidden="true" tabindex="-1"></a>::: {.ejercicio-box}</span>
+<span id="cb12-220"><a href="#cb12-220" aria-hidden="true" tabindex="-1"></a>**🧩 Ejercicio 6 (bonus — dataset real)**</span>
+<span id="cb12-221"><a href="#cb12-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-222"><a href="#cb12-222" aria-hidden="true" tabindex="-1"></a>Sobre <span class="in">`titanic`</span>:</span>
+<span id="cb12-223"><a href="#cb12-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-224"><a href="#cb12-224" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Repita el análisis anterior pero con la columna <span class="in">`Age`</span> en vez de <span class="in">`Fare`</span> (cuidado: <span class="in">`Age`</span> tiene valores <span class="in">`NA`</span> — use <span class="in">`na.rm = TRUE`</span> en <span class="in">`mean()`</span>/<span class="in">`sd()`</span>, o filtre con <span class="in">`na.omit()`</span> primero).</span>
+<span id="cb12-225"><a href="#cb12-225" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Genere el boxplot de <span class="in">`Age ~ Pclass`</span>. ¿Los pasajeros de 1ª clase eran, en promedio, mayores o menores que los de 3ª?</span>
+<span id="cb12-226"><a href="#cb12-226" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Busque en Kaggle (o en la documentación del dataset) qué otra columna categórica podría usar para comparar dispersión de <span class="in">`Fare`</span> además de <span class="in">`Pclass`</span> (pista: <span class="in">`Embarked`</span> o <span class="in">`Sex`</span>), y repita el <span class="in">`group_by()`</span> + <span class="in">`summarise()`</span> con esa columna.</span>
+<span id="cb12-227"><a href="#cb12-227" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-228"><a href="#cb12-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-229"><a href="#cb12-229" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-230"><a href="#cb12-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🐍 Equivalentes en Python</span></span>
+<span id="cb12-232"><a href="#cb12-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb12-234"><a href="#cb12-234" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-235"><a href="#cb12-235" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb12-236"><a href="#cb12-236" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb12-237"><a href="#cb12-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-238"><a href="#cb12-238" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"datos_salarios_ecuador_app2.csv"</span>).dropna()</span>
+<span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-240"><a href="#cb12-240" aria-hidden="true" tabindex="-1"></a><span class="co"># range, var, sd (ddof=1 = muestral, igual que R)</span></span>
+<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a>rango <span class="op">=</span> df[<span class="st">'salario'</span>].<span class="bu">max</span>() <span class="op">-</span> df[<span class="st">'salario'</span>].<span class="bu">min</span>()</span>
+<span id="cb12-242"><a href="#cb12-242" aria-hidden="true" tabindex="-1"></a>varianza <span class="op">=</span> df[<span class="st">'salario'</span>].var(ddof<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a>desviacion <span class="op">=</span> df[<span class="st">'salario'</span>].std(ddof<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> (desviacion <span class="op">/</span> df[<span class="st">'salario'</span>].mean()) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión por grupo</span></span>
+<span id="cb12-247"><a href="#cb12-247" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'sector'</span>)[<span class="st">'salario'</span>].agg([<span class="st">'mean'</span>, <span class="st">'std'</span>]) <span class="op">\</span></span>
+<span id="cb12-248"><a href="#cb12-248" aria-hidden="true" tabindex="-1"></a>  .assign(cv<span class="op">=</span><span class="kw">lambda</span> d: (d[<span class="st">'std'</span>] <span class="op">/</span> d[<span class="st">'mean'</span>]) <span class="op">*</span> <span class="dv">100</span>) <span class="op">\</span></span>
+<span id="cb12-249"><a href="#cb12-249" aria-hidden="true" tabindex="-1"></a>  .sort_values(<span class="st">'cv'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-251"><a href="#cb12-251" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot comparativo</span></span>
+<span id="cb12-252"><a href="#cb12-252" aria-hidden="true" tabindex="-1"></a>df.boxplot(column<span class="op">=</span><span class="st">'salario'</span>, by<span class="op">=</span><span class="st">'sector'</span>)</span>
+<span id="cb12-253"><a href="#cb12-253" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Salario por Sector"</span>)</span>
+<span id="cb12-254"><a href="#cb12-254" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">""</span>)</span>
+<span id="cb12-255"><a href="#cb12-255" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-256"><a href="#cb12-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-257"><a href="#cb12-257" aria-hidden="true" tabindex="-1"></a><span class="co"># Mismo dataset real de Kaggle, leído directo desde la URL</span></span>
+<span id="cb12-258"><a href="#cb12-258" aria-hidden="true" tabindex="-1"></a>titanic <span class="op">=</span> pd.read_csv(<span class="st">"https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"</span>)</span>
+<span id="cb12-259"><a href="#cb12-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-260"><a href="#cb12-260" aria-hidden="true" tabindex="-1"></a>titanic.groupby(<span class="st">'Pclass'</span>)[<span class="st">'Fare'</span>].agg([<span class="st">'mean'</span>, <span class="st">'std'</span>]) <span class="op">\</span></span>
+<span id="cb12-261"><a href="#cb12-261" aria-hidden="true" tabindex="-1"></a>  .assign(cv<span class="op">=</span><span class="kw">lambda</span> d: (d[<span class="st">'std'</span>] <span class="op">/</span> d[<span class="st">'mean'</span>]) <span class="op">*</span> <span class="dv">100</span>) <span class="op">\</span></span>
+<span id="cb12-262"><a href="#cb12-262" aria-hidden="true" tabindex="-1"></a>  .sort_values(<span class="st">'cv'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-263"><a href="#cb12-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-264"><a href="#cb12-264" aria-hidden="true" tabindex="-1"></a>titanic.boxplot(column<span class="op">=</span><span class="st">'Fare'</span>, by<span class="op">=</span><span class="st">'Pclass'</span>)</span>
+<span id="cb12-265"><a href="#cb12-265" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Tarifa (Fare) por Clase — Titanic"</span>)</span>
+<span id="cb12-266"><a href="#cb12-266" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">""</span>)</span>
+<span id="cb12-267"><a href="#cb12-267" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-268"><a href="#cb12-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-269"><a href="#cb12-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-270"><a href="#cb12-270" aria-hidden="true" tabindex="-1"></a>::: {.highlight-box}</span>
+<span id="cb12-271"><a href="#cb12-271" aria-hidden="true" tabindex="-1"></a><span class="in">`pandas`</span>/<span class="in">`numpy`</span> también usan <span class="in">`ddof=1`</span> (muestral) por defecto en <span class="in">`.std()`</span>, igual que R — a diferencia de <span class="in">`numpy.std()`</span> "a secas", que por defecto usa <span class="in">`ddof=0`</span> (poblacional). Otra fuente común de confusión entre paquetes.</span>
+<span id="cb12-272"><a href="#cb12-272" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-273"><a href="#cb12-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-274"><a href="#cb12-274" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-275"><a href="#cb12-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-276"><a href="#cb12-276" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📎 Resumen de Funciones — Semana 11</span></span>
+<span id="cb12-277"><a href="#cb12-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-278"><a href="#cb12-278" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Función <span class="pp">|</span> Qué hace <span class="pp">|</span> Nivel <span class="pp">|</span></span>
+<span id="cb12-279"><a href="#cb12-279" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb12-280"><a href="#cb12-280" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`range()`</span> <span class="pp">|</span> Mínimo y máximo <span class="pp">|</span> Fácil <span class="pp">|</span></span>
+<span id="cb12-281"><a href="#cb12-281" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`diff(range(x))`</span> <span class="pp">|</span> Rango como un solo número <span class="pp">|</span> Fácil <span class="pp">|</span></span>
+<span id="cb12-282"><a href="#cb12-282" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`var()`</span> <span class="pp">|</span> Varianza muestral (n-1) <span class="pp">|</span> Intermedio <span class="pp">|</span></span>
+<span id="cb12-283"><a href="#cb12-283" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`sd()`</span> <span class="pp">|</span> Desviación estándar muestral (n-1) <span class="pp">|</span> Intermedio <span class="pp">|</span></span>
+<span id="cb12-284"><a href="#cb12-284" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`(sd(x)/mean(x))*100`</span> <span class="pp">|</span> Coeficiente de variación <span class="pp">|</span> Intermedio <span class="pp">|</span></span>
+<span id="cb12-285"><a href="#cb12-285" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`boxplot(x)`</span> <span class="pp">|</span> Visualiza dispersión de una variable <span class="pp">|</span> Avanzado <span class="pp">|</span></span>
+<span id="cb12-286"><a href="#cb12-286" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`boxplot(y ~ grupo, data=...)`</span> <span class="pp">|</span> Compara dispersión entre grupos <span class="pp">|</span> Avanzado <span class="pp">|</span></span>
+<span id="cb12-287"><a href="#cb12-287" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`group_by() + summarise()`</span> <span class="pp">|</span> Dispersión numérica por grupo <span class="pp">|</span> Avanzado <span class="pp">|</span></span>
+<span id="cb12-288"><a href="#cb12-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-289"><a href="#cb12-289" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-290"><a href="#cb12-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-291"><a href="#cb12-291" aria-hidden="true" tabindex="-1"></a>*Semana 11 de 16 | Herramientas Estadísticas 2026 | Ing. David Minango PhD*</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

@@ -180,11 +180,23 @@
     ]
   },
   {
+    "objectID": "weeks/week11/page.html#aplicando-esto-a-un-dataset-real-titanic-kaggle",
+    "href": "weeks/week11/page.html#aplicando-esto-a-un-dataset-real-titanic-kaggle",
+    "title": "Semana 11 — Estadística con R (Dispersión)",
+    "section": "🌐 Aplicando esto a un dataset real: Titanic (Kaggle)",
+    "text": "🌐 Aplicando esto a un dataset real: Titanic (Kaggle)\nTodo lo anterior lo hicimos sobre un dataset simulado. Ahora lo aplicamos a un dataset real — el clásico Titanic de Kaggle — sin necesidad de descargarlo a mano ni crear cuenta: muchos datasets populares de Kaggle tienen una copia pública en una URL estable, y read.csv() puede leer directamente desde esa URL, igual que hicimos con las APIs en la Semana 9.\ntitanic &lt;- read.csv(\n  \"https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv\",\n  stringsAsFactors = FALSE\n)\n\nstr(titanic)\n\nread.csv() no distingue entre una ruta local y una URL — si el enlace apunta a un archivo .csv público, lo descarga y lo carga directo en memoria. Es la misma idea que fromJSON(\"https://...\") en la Semana 9, aplicada a CSV.\n\nAnalicemos la dispersión de Fare (tarifa pagada) según la clase del pasajero (Pclass: 1ª, 2ª o 3ª):\n# Dispersión general de Fare\nrange(titanic$Fare)\nsd(titanic$Fare)\n(sd(titanic$Fare) / mean(titanic$Fare)) * 100    # CV\n\n# Boxplot comparativo por clase\nboxplot(Fare ~ Pclass, data = titanic,\n        col = c(\"#e8f4fd\", \"#fff9e6\", \"#ffe8e8\"),\n        border = \"#003366\",\n        main = \"Tarifa (Fare) por Clase — Titanic\",\n        xlab = \"Clase (Pclass)\", ylab = \"Fare ($)\")\n\n# Dispersión por grupo con dplyr\nlibrary(dplyr)\ntitanic %&gt;%\n  group_by(Pclass) %&gt;%\n  summarise(n = n(),\n            media = round(mean(Fare), 2),\n            sd = round(sd(Fare), 2),\n            cv = round((sd(Fare) / mean(Fare)) * 100, 1)) %&gt;%\n  arrange(desc(cv))\n\n🧩 Ejercicio 6 (bonus — dataset real)\nSobre titanic:\n\nRepita el análisis anterior pero con la columna Age en vez de Fare (cuidado: Age tiene valores NA — use na.rm = TRUE en mean()/sd(), o filtre con na.omit() primero).\nGenere el boxplot de Age ~ Pclass. ¿Los pasajeros de 1ª clase eran, en promedio, mayores o menores que los de 3ª?\nBusque en Kaggle (o en la documentación del dataset) qué otra columna categórica podría usar para comparar dispersión de Fare además de Pclass (pista: Embarked o Sex), y repita el group_by() + summarise() con esa columna.",
+    "crumbs": [
+      "🗓️ Semanas",
+      "Semana 11 — Estadística con R (Dispersión)",
+      "👨‍🏫 Material de Clase"
+    ]
+  },
+  {
     "objectID": "weeks/week11/page.html#equivalentes-en-python",
     "href": "weeks/week11/page.html#equivalentes-en-python",
     "title": "Semana 11 — Estadística con R (Dispersión)",
     "section": "🐍 Equivalentes en Python",
-    "text": "🐍 Equivalentes en Python\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ndf = pd.read_csv(\"datos_salarios_ecuador_app2.csv\").dropna()\n\n# range, var, sd (ddof=1 = muestral, igual que R)\nrango = df['salario'].max() - df['salario'].min()\nvarianza = df['salario'].var(ddof=1)\ndesviacion = df['salario'].std(ddof=1)\ncv = (desviacion / df['salario'].mean()) * 100\n\n# Dispersión por grupo\ndf.groupby('sector')['salario'].agg(['mean', 'std']) \\\n  .assign(cv=lambda d: (d['std'] / d['mean']) * 100) \\\n  .sort_values('cv', ascending=False)\n\n# Boxplot comparativo\ndf.boxplot(column='salario', by='sector')\nplt.title(\"Salario por Sector\")\nplt.suptitle(\"\")\nplt.show()\n\npandas/numpy también usan ddof=1 (muestral) por defecto en .std(), igual que R — a diferencia de numpy.std() “a secas”, que por defecto usa ddof=0 (poblacional). Otra fuente común de confusión entre paquetes.",
+    "text": "🐍 Equivalentes en Python\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ndf = pd.read_csv(\"datos_salarios_ecuador_app2.csv\").dropna()\n\n# range, var, sd (ddof=1 = muestral, igual que R)\nrango = df['salario'].max() - df['salario'].min()\nvarianza = df['salario'].var(ddof=1)\ndesviacion = df['salario'].std(ddof=1)\ncv = (desviacion / df['salario'].mean()) * 100\n\n# Dispersión por grupo\ndf.groupby('sector')['salario'].agg(['mean', 'std']) \\\n  .assign(cv=lambda d: (d['std'] / d['mean']) * 100) \\\n  .sort_values('cv', ascending=False)\n\n# Boxplot comparativo\ndf.boxplot(column='salario', by='sector')\nplt.title(\"Salario por Sector\")\nplt.suptitle(\"\")\nplt.show()\n\n# Mismo dataset real de Kaggle, leído directo desde la URL\ntitanic = pd.read_csv(\"https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv\")\n\ntitanic.groupby('Pclass')['Fare'].agg(['mean', 'std']) \\\n  .assign(cv=lambda d: (d['std'] / d['mean']) * 100) \\\n  .sort_values('cv', ascending=False)\n\ntitanic.boxplot(column='Fare', by='Pclass')\nplt.title(\"Tarifa (Fare) por Clase — Titanic\")\nplt.suptitle(\"\")\nplt.show()\n\npandas/numpy también usan ddof=1 (muestral) por defecto en .std(), igual que R — a diferencia de numpy.std() “a secas”, que por defecto usa ddof=0 (poblacional). Otra fuente común de confusión entre paquetes.",
     "crumbs": [
       "🗓️ Semanas",
       "Semana 11 — Estadística con R (Dispersión)",
@@ -2292,6 +2304,13 @@
     "text": "Dispersión por grupo con dplyr\ndatos %&gt;%\n  group_by(sector) %&gt;%\n  summarise(sd = round(sd(salario), 2),\n            cv = round((sd(salario)/mean(salario))*100, 1)) %&gt;%\n  arrange(desc(cv))\nEl equivalente numérico del boxplot comparativo."
   },
   {
+    "objectID": "weeks/week11/slides.html#dataset-real-titanic-kaggle",
+    "href": "weeks/week11/slides.html#dataset-real-titanic-kaggle",
+    "title": "Semana 11: Estadística con R (Dispersión)",
+    "section": "Dataset real: Titanic (Kaggle)",
+    "text": "Dataset real: Titanic (Kaggle)\ntitanic &lt;- read.csv(\n  \"https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv\")\n\nboxplot(Fare ~ Pclass, data = titanic,\n        main = \"Tarifa por Clase — Titanic\")\n\ntitanic %&gt;%\n  group_by(Pclass) %&gt;%\n  summarise(cv = round((sd(Fare)/mean(Fare))*100, 1))\n\nread.csv() lee directo desde una URL pública — sin cuenta de Kaggle ni descarga manual. Mismo truco que fromJSON(\"https://...\") en la Semana 9."
+  },
+  {
     "objectID": "weeks/week11/slides.html#progresión-de-hoy",
     "href": "weeks/week11/slides.html#progresión-de-hoy",
     "title": "Semana 11: Estadística con R (Dispersión)",
@@ -2303,7 +2322,7 @@
     "href": "weeks/week11/slides.html#hoy-en-clase",
     "title": "Semana 11: Estadística con R (Dispersión)",
     "section": "Hoy en Clase",
-    "text": "Hoy en Clase\n\nLunes (2h): range(), var(), sd() y coeficiente de variación (CV), con un ejercicio corto tras cada función.\nViernes (1h): boxplot() simple y comparativo entre grupos + dispersión por grupo con dplyr, cerrando con el mini-taller integrador.\n\nLa misma pregunta — ¿qué tan dispersos están los datos? — respondida con más detalle cada vez. 📦"
+    "text": "Hoy en Clase\n\nLunes (2h): range(), var(), sd() y coeficiente de variación (CV), con un ejercicio corto tras cada función.\nViernes (1h): boxplot() simple y comparativo entre grupos + dispersión por grupo con dplyr, cerrando con el dataset real de Kaggle (Titanic) leído directo desde una URL.\n\nLa misma pregunta — ¿qué tan dispersos están los datos? — respondida con más detalle cada vez. 📦"
   },
   {
     "objectID": "weeks/week13/page.html",
