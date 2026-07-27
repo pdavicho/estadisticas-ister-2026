@@ -1,25 +1,222 @@
 ---
-title: "Semana 11 — Estadística Descriptiva con R — Dispersión"
+title: "Semana 11 — Estadística con R (Dispersión)"
 subtitle: "var(), sd(), range(), coeficiente de variación y boxplots"
 author: "Ing. David Minango PhD"
 ---
 
-::: {.callout-note}
-## 🔒 Contenido en Preparación
+En la Semana 3 calculamos varianza, desviación estándar y coeficiente de variación **a mano**, sobre datos agrupados en tablas de frecuencia. Ahora que en R tenemos datos reales listos para trabajar (Semanas 7-9), retomamos esas mismas medidas usando las funciones nativas de R sobre datos **sin agrupar** — y las llevamos un paso más allá: comparando la dispersión entre grupos con `dplyr` y `boxplot()`.
 
-Este material estará disponible próximamente.
+::: {.objetivos-box}
+**Objetivos:**
 
-**Tema:** Estadística Descriptiva con R — Dispersión
-
-**Contenido previsto:**
-var(), sd(), range(), coeficiente de variación y boxplots
+- Calcular dispersión con las funciones nativas de R: `range()`, `var()`, `sd()`
+- Entender la diferencia entre la desviación estándar **muestral** (R, denominador n-1) y la **poblacional** (Semana 3, denominador n)
+- Calcular e interpretar el coeficiente de variación (CV) para comparar variables de distinta escala o unidad
+- Visualizar dispersión con `boxplot()`, incluyendo comparaciones entre grupos
+- Calcular dispersión por grupo con `dplyr::group_by()` + `summarise()`
 :::
 
-## Próximamente
+## 👨‍🏫 Presentación de Clase
 
-El material de esta semana será publicado antes de la fecha de clase correspondiente.
+<div class="slides-container">
+  <iframe src="slides.html" style="width:100%; height:600px; border:none; border-radius:8px;"></iframe>
+</div>
 
-Mientras tanto, puede repasar los temas anteriores o consultar la bibliografía del curso en la [sección del programa](../../syllabus.qmd).
+## 🔁 Repaso: Semana 3
+
+```r
+# Semana 3 — fórmula poblacional sobre datos AGRUPADOS (tabla de frecuencias)
+varianza <- sum(fi * (mi - media)^2) / n        # denominador: n
+desv_std <- sqrt(varianza)
+cv       <- (desv_std / media) * 100
+```
+
+Hoy trabajamos sobre el **vector de datos crudo** (sin agrupar), con las funciones que R ya trae incorporadas.
+
+---
+
+## 📏 Lo más fácil: `range()`
+
+```r
+datos <- read.csv("datos_salarios_ecuador_app2.csv", stringsAsFactors = FALSE)
+datos <- na.omit(datos)
+
+range(datos$salario)                    # c(mínimo, máximo)
+diff(range(datos$salario))               # el rango como un solo número
+```
+
+`range()` no dice nada sobre la forma de la distribución — solo los dos extremos. Es la medida de dispersión más simple y también la más sensible a valores atípicos.
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 1**
+
+Calcule el rango de la columna `edad` y de la columna `anios_exp`. ¿Cuál de las dos variables tiene un rango más amplio?
+:::
+
+---
+
+## 📐 `var()` y `sd()`
+
+```r
+varianza <- var(datos$salario)
+desviacion <- sd(datos$salario)
+
+varianza
+desviacion
+```
+
+::: {.highlight-box}
+**Atención — muestral vs. poblacional:** `var()` y `sd()` en R dividen entre **n − 1** (varianza/desviación **muestral**), mientras que en la Semana 3 dividimos entre **n** (fórmula **poblacional**, la que se enseña para datos agrupados). Con muestras grandes la diferencia es mínima, pero **no son la misma fórmula** — si compara un cálculo manual con el de R, esta es la razón más común del desfase.
+
+```r
+# Para replicar la fórmula poblacional de la Semana 3 sobre un vector:
+n <- length(datos$salario)
+sd(datos$salario) * sqrt((n - 1) / n)
+```
+:::
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 2**
+
+Calcule `var()` y `sd()` de `anios_exp`. Verifique con `sqrt(var(...))` que efectivamente equivale a `sd(...)`.
+:::
+
+---
+
+## 📊 Coeficiente de Variación (CV)
+
+`sd()` sola no permite comparar variables en **distinta escala o unidad** (ej. salario en dólares vs. edad en años) — para eso normalizamos con el CV:
+
+```r
+cv_salario <- (sd(datos$salario) / mean(datos$salario)) * 100
+cv_edad    <- (sd(datos$edad)    / mean(datos$edad))    * 100
+
+cat(sprintf("CV salario: %.1f%%\n", cv_salario))
+cat(sprintf("CV edad:    %.1f%%\n", cv_edad))
+```
+
+::: {.highlight-box}
+El CV es un porcentaje: cuanto **más alto**, más dispersos (relativamente) están los datos respecto a su propia media. Por eso sirve para comparar salario (dólares) contra edad (años) — algo que `sd()` sola no permite, porque están en unidades distintas.
+:::
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 3**
+
+Calcule el CV de `salario` y de `anios_exp`. ¿Cuál de las dos variables es relativamente más dispersa según el CV, aunque sus `sd()` no sean directamente comparables?
+:::
+
+---
+
+## 📦 `boxplot()` — visualizando la dispersión
+
+```r
+boxplot(datos$salario,
+        col = "#e8f4fd", border = "#003366",
+        main = "Distribución del Salario",
+        ylab = "Salario ($)")
+```
+
+Un boxplot resume de un vistazo lo que `range()`, cuartiles y outliers muestran por separado: la caja son Q1-Q3 (el 50% central de los datos), la línea es la mediana, los bigotes llegan hasta 1.5×IQR, y los puntos sueltos son valores atípicos.
+
+---
+
+## 📦 Boxplot comparativo entre grupos
+
+Lo más complejo del día: comparar la dispersión de `salario` **entre categorías** con la interfaz de fórmula (`variable ~ grupo`):
+
+```r
+boxplot(salario ~ sector, data = datos,
+        col = c("#e8f4fd", "#fff9e6", "#ffe8e8"),
+        border = "#003366",
+        main = "Salario por Sector",
+        xlab = "Sector", ylab = "Salario ($)")
+```
+
+::: {.highlight-box}
+Comparar boxplots lado a lado responde preguntas que un solo número no puede: ¿qué sector tiene salarios más dispersos (caja y bigotes más anchos)? ¿cuál tiene más outliers? ¿cuál tiene la mediana más alta, aunque no sea el de mayor dispersión?
+:::
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 4**
+
+Genere un boxplot comparativo de `salario ~ region`. ¿Qué región muestra mayor dispersión visualmente? ¿Coincide con la región de mayor CV (Ejercicio 5)?
+:::
+
+---
+
+## 🔢 Dispersión por grupo con `dplyr`
+
+El equivalente numérico del boxplot comparativo: calcular varias medidas de dispersión **por grupo** a la vez.
+
+```r
+library(dplyr)
+
+datos %>%
+  group_by(sector) %>%
+  summarise(n = n(),
+            media = round(mean(salario), 2),
+            sd = round(sd(salario), 2),
+            cv = round((sd(salario) / mean(salario)) * 100, 1)) %>%
+  arrange(desc(cv))
+```
+
+::: {.ejercicio-box}
+**🧩 Ejercicio 5 (mini-taller final)**
+
+Repita el `group_by()` + `summarise()` anterior, pero agrupando por `region` en vez de `sector`. Con el resultado:
+
+1. ¿Qué región tiene el CV más alto (mayor dispersión relativa de salario)?
+2. ¿Esa misma región es la de mayor `sd()` en términos absolutos? ¿Por qué podría no serlo?
+3. Genere el boxplot `salario ~ region` y confirme visualmente su respuesta al punto 1.
+:::
+
+---
+
+## 🐍 Equivalentes en Python
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("datos_salarios_ecuador_app2.csv").dropna()
+
+# range, var, sd (ddof=1 = muestral, igual que R)
+rango = df['salario'].max() - df['salario'].min()
+varianza = df['salario'].var(ddof=1)
+desviacion = df['salario'].std(ddof=1)
+cv = (desviacion / df['salario'].mean()) * 100
+
+# Dispersión por grupo
+df.groupby('sector')['salario'].agg(['mean', 'std']) \
+  .assign(cv=lambda d: (d['std'] / d['mean']) * 100) \
+  .sort_values('cv', ascending=False)
+
+# Boxplot comparativo
+df.boxplot(column='salario', by='sector')
+plt.title("Salario por Sector")
+plt.suptitle("")
+plt.show()
+```
+
+::: {.highlight-box}
+`pandas`/`numpy` también usan `ddof=1` (muestral) por defecto en `.std()`, igual que R — a diferencia de `numpy.std()` "a secas", que por defecto usa `ddof=0` (poblacional). Otra fuente común de confusión entre paquetes.
+:::
+
+---
+
+## 📎 Resumen de Funciones — Semana 11
+
+| Función | Qué hace | Nivel |
+|---|---|---|
+| `range()` | Mínimo y máximo | Fácil |
+| `diff(range(x))` | Rango como un solo número | Fácil |
+| `var()` | Varianza muestral (n-1) | Intermedio |
+| `sd()` | Desviación estándar muestral (n-1) | Intermedio |
+| `(sd(x)/mean(x))*100` | Coeficiente de variación | Intermedio |
+| `boxplot(x)` | Visualiza dispersión de una variable | Avanzado |
+| `boxplot(y ~ grupo, data=...)` | Compara dispersión entre grupos | Avanzado |
+| `group_by() + summarise()` | Dispersión numérica por grupo | Avanzado |
 
 ---
 

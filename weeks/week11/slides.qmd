@@ -1,0 +1,148 @@
+---
+title: "Semana 11: Estadística con R (Dispersión)"
+subtitle: "var(), sd(), range(), CV y boxplots"
+author: "Ing. David Minango PhD"
+institute: "ISTER — Sistemas y Gestión de Data"
+date: "2026"
+format:
+  revealjs:
+    theme: [default, ../../styles-slides.css]
+    slide-number: true
+    logo: ../../figures/logos/ister_logo.png
+    footer: "Herramientas Estadísticas 2026 | Ing. David Minango PhD"
+    transition: slide
+    highlight-style: github
+    chalkboard: true
+    width: 1280
+    height: 720
+    margin: 0.04
+    min-scale: 0.1
+    max-scale: 2.0
+include-in-header:
+  text: |
+    <style>
+    .reveal h1, .reveal h2 { color: #003366; }
+    .reveal section.has-dark-background h1,
+    .reveal section.has-dark-background h2 { color: #ffffff !important; }
+    .formula-slide { background: #fff9e6; border: 2px solid #f0a500; border-radius: 8px; padding: 1rem; color: #1a1a2e !important; }
+    .formula-slide * { color: #1a1a2e !important; }
+    .highlight-box { background: #e8f4fd; border-left: 4px solid #0055a5; padding: 0.8rem 1rem; border-radius: 4px; color: #1a1a2e !important; }
+    .highlight-box * { color: #1a1a2e !important; }
+    </style>
+---
+
+## De la Semana 3 a la Semana 11 {background-color="#003366" color="white"}
+
+```
+Semana 3                          Semana 11
+─────────                         ─────────
+Fórmulas a mano                →  Funciones nativas de R
+Datos agrupados (tabla de freq)   Datos crudos (vector)
+Un solo grupo                     Comparar entre grupos
+```
+
+Misma idea (¿qué tan dispersos están los datos?), ahora con herramientas de R sobre datos reales.
+
+---
+
+## Lo más fácil: `range()`
+
+```r
+datos <- read.csv("datos_salarios_ecuador_app2.csv") %>% na.omit()
+
+range(datos$salario)          # mínimo y máximo
+diff(range(datos$salario))    # el rango como un número
+```
+
+::: {.highlight-box}
+Simple y rápido, pero muy sensible a valores atípicos — no dice nada de la forma de la distribución.
+:::
+
+---
+
+## `var()` y `sd()`
+
+```r
+var(datos$salario)
+sd(datos$salario)
+```
+
+::: {.formula-slide}
+**⚠️ R usa denominador n − 1 (muestral)**, no n (poblacional, Semana 3). Con muestras grandes la diferencia es chica, pero no es la misma fórmula.
+:::
+
+---
+
+## Coeficiente de Variación (CV)
+
+```r
+cv_salario <- (sd(datos$salario) / mean(datos$salario)) * 100
+cv_edad    <- (sd(datos$edad)    / mean(datos$edad))    * 100
+```
+
+::: {.highlight-box}
+`sd()` sola no compara variables en distinta escala (dólares vs. años). El CV, al ser un porcentaje, sí.
+:::
+
+---
+
+## `boxplot()` — una variable
+
+```r
+boxplot(datos$salario,
+        col = "#e8f4fd", border = "#003366",
+        main = "Distribución del Salario")
+```
+
+Caja = Q1-Q3 · línea = mediana · bigotes = 1.5×IQR · puntos = outliers
+
+---
+
+## `boxplot()` comparativo entre grupos
+
+```r
+boxplot(salario ~ sector, data = datos,
+        col = c("#e8f4fd", "#fff9e6", "#ffe8e8"),
+        main = "Salario por Sector")
+```
+
+::: {.highlight-box}
+Lo más avanzado del día: la interfaz de fórmula `y ~ grupo` compara dispersión visualmente entre categorías.
+:::
+
+---
+
+## Dispersión por grupo con `dplyr`
+
+```r
+datos %>%
+  group_by(sector) %>%
+  summarise(sd = round(sd(salario), 2),
+            cv = round((sd(salario)/mean(salario))*100, 1)) %>%
+  arrange(desc(cv))
+```
+
+El equivalente numérico del boxplot comparativo.
+
+---
+
+## Progresión de Hoy {background-color="#003366" color="white"}
+
+```
+range()  →  var() / sd()  →  CV  →  boxplot()  →  boxplot(y~grupo)  →  group_by()+summarise()
+ fácil                                                                        complejo
+```
+
+Misma pregunta (¿cuánto varían los datos?), cada vez con más detalle y más grupos comparados.
+
+---
+
+## Hoy en Clase {background-color="#003366" color="white"}
+
+::: {.highlight-box}
+**Lunes (2h):** `range()`, `var()`, `sd()` y coeficiente de variación (CV), con un ejercicio corto tras cada función.
+
+**Viernes (1h):** `boxplot()` simple y comparativo entre grupos + dispersión por grupo con `dplyr`, cerrando con el mini-taller integrador.
+:::
+
+**La misma pregunta — ¿qué tan dispersos están los datos? — respondida con más detalle cada vez.** 📦

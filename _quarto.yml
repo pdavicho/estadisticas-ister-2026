@@ -91,7 +91,7 @@ website:
             contents:
               - text: "👨‍🏫 Material de Clase"
                 href: weeks/week10/page.qmd
-          - section: "Semana 11 — Próximamente"
+          - section: "Semana 11 — Estadística con R (Dispersión)"
             contents:
               - text: "👨‍🏫 Material de Clase"
                 href: weeks/week11/page.qmd
